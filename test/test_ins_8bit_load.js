@@ -56,3 +56,14 @@ test('ld_ptrHL_r(cpu, rIndex)', t => {
     const m = cpu.memory[0x862f]
     t.is(m, 0xee);
 });
+
+test('ld_ptrIXd_r(cpu, rIndex, d)', t => {   
+    regs8.set(regs8.idx.C, false, 0xf4);
+    regsSp.IX = 0xaf21;
+    const d = -0x5a;
+    const ix = regsSp.IX;
+    const ptr = ix + d;
+    instr.ld_ptrIXd_r(cpu, regs8.idx.C, d); // LD (IX+d), C
+    const m = cpu.memory[ptr]
+    t.is(m, 0xf4);
+});
