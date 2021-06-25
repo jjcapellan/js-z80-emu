@@ -280,6 +280,17 @@ function ld_r_ptrHL(cpu, rIndex) {
     regsSp.I = regs.regs8.get(regs.regs8.idx.A, false);
 }
 
+/**
+ * LD R, A
+ * 
+ * The contents of the Accumulator are loaded to the Memory Refresh register R.
+ * Clock: 9T
+ */
+ function ld_R_A(cpu) {
+    const regs = cpu.registers;
+    regsSp.R = regs.regs8.get(regs.regs8.idx.A, false);
+}
+
 module.exports = {
     ld_r_r2,
     ld_r_n,
@@ -300,5 +311,6 @@ module.exports = {
     ld_ptrnn_A,
     ld_A_I,
     ld_A_R,
-    ld_I_A
+    ld_I_A,
+    ld_R_A
 }
