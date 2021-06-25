@@ -155,4 +155,4 @@ test('ld_ptrnn_A(cpu, nn)', t => {
     instr.ld_ptrnn_A(cpu, nn); // LD (nn), A
     const m = cpu.memory[nn];
     t.is(m, 0xac);
-});
+}); 
