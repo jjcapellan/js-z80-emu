@@ -48,3 +48,11 @@ test('ld_r_ptrIYd(cpu, rIndex, d)', t => {
     const e = regs8.get(regs8.idx.E, false);
     t.is(e, 0xa9);
 });
+
+test('ld_ptrHL_r(cpu, rIndex)', t => {   
+    regs16.set(regs16.idx.HL, false, 0x862f);
+    regs8.set(regs8.idx.B, false, 0xee);
+    instr.ld_ptrHL_r(cpu, regs8.idx.B); // LD (HL), B
+    const m = cpu.memory[0x862f]
+    t.is(m, 0xee);
+});
