@@ -114,6 +114,19 @@ function ld_r_ptrHL(cpu, rIndex) {
     cpu.memory[ptr] = regs.regs8.get(rIndex, false);
 }
 
+/**
+ * LD (HL), n
+ * 
+ * The n integer is loaded to the memory address specified by the contents of the HL register
+ * pair.
+ * Clock: 10T
+ */
+ function ld_ptrHL_n(cpu, n) {
+    const regs = cpu.registers;
+    const ptr = regs.regs16.get(regs.regs16.idx.HL, false);
+    cpu.memory[ptr] = n;
+}
+
 module.exports = {
     ld_r_r2,
     ld_r_n,
@@ -122,5 +135,6 @@ module.exports = {
     ld_r_ptrIYd,
     ld_ptrHL_r,
     ld_ptrIXd_r,
-    ld_ptrIYd_r
+    ld_ptrIYd_r,
+    ld_ptrHL_n
 }

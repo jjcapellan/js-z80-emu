@@ -74,7 +74,15 @@ test('ld_ptrIYd_r(cpu, rIndex, d)', t => {
     const d = 0x5a;
     const iy = regsSp.IY;
     const ptr = iy + d;
-    instr.ld_ptrIYd_r(cpu, regs8.idx.D, d); // LD (IX+d), D
+    instr.ld_ptrIYd_r(cpu, regs8.idx.D, d); // LD (IY+d), D
     const m = cpu.memory[ptr]
     t.is(m, 0xf8);
+});
+
+test('ld_ptrHL_n(cpu, n)', t => {   
+    regs16.set(regs16.idx.HL, false, 0x06a4);
+    const n = 0xcf;
+    instr.ld_ptrHL_n(cpu, n); // LD (HL), n
+    const m = cpu.memory[0x06a4]
+    t.is(m, 0xcf);
 });
