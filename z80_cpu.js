@@ -4,10 +4,11 @@
  */
 
 const registers = require('./z80_registers');
+const memory = require('./z80_memory');
 
 class Z80 {
     constructor(){
-        this.memory;
+        this.memory = memory;
         this.registers = registers;
     }
 
