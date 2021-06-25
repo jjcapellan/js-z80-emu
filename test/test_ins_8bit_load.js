@@ -148,3 +148,11 @@ test('ld_ptrDE_A(cpu)', t => {
     const a = regs8.get(regs8.idx.A, false);
     t.is(a, 0x60);
 });
+
+test('ld_ptrnn_A(cpu, nn)', t => {   
+    regs8.set(regs8.idx.A, false, 0xac);
+    const nn = 0x5254;
+    instr.ld_ptrnn_A(cpu, nn); // LD (nn), A
+    const m = cpu.memory[nn];
+    t.is(m, 0xac);
+});
