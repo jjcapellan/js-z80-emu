@@ -1,0 +1,23 @@
+{
+  "name": "z80-emulator",
+  "version": "1.0.0",
+  "description": "Class to integrate in other emulators",
+  "scripts": {
+    "test": "ava"
+  },
+  
+  "author": "",
+
+  "license": "ISC",
+
+  "devDependencies": {
+    "ava": "^3.15.0"
+  },
+
+  "ava":{
+    "files":[
+      "./test/*"
+    ],
+    "verbose": true
+  }
+}
