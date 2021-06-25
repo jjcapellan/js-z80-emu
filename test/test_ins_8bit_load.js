@@ -176,3 +176,10 @@ test('ld_A_I(cpu)', t => {
     t.is(flag_pv, false);
     t.is(flag_n, false);
 }); 
+
+test('ld_I_A(cpu)', t => {   
+    regs8.set(regs8.idx.A, false, 0x24);
+    instr.ld_I_A(cpu); // LD I, A
+    const a = regs8.get(regs8.idx.A, false);
+    t.is(regsSp.I, a);
+});

@@ -5,6 +5,8 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
+const { regsSp } = require("../z80_registers");
+
 /**
  * LD r, r'
  * 
@@ -248,6 +250,36 @@ function ld_r_ptrHL(cpu, rIndex) {
     flags.set(flags.idx.N, false, false);
 }
 
+/**
+ * LD A, R
+ * 
+ * The contents of Memory Refresh Register R are loaded to the Accumulator
+ * Clock: 9T
+ */
+ function ld_A_R(cpu) {
+    const regs = cpu.registers;
+    const flags = regs.flags;
+    const r = regs.regsSp.R;
+    regs.regs8.set(regs.regs8.idx.A, false, r);
+    // Flags
+    flags.set(flags.idx.S, false, (r & 0b10000000) != 0);
+    flags.set(flags.idx.Z, false, r == 0);
+    flags.set(flags.idx.H, false, false);
+    flags.set(flags.idx.PV, false, regs.iff.IFF2);
+    flags.set(flags.idx.N, false, false);
+}
+
+/**
+ * LD I, A
+ * 
+ * The contents of the Accumulator are loaded to the Interrupt Control Vector Register, I
+ * Clock: 9T
+ */
+ function ld_I_A(cpu) {
+    const regs = cpu.registers;
+    regsSp.I = regs.regs8.get(regs.regs8.idx.A, false);
+}
+
 module.exports = {
     ld_r_r2,
     ld_r_n,
@@ -266,5 +298,7 @@ module.exports = {
     ld_ptrBC_A,
     ld_ptrDE_A,
     ld_ptrnn_A,
-    ld_A_I
+    ld_A_I,
+    ld_A_R,
+    ld_I_A
 }
