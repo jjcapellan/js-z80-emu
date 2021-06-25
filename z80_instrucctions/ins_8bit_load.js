@@ -166,6 +166,19 @@ function ld_r_ptrHL(cpu, rIndex) {
     regs.regs8.set(regs.regs8.idx.A, false, cpu.memory[ptr]);
 }
 
+/**
+ * LD A, (DE)
+ * 
+ * The contents of the memory location specified by the contents of the DE register pair are
+ * loaded to the Accumulator.
+ * Clock: 7T
+ */
+ function ld_A_ptrDE(cpu) {
+    const regs = cpu.registers;
+    const ptr = regs.regs16.get(regs.regs16.idx.DE, false);
+    regs.regs8.set(regs.regs8.idx.A, false, cpu.memory[ptr]);
+}
+
 module.exports = {
     ld_r_r2,
     ld_r_n,
@@ -178,5 +191,6 @@ module.exports = {
     ld_ptrHL_n,
     ld_ptrIXd_n,
     ld_ptrIYd_n,
-    ld_A_ptrBC
+    ld_A_ptrBC,
+    ld_A_ptrDE
 }
