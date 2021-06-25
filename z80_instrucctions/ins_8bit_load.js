@@ -194,13 +194,26 @@ function ld_r_ptrHL(cpu, rIndex) {
 /**
  * LD (BC), A
  * 
- * The contents of register r are loaded to the memory location specified by the contents of
- * the HL register pair. The r symbol identifies registers A, B, C, D, E, H, or L.
+ * The contents of the Accumulator are loaded to the memory location specified by the contents 
+ * of the register pair BC.
  * Clock: 7T
  */
  function ld_ptrBC_A(cpu) {
     const regs = cpu.registers;
     const ptr = regs.regs16.get(regs.regs16.idx.BC, false);
+    regs.regs8.set(regs.regs8.idx.A, false, cpu.memory[ptr]);
+}
+
+/**
+ * LD (DE), A
+ * 
+ * The contents of the Accumulator are loaded to the memory location specified by the contents 
+ * of the register pair DE.
+ * Clock: 7T
+ */
+ function ld_ptrDE_A(cpu) {
+    const regs = cpu.registers;
+    const ptr = regs.regs16.get(regs.regs16.idx.DE, false);
     regs.regs8.set(regs.regs8.idx.A, false, cpu.memory[ptr]);
 }
 
@@ -219,5 +232,6 @@ module.exports = {
     ld_A_ptrBC,
     ld_A_ptrDE,
     ld_A_ptrnn,
-    ld_ptrBC_A
+    ld_ptrBC_A,
+    ld_ptrDE_A
 }

@@ -140,3 +140,11 @@ test('ld_ptrBC_A(cpu)', t => {
     const a = regs8.get(regs8.idx.A, false);
     t.is(a, 0x64);
 });
+
+test('ld_ptrDE_A(cpu)', t => {   
+    regs16.set(regs16.idx.DE, false, 0x890c);
+    cpu.memory[0x890c] = 0x60;
+    instr.ld_ptrDE_A(cpu); // LD (DE), A
+    const a = regs8.get(regs8.idx.A, false);
+    t.is(a, 0x60);
+});
