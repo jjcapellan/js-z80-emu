@@ -179,6 +179,18 @@ function ld_r_ptrHL(cpu, rIndex) {
     regs.regs8.set(regs.regs8.idx.A, false, cpu.memory[ptr]);
 }
 
+/**
+ * LD A, (nn)
+ * 
+ * The contents of the memory location specified by the operands nn are loaded to the Accumulator.
+ * The first n operand after the op code is the low-order byte of a 2-byte memory address.
+ * Clock: 13T
+ */
+ function ld_A_ptrnn(cpu, nn) {
+    const regs = cpu.registers;
+    regs.regs8.set(regs.regs8.idx.A, false, cpu.memory[nn]);
+}
+
 module.exports = {
     ld_r_r2,
     ld_r_n,
@@ -192,5 +204,6 @@ module.exports = {
     ld_ptrIXd_n,
     ld_ptrIYd_n,
     ld_A_ptrBC,
-    ld_A_ptrDE
+    ld_A_ptrDE,
+    ld_A_ptrnn
 }
