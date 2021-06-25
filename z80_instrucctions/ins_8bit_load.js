@@ -100,6 +100,20 @@ function ld_r_ptrHL(cpu, rIndex) {
     cpu.memory[ptr] = regs.regs8.get(rIndex, false);
 }
 
+/**
+ * LD (IY+d), r
+ * 
+ * The contents of register r are loaded to the memory address specified by the contents of
+ * Index Register IY summed with d, a two’s-complement displacement integer. 
+ * The r symbol identifies registers A, B, C, D, E, H, or L.
+ * Clock: 19T
+ */
+ function ld_ptrIYd_r(cpu, rIndex, d) {
+    const regs = cpu.registers;
+    const ptr = regs.regsSp.IY + d;
+    cpu.memory[ptr] = regs.regs8.get(rIndex, false);
+}
+
 module.exports = {
     ld_r_r2,
     ld_r_n,
@@ -107,5 +121,6 @@ module.exports = {
     ld_r_ptrIXd,
     ld_r_ptrIYd,
     ld_ptrHL_r,
-    ld_ptrIXd_r
+    ld_ptrIXd_r,
+    ld_ptrIYd_r
 }

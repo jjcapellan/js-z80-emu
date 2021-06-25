@@ -67,3 +67,14 @@ test('ld_ptrIXd_r(cpu, rIndex, d)', t => {
     const m = cpu.memory[ptr]
     t.is(m, 0xf4);
 });
+
+test('ld_ptrIYd_r(cpu, rIndex, d)', t => {   
+    regs8.set(regs8.idx.D, false, 0xf8);
+    regsSp.IY = 0xef64;
+    const d = 0x5a;
+    const iy = regsSp.IY;
+    const ptr = iy + d;
+    instr.ld_ptrIYd_r(cpu, regs8.idx.D, d); // LD (IX+d), D
+    const m = cpu.memory[ptr]
+    t.is(m, 0xf8);
+});
