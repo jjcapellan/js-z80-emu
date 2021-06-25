@@ -84,5 +84,16 @@ test('ld_ptrHL_n(cpu, n)', t => {
     const n = 0xcf;
     instr.ld_ptrHL_n(cpu, n); // LD (HL), n
     const m = cpu.memory[0x06a4]
-    t.is(m, 0xcf);
+    t.is(m, n);
+});
+
+test('ld_ptrIXd_n(cpu, n, d)', t => {   
+    regsSp.IX = 0x5555;
+    const n = 0xa9;
+    const d = 0x34;
+    const ix = regsSp.IX;
+    const ptr = ix + d;
+    instr.ld_ptrIXd_n(cpu, n, d); // LD (IX+d), n
+    const m = cpu.memory[ptr]
+    t.is(m, n);
 });
