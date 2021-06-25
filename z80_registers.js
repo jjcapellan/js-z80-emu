@@ -60,10 +60,10 @@ const regsSp = {
     PC: 0x0   // 16bit program counter
 }
 
-//// Interrupts FFI (flipflops)
-const ffi = {
-    1: false,
-    2: false
+//// Interrupts IFF (interrupt flipflops)
+const iff = {
+    IFF1: false,
+    IFF2: false
 }
 
 
@@ -97,4 +97,4 @@ const flags = {
 }
 
 
-module.exports = { regs8, regs16, regsSp, flags, ffi };
+module.exports = { regs8, regs16, regsSp, flags, iff };

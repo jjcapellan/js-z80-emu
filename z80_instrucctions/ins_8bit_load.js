@@ -229,6 +229,25 @@ function ld_r_ptrHL(cpu, rIndex) {
     cpu.memory[nn] = regs.regs8.get(regs.regs8.idx.A, false);
 }
 
+/**
+ * LD A, I
+ * 
+ * The contents of the Interrupt Vector Register I are loaded to the Accumulator.
+ * Clock: 9T
+ */
+ function ld_A_I(cpu) {
+    const regs = cpu.registers;
+    const flags = regs.flags;
+    const i = regs.regsSp.I;
+    regs.regs8.set(regs.regs8.idx.A, false, i);
+    // Flags
+    flags.set(flags.idx.S, false, (i & 0b10000000) != 0);
+    flags.set(flags.idx.Z, false, i == 0);
+    flags.set(flags.idx.H, false, false);
+    flags.set(flags.idx.PV, false, regs.iff.IFF2);
+    flags.set(flags.idx.N, false, false);
+}
+
 module.exports = {
     ld_r_r2,
     ld_r_n,
@@ -246,5 +265,6 @@ module.exports = {
     ld_A_ptrnn,
     ld_ptrBC_A,
     ld_ptrDE_A,
-    ld_ptrnn_A
+    ld_ptrnn_A,
+    ld_A_I
 }

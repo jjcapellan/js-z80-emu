@@ -6,6 +6,7 @@ const cpu = new z80();
 const regs8 = cpu.registers.regs8;
 const regs16 = cpu.registers.regs16;
 const regsSp = cpu.registers.regsSp;
+const flags = cpu.registers.flags;
 
 test('ld_r_r2(cpu, rIndex, r2Index)', t => {
     regs8.set(regs8.idx.D, false, 0x15);
@@ -155,4 +156,23 @@ test('ld_ptrnn_A(cpu, nn)', t => {
     instr.ld_ptrnn_A(cpu, nn); // LD (nn), A
     const m = cpu.memory[nn];
     t.is(m, 0xac);
+}); 
+
+test('ld_A_I(cpu)', t => {   
+    regsSp.I = -0x12; // signed int8
+    const i = regsSp.I;
+    instr.ld_A_I(cpu); // LD A, I
+    const a = regs8.get(regs8.idx.A, false);
+    t.is(a, i & 0xff, `Result: ${a} Expected: ${i}`);
+    //Flags
+    const flag_s = flags.get(flags.idx.S, false);
+    const flag_z = flags.get(flags.idx.Z, false);
+    const flag_h = flags.get(flags.idx.H, false);
+    const flag_pv = flags.get(flags.idx.PV, false);
+    const flag_n = flags.get(flags.idx.N, false);
+    t.is(flag_s, true);
+    t.is(flag_z, false);
+    t.is(flag_h, false);
+    t.is(flag_pv, false);
+    t.is(flag_n, false);
 }); 
