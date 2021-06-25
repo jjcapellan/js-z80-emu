@@ -38,3 +38,13 @@ test('ld_r_ptrIXd(cpu, rIndex, d)', t => {
     const a = regs8.get(regs8.idx.A, false);
     t.is(a, 0xa3);
 });
+
+test('ld_r_ptrIYd(cpu, rIndex, d)', t => {
+    regsSp.IY = 0x3434;
+    const iy = regsSp.IY;
+    const d = -0x26;
+    cpu.memory[iy+d] = 0xa9;
+    instr.ld_r_ptrIYd(cpu, regs8.idx.E, d); // LD E, (IY+d)
+    const e = regs8.get(regs8.idx.E, false);
+    t.is(e, 0xa9);
+});
