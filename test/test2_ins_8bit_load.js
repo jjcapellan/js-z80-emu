@@ -12,3 +12,9 @@ test('ld_r_r2(cpu, rIndex, r2Index)', t => {
     const b = regs8.get(regs8.idx.B, false);
     t.is(b, 0x15);
 });
+
+test('ld_r_n(cpu, rIndex, n)', t => {   
+    instr.ld_r_n(cpu, regs8.idx.E, 0x3c); // LD E, n
+    const e = regs8.get(regs8.idx.E, false);
+    t.is(e, 0x3c);
+});

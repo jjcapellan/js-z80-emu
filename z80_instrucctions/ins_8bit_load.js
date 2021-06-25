@@ -18,6 +18,20 @@ function ld_r_r2(cpu, rIndex, r2Index){
     regs.set(rIndex, false, r2);
 }
 
+
+/**
+ * LD r, n
+ * 
+ * The 8-bit integer n is loaded to any register r, in which r identifies registers A, B, C, D, E,
+ * H, or L.
+ * Clock: 7T
+ */
+function ld_r_n(cpu, rIndex, n){
+    cpu.registers.regs8.set(rIndex, false, n);
+}
+
+
 module.exports = {
-    ld_r_r2
+    ld_r_r2,
+    ld_r_n
 }
