@@ -140,6 +140,19 @@ function ld_r_ptrHL(cpu, rIndex) {
     cpu.memory[ptr] = n;
 }
 
+/**
+ * LD (IY+d), n
+ * 
+ * The n operand is loaded to the memory address specified by the sum of Index Register IY
+ * and the two’s complement displacement operand d.
+ * Clock: 19T
+ */
+ function ld_ptrIYd_n(cpu, n, d) {
+    const regs = cpu.registers;
+    const ptr = regs.regsSp.IY + d;
+    cpu.memory[ptr] = n;
+}
+
 module.exports = {
     ld_r_r2,
     ld_r_n,
@@ -150,5 +163,6 @@ module.exports = {
     ld_ptrIXd_r,
     ld_ptrIYd_r,
     ld_ptrHL_n,
-    ld_ptrIXd_n
+    ld_ptrIXd_n,
+    ld_ptrIYd_n
 }

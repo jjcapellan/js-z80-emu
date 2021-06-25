@@ -97,3 +97,14 @@ test('ld_ptrIXd_n(cpu, n, d)', t => {
     const m = cpu.memory[ptr]
     t.is(m, n);
 });
+
+test('ld_ptrIYd_n(cpu, n, d)', t => {   
+    regsSp.IX = 0x2323;
+    const n = 0x15;
+    const d = 0x2f;
+    const iy = regsSp.IY;
+    const ptr = iy + d;
+    instr.ld_ptrIYd_n(cpu, n, d); // LD (IY+d), n
+    const m = cpu.memory[ptr]
+    t.is(m, n);
+});
