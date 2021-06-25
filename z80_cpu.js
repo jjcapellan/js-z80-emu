@@ -20,3 +20,5 @@ class Z80 {
         // TODO
     }
 }
+
+module.exports = Z80;
