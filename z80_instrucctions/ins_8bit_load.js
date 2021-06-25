@@ -191,6 +191,19 @@ function ld_r_ptrHL(cpu, rIndex) {
     regs.regs8.set(regs.regs8.idx.A, false, cpu.memory[nn]);
 }
 
+/**
+ * LD (BC), A
+ * 
+ * The contents of register r are loaded to the memory location specified by the contents of
+ * the HL register pair. The r symbol identifies registers A, B, C, D, E, H, or L.
+ * Clock: 7T
+ */
+ function ld_ptrBC_A(cpu) {
+    const regs = cpu.registers;
+    const ptr = regs.regs16.get(regs.regs16.idx.BC, false);
+    regs.regs8.set(regs.regs8.idx.A, false, cpu.memory[ptr]);
+}
+
 module.exports = {
     ld_r_r2,
     ld_r_n,
@@ -205,5 +218,6 @@ module.exports = {
     ld_ptrIYd_n,
     ld_A_ptrBC,
     ld_A_ptrDE,
-    ld_A_ptrnn
+    ld_A_ptrnn,
+    ld_ptrBC_A
 }

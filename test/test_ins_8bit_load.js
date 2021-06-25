@@ -132,3 +132,11 @@ test('ld_A_ptrnn(cpu, nn)', t => {
     const a = regs8.get(regs8.idx.A, false);
     t.is(a, 0xb3);
 });
+
+test('ld_ptrBC_A(cpu)', t => {   
+    regs16.set(regs16.idx.BC, false, 0x892c);
+    cpu.memory[0x892c] = 0x64;
+    instr.ld_ptrBC_A(cpu); // LD (BC), A
+    const a = regs8.get(regs8.idx.A, false);
+    t.is(a, 0x64);
+});
