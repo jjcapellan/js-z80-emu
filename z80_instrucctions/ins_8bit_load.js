@@ -12,7 +12,7 @@
  * registers A, B, C, D, E, H, or L.
  * Clock: 4T
  */
-function ld_r_r2(cpu, rIndex, r2Index){
+function ld_r_r2(cpu, rIndex, r2Index) {
     const regs = cpu.registers.regs8;
     const r2 = regs.get(r2Index, false);
     regs.set(rIndex, false, r2);
@@ -26,12 +26,25 @@ function ld_r_r2(cpu, rIndex, r2Index){
  * H, or L.
  * Clock: 7T
  */
-function ld_r_n(cpu, rIndex, n){
+function ld_r_n(cpu, rIndex, n) {
     cpu.registers.regs8.set(rIndex, false, n);
 }
 
+/**
+ * LD r, (HL)
+ * 
+ * The 8-bit contents of memory location (HL) are loaded to register r, in which r identifies
+ * registers A, B, C, D, E, H, or L
+ * Clock: 7T
+ */
+function ld_r_ptrHL(cpu, rIndex) {
+    const regs = cpu.registers;
+    const ptrHLcontent = cpu.memory[regs.regs16.get(regs.regs16.idx.HL, false)];
+    cpu.registers.regs8.set(rIndex, false, ptrHLcontent);
+}
 
 module.exports = {
     ld_r_r2,
-    ld_r_n
+    ld_r_n,
+    ld_r_ptrHL
 }

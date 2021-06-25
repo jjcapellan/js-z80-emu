@@ -4,6 +4,7 @@ const instr = require('../z80_instrucctions/ins_8bit_load');
 
 const cpu = new z80();
 const regs8 = cpu.registers.regs8;
+const regs16 = cpu.registers.regs16;
 
 test('ld_r_r2(cpu, rIndex, r2Index)', t => {
     regs8.set(regs8.idx.D, false, 0x15);
@@ -17,4 +18,12 @@ test('ld_r_n(cpu, rIndex, n)', t => {
     instr.ld_r_n(cpu, regs8.idx.E, 0x3c); // LD E, n
     const e = regs8.get(regs8.idx.E, false);
     t.is(e, 0x3c);
+});
+
+test('ld_r_ptrHL(cpu, rIndex)', t => {   
+    regs16.set(regs16.idx.HL, false, 0x4546);
+    cpu.memory[0x4546] = 0xb6;
+    instr.ld_r_ptrHL(cpu, regs8.idx.C); // LD C, (HL)
+    const c = regs8.get(regs8.idx.C, false);
+    t.is(c, 0xb6);
 });
