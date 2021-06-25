@@ -43,8 +43,24 @@ function ld_r_ptrHL(cpu, rIndex) {
     cpu.registers.regs8.set(rIndex, false, ptrHLcontent);
 }
 
+/**
+ * LD r, (IX+d)
+ * 
+ * The (IX+d) operand (i.e., the contents of Index Register IX summed with two’s-complement 
+ * displacement integer d) is loaded to register r, in which r identifies registers A, B, C,
+ * D, E, H, or L
+ * Clock: 19T
+ */
+ function ld_r_ptrIXd(cpu, rIndex, d) {
+    const regs = cpu.registers;
+    const ptr = regs.regsSp.IX + d;
+    const ptrContent = cpu.memory[ptr];
+    regs.regs8.set(rIndex, false, ptrContent);
+}
+
 module.exports = {
     ld_r_r2,
     ld_r_n,
-    ld_r_ptrHL
+    ld_r_ptrHL,
+    ld_r_ptrIXd
 }
