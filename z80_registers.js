@@ -17,7 +17,7 @@ const regs8 = {
      * @param {boolean} isAlt Is alternative register?
      * @returns {number}
      */
-    get: (regIdx, isAlt=false) => regs8bitArray[regIdx + 8 * isAlt],
+    get: (regIdx, isAlt = false) => regs8bitArray[regIdx + 8 * isAlt],
 
     /**
      * 
@@ -25,7 +25,7 @@ const regs8 = {
      * @param {boolean} isAlt Is alternative register?
      * @param {number} value 8 bit value
      */
-    set: (regIdx, isAlt, value) => regs8bitArray[regIdx + 8 * isAlt] = value
+    set: (regIdx, value, isAlt = false) => regs8bitArray[regIdx + 8 * isAlt] = value
 }
 
 // Registers of 16 bits: BC DE HL AF BC' DE' HL' AF'
@@ -38,7 +38,7 @@ const regs16 = {
      * @param {boolean} isAlt Is alternative register?
      * @returns {number}
      */
-    get: (regIdx, isAlt=false) => regs16bitArray[regIdx + 4 * isAlt],
+    get: (regIdx, isAlt = false) => regs16bitArray[regIdx + 4 * isAlt],
 
     /**
      * 
@@ -46,7 +46,7 @@ const regs16 = {
      * @param {boolean} isAlt Is alternative register?
      * @param {number} value 16 bit value
      */
-    set: (regIdx, isAlt, value) => regs16bitArray[regIdx + 4 * isAlt] = value
+    set: (regIdx, value, isAlt = false) => regs16bitArray[regIdx + 4 * isAlt] = value
 }
 
 
@@ -77,21 +77,21 @@ const flags = {
      * @param {boolean} isAltSet Is alternative flag?
      * @returns 
      */
-    get: (flagIdx, isAltSet=false) => {
+    get: (flagIdx, isAltSet = false) => {
         return (regs8bitArray[regs8.idx.F + 8 * isAltSet] & (1 << flagIdx)) != 0;
     },
 
     /**
      * 
      * @param {number} flagIdx Index bit in flag registers (flags.idx)
-     * @param {boolean} isAltSet Is alternative flag?
+     * @param {boolean} isAlt Is alternative flag?
      * @param {boolean} active True sets to 1, false sets to 0. 
      */
-    set: (flagIdx, isAltSet, active) => {
+    set: (flagIdx, active, isAlt = false) => {
         if (active) {
-            regs8bitArray[regs8.idx.F + 8 * isAltSet] |= (1 << flagIdx);
+            regs8bitArray[regs8.idx.F + 8 * isAlt] |= (1 << flagIdx);
         } else {
-            regs8bitArray[regs8.idx.F + 8 * isAltSet] &= ~(1 << flagIdx);
+            regs8bitArray[regs8.idx.F + 8 * isAlt] &= ~(1 << flagIdx);
         }
     }
 }
