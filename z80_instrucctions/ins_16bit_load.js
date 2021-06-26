@@ -86,11 +86,28 @@ function ld_IX_ptrnn(cpu, ptrnn) {
     cpu.registers.regsSp.IX = ixValue;
 }
 
+/**
+ * LD IY, (nn)
+ * 
+ * The contents of the address (nn) are loaded to the low-order portion of Index Register IY,
+ * and the contents of the next highest memory address (nn + 1) are loaded to the high-order
+ * portion of IY. The first n operand after the op code is the low-order byte of nn.
+ * Clock: 20T
+ */
+ function ld_IY_ptrnn(cpu, ptrnn) {
+    const mem = cpu.memory;
+    const iyHigh = mem[ptrnn + 1];
+    const iyLow = mem[ptrnn];
+    const iyValue = (iyLow << 8) | iyHigh; //little endian
+    cpu.registers.regsSp.IY = iyValue;
+}
+
 module.exports = {
     ld_dd_nn,
     ld_IX_nn,
     ld_IY_nn,
     ld_HL_ptrnn,
     ld_dd_ptrnn,
-    ld_IX_ptrnn
+    ld_IX_ptrnn,
+    ld_IY_ptrnn
 }
