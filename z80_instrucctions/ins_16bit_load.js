@@ -117,6 +117,20 @@ function ld_ptrnn_HL(cpu, ptrnn) {
     mem[ptrnn + 1] = regs8.get(regs8.idx.H);
 }
 
+/**
+ * LD (nn), dd
+ * 
+ * The low-order byte of register pair dd is loaded to memory address (nn); the upper byte is
+ * loaded to memory address (nn + 1). Register pair dd defines either BC, DE, HL, or SP.
+ * Clock: 20T
+ */
+function ld_ptrnn_dd(cpu, ddIndex, ptrnn) {
+    const dd = cpu.registers.regs16.get(ddIndex);
+    const mem = cpu.memory;
+    mem[ptrnn] = dd & 0xff;
+    mem[ptrnn + 1] = (dd & 0xff00) >> 8;
+}
+
 module.exports = {
     ld_dd_nn,
     ld_IX_nn,
@@ -125,5 +139,6 @@ module.exports = {
     ld_dd_ptrnn,
     ld_IX_ptrnn,
     ld_IY_ptrnn,
-    ld_ptrnn_HL
+    ld_ptrnn_HL,
+    ld_ptrnn_dd
 }

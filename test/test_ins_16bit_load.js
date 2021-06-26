@@ -68,3 +68,15 @@ test('ld_ptrnn_HL(cpu, ptrnn)', t => {
     t.is(h, mem[ptrnn + 1]);
     t.is(l, mem[ptrnn]);
 });
+
+test('ld_ptrnn_dd(cpu, ddIndex, ptrnn)', t => {
+    const ptrnn = 0x3232;
+    const ddIndex = regs16.idx.DE;
+    const d = 0x1d;
+    const e = 0x19;
+    regs8.set(regs8.idx.D, d);    
+    regs8.set(regs8.idx.E, e);
+    instr.ld_ptrnn_dd(cpu, ddIndex, ptrnn); // LD (nn), DE
+    t.is(e, mem[ptrnn + 1]);
+    t.is(d, mem[ptrnn]);
+});
