@@ -16,6 +16,18 @@ function ld_dd_nn(cpu, ddIndex, nn){
     cpu.registers.regs16.set(ddIndex, nn);
 }
 
+/**
+ * LD IX, nn
+ * 
+ * The n integer is loaded to Index Register IX. The first n operand after the op code is the
+ * low-order byte.
+ * Clock: 14T
+ */
+ function ld_IX_nn(cpu, nn){
+    cpu.registers.regsSp.IX = nn;
+}
+
 module.exports = {
-    ld_dd_nn
+    ld_dd_nn,
+    ld_IX_nn
 }

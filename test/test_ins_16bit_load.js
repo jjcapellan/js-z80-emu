@@ -15,3 +15,10 @@ test('ld_dd_nn(cpu, ddIndex, nn)', t => {
     const af = regs16.get(regs16.idx.AF);
     t.is(af, nn);
 });
+
+test('ld_IX_nn(cpu, nn)', t => {
+    const nn = 0x0612;    
+    instr.ld_IX_nn(cpu, nn); // LD IX, nn
+    const ix = regsSp.IX;
+    t.is(ix, nn);
+});
