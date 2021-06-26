@@ -48,3 +48,12 @@ test('ld_dd_ptrnn(cpu, ddIndex, ptrnn)', t => {
     t.is(e, 0x19);
     t.is(de, 0x191c); //little endian
 });
+
+test('ld_IX_ptrnn(cpu, ptrnn)', t => {
+    const ptrnn = 0x3232;
+    cpu.memory[ptrnn] = 0x11;
+    cpu.memory[ptrnn + 1] = 0x1d;    
+    instr.ld_IX_ptrnn(cpu, ptrnn); // LD IX, (nn)
+    const ix = regsSp.IX;
+    t.is(ix, 0x111d);
+});
