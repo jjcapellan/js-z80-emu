@@ -54,9 +54,26 @@ function ld_HL_ptrnn(cpu, ptrnn) {
     regs8.set(regs8.idx.H, mem[ptrnn + 1]);
 }
 
+/**
+ * LD dd, (nn)
+ * 
+ * The contents of address (nn) are loaded to the low-order portion of register pair dd, and the
+ * contents of the next highest memory address (nn + 1) are loaded to the high-order portion
+ * of dd. Register pair dd defines BC, DE, HL, or SP register pairs.
+ * Clock: 20T
+ */
+function ld_dd_ptrnn(cpu, ddIndex, ptrnn) {
+    const mem = cpu.memory;
+    const dHigh = mem[ptrnn + 1];
+    const dLow = mem[ptrnn];
+    const ddValue = (dLow << 8) | dHigh; //little endian
+    cpu.registers.regs16.set(ddIndex, ddValue);
+}
+
 module.exports = {
     ld_dd_nn,
     ld_IX_nn,
     ld_IY_nn,
-    ld_HL_ptrnn
+    ld_HL_ptrnn,
+    ld_dd_ptrnn
 }

@@ -35,3 +35,16 @@ test('ld_HL_ptrnn(cpu, ptrnn)', t => {
     t.is(l, 0x16);
     t.is(hl, 0x161e); //little endian
 });
+
+test('ld_dd_ptrnn(cpu, ddIndex, ptrnn)', t => {
+    const ptrnn = 0x2526;
+    cpu.memory[ptrnn] = 0x19;
+    cpu.memory[ptrnn + 1] = 0x1c;    
+    instr.ld_dd_ptrnn(cpu, regs16.idx.DE, ptrnn); // LD DE, (nn)
+    const de = regs16.get(regs16.idx.DE);
+    const d = regs8.get(regs8.idx.D);
+    const e = regs8.get(regs8.idx.E);
+    t.is(d, 0x1c, `Result: ${d.toString(16)} Expected: 0x1c `);
+    t.is(e, 0x19);
+    t.is(de, 0x191c); //little endian
+});
