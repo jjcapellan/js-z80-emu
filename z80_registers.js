@@ -17,7 +17,7 @@ const regs8 = {
      * @param {boolean} isAlt Is alternative register?
      * @returns {number}
      */
-    get: (regIdx, isAlt) => regs8bitArray[regIdx + 8 * isAlt],
+    get: (regIdx, isAlt=false) => regs8bitArray[regIdx + 8 * isAlt],
 
     /**
      * 
@@ -38,7 +38,7 @@ const regs16 = {
      * @param {boolean} isAlt Is alternative register?
      * @returns {number}
      */
-    get: (regIdx, isAlt) => regs16bitArray[regIdx + 4 * isAlt],
+    get: (regIdx, isAlt=false) => regs16bitArray[regIdx + 4 * isAlt],
 
     /**
      * 
@@ -77,7 +77,7 @@ const flags = {
      * @param {boolean} isAltSet Is alternative flag?
      * @returns 
      */
-    get: (flagIdx, isAltSet) => {
+    get: (flagIdx, isAltSet=false) => {
         return (regs8bitArray[regs8.idx.F + 8 * isAltSet] & (1 << flagIdx)) != 0;
     },
 
