@@ -27,7 +27,19 @@ function ld_dd_nn(cpu, ddIndex, nn){
     cpu.registers.regsSp.IX = nn;
 }
 
+/**
+ * LD IY, nn
+ * 
+ * The n integer is loaded to Index Register IY. The first n operand after the op code is the
+ * low-order byte.
+ * Clock: 14T
+ */
+ function ld_IY_nn(cpu, nn){
+    cpu.registers.regsSp.IY = nn;
+}
+
 module.exports = {
     ld_dd_nn,
-    ld_IX_nn
+    ld_IX_nn,
+    ld_IY_nn
 }
