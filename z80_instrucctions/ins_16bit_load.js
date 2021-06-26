@@ -102,6 +102,21 @@ function ld_IX_ptrnn(cpu, ptrnn) {
     cpu.registers.regsSp.IY = iyValue;
 }
 
+/**
+ * LD (nn), HL
+ * 
+ * The contents of the low-order portion of register pair HL (Register L) are loaded to memory address (nn), and the contents of the high-order portion of HL (Register H) are loaded
+ * to the next highest memory address (nn + 1). The first n operand after the op code is the
+ * low-order byte of nn.
+ * Clock: 16T
+ */
+function ld_ptrnn_HL(cpu, ptrnn) {
+    const regs8 = cpu.registers.regs8;
+    const mem = cpu.memory;
+    mem[ptrnn] = regs8.get(regs8.idx.L);
+    mem[ptrnn + 1] = regs8.get(regs8.idx.H);
+}
+
 module.exports = {
     ld_dd_nn,
     ld_IX_nn,
@@ -109,5 +124,6 @@ module.exports = {
     ld_HL_ptrnn,
     ld_dd_ptrnn,
     ld_IX_ptrnn,
-    ld_IY_ptrnn
+    ld_IY_ptrnn,
+    ld_ptrnn_HL
 }
