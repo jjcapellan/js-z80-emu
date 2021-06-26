@@ -1,4 +1,4 @@
-##v0.2.0-Alpha (WIP)
+##v1.0.0-Alpha (WIP)
 * Changed: isAlt param is optional in registers getters.
 * Changed: isAlt param is oprional in registers setters. This param was moved to last position.
 
