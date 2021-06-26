@@ -12,7 +12,7 @@
  * HL, or SP register pairs.
  * Clock: 10T
  */
-function ld_dd_nn(cpu, ddIndex, nn){
+function ld_dd_nn(cpu, ddIndex, nn) {
     cpu.registers.regs16.set(ddIndex, nn);
 }
 
@@ -23,7 +23,7 @@ function ld_dd_nn(cpu, ddIndex, nn){
  * low-order byte.
  * Clock: 14T
  */
- function ld_IX_nn(cpu, nn){
+function ld_IX_nn(cpu, nn) {
     cpu.registers.regsSp.IX = nn;
 }
 
@@ -34,12 +34,29 @@ function ld_dd_nn(cpu, ddIndex, nn){
  * low-order byte.
  * Clock: 14T
  */
- function ld_IY_nn(cpu, nn){
+function ld_IY_nn(cpu, nn) {
     cpu.registers.regsSp.IY = nn;
+}
+
+/**
+ * LD HL, (nn)
+ * 
+ * The contents of memory address (nn) are loaded to the low-order portion of register pair
+ * HL (Register L), and the contents of the next highest memory address (nn + 1) are loaded
+ * to the high-order portion of HL (Register H). The first n operand after the op code is the
+ * low-order byte of nn.
+ * Clock: 16T
+ */
+function ld_HL_ptrnn(cpu, ptrnn) {
+    const regs8 = cpu.registers.regs8;
+    const mem = cpu.memory;
+    regs8.set(regs8.idx.L, mem[ptrnn]);
+    regs8.set(regs8.idx.H, mem[ptrnn + 1]);
 }
 
 module.exports = {
     ld_dd_nn,
     ld_IX_nn,
-    ld_IY_nn
+    ld_IY_nn,
+    ld_HL_ptrnn
 }
