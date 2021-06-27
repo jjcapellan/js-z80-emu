@@ -118,3 +118,15 @@ test('push_IX(cpu)', t => {
     t.is(mem[0x1005], 0x14);
     t.is(sp, 0x1005);
 });
+
+test('pop_qq(cpu, qqIndex)', t => {
+    regsSp.SP = 0x1000;
+    mem[0x1000] = 0x55;
+    mem[0x1001] = 0x33;
+    const qqIndex = regs16.idx.HL;
+    instr.pop_qq(cpu, qqIndex); // pop HL
+    const sp = regsSp.SP;
+    const hl = regs16.get(qqIndex);
+    t.is(hl, 0x3355);
+    t.is(sp, 0x1002);
+});
