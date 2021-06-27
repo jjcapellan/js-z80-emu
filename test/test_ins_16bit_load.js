@@ -34,7 +34,7 @@ test('ld_HL_ptrnn(cpu, ptrnn)', t => {
     const l = regs8.get(regs8.idx.L);
     t.is(h, 0x1e);
     t.is(l, 0x16);
-    t.is(hl, 0x161e); //little endian
+    t.is(hl, 0x1e16);
 });
 
 test('ld_dd_ptrnn(cpu, ddIndex, ptrnn)', t => {
@@ -47,7 +47,7 @@ test('ld_dd_ptrnn(cpu, ddIndex, ptrnn)', t => {
     const e = regs8.get(regs8.idx.E);
     t.is(d, 0x1c, `Result: ${d.toString(16)} Expected: 0x1c `);
     t.is(e, 0x19);
-    t.is(de, 0x191c); //little endian
+    t.is(de, 0x1c19);
 });
 
 test('ld_IX_ptrnn(cpu, ptrnn)', t => {
@@ -77,8 +77,8 @@ test('ld_ptrnn_dd(cpu, ddIndex, ptrnn)', t => {
     regs8.set(regs8.idx.D, d);    
     regs8.set(regs8.idx.E, e);
     instr.ld_ptrnn_dd(cpu, ddIndex, ptrnn); // LD (nn), DE
-    t.is(e, mem[ptrnn + 1]);
-    t.is(d, mem[ptrnn]);
+    t.is(d, mem[ptrnn + 1]);
+    t.is(e, mem[ptrnn]);
 });
 
 test('ld_ptrnn_IX(cpu, ptrnn)', t => {

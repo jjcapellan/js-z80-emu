@@ -66,7 +66,7 @@ function ld_dd_ptrnn(cpu, ddIndex, ptrnn) {
     const mem = cpu.memory;
     const dHigh = mem[ptrnn + 1];
     const dLow = mem[ptrnn];
-    const ddValue = (dLow << 8) | dHigh; //little endian
+    const ddValue = (dHigh << 8) | dLow;
     cpu.registers.regs16.set(ddIndex, ddValue);
 }
 
