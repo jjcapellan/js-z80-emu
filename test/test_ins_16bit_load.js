@@ -130,3 +130,14 @@ test('pop_qq(cpu, qqIndex)', t => {
     t.is(hl, 0x3355);
     t.is(sp, 0x1002);
 });
+
+test('pop_IX(cpu)', t => {
+    regsSp.SP = 0x1000;
+    mem[0x1000] = 0x55;
+    mem[0x1001] = 0x33;
+    instr.pop_IX(cpu); // pop IX
+    const sp = regsSp.SP;
+    const ix = regsSp.IX;
+    t.is(ix, 0x3355);
+    t.is(sp, 0x1002);
+});
