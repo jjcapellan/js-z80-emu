@@ -226,6 +226,37 @@ function lddr(cpu) {
 
 }
 
+/**
+ * cpi
+ * 
+ * The contents of the memory location addressed by the HL register is compared with the
+contents of the Accumulator. With a true compare, a condition bit is set. Then HL is 
+ * incremented and the Byte Counter (register pair BC) is decremented.
+ * Clock: 16T
+ */
+ function cpi(cpu) {
+    const regs16 = cpu.registers.regs16;
+    const regs8 = cpu.registers.regs8;
+    const flags = cpu.registers.flags;
+    const mem = cpu.memory;
+
+    const a = regs8.get(regs8.idx.A);
+    let hl = regs16.get(regs16.idx.HL);
+    let bc = regs16.get(regs16.idx.BC);
+    const diff = a - mem[hl];
+
+    regs16.set(regs16.idx.HL, hl + 1);
+    regs16.set(regs16.idx.BC, bc - 1);
+
+    // Flags
+    flags.set(flags.idx.S, diff < 0);
+    flags.set(flags.idx.Z, diff == 0);
+    flags.set(flags.idx.H, (a & 0b1000) < (mem[hl] & 0b1000));
+    flags.set(flags.idx.PV, (bc-1) != 0);
+    flags.set(flags.idx.N, true);
+
+}
+
 module.exports = {
     ex_DE_HL,
     ex_AF_AF2,
@@ -236,5 +267,6 @@ module.exports = {
     ldi,
     ldir,
     ldd,
-    lddr
+    lddr,
+    cpi
 }

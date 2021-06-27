@@ -101,3 +101,19 @@ test('ldi(cpu)', t => {
     t.is(mem[0x2222], 0x88);
     t.is(PV_flag, true);
 });
+
+test('cpi(cpu)', t => {
+    regs16.set(regs16.idx.HL, 0x1111);
+    regs16.set(regs16.idx.BC, 0x0001);
+    regs8.set(regs8.idx.A, 0x3b);    
+    mem[0x1111] = 0x3b;
+    instr.cpi(cpu); // CPI
+    const hl = regs16.get(regs16.idx.HL);
+    const bc = regs16.get(regs16.idx.BC);
+    const PV_flag = flags.get(flags.idx.PV);
+    const Z_flag = flags.get(flags.idx.Z);
+    t.is(bc, 0);
+    t.is(hl, 0x1112);
+    t.is(Z_flag, true);
+    t.is(PV_flag, false);
+});
