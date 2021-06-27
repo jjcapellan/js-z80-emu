@@ -19,6 +19,22 @@ function ex_DE_HL(cpu){
     regs.set(regs.idx.HL, de);
 }
 
+/**
+ * ex AF, AF'
+ * 
+ * The 2-byte contents of the register pairs AF and AF' 
+ * are exchanged. Register pair AF consists of registers A′ and F′.
+ * Clock: 4T
+ */
+function ex_AF_AF2(cpu){
+    const regs = cpu.registers.regs16;
+    const af = regs.get(regs.idx.AF);
+    const af2 = regs.get(regs.idx.AF, true);
+    regs.set(regs.idx.AF, af2);
+    regs.set(regs.idx.AF, af, true);
+}
+
 module.exports = {
-    ex_DE_HL
+    ex_DE_HL,
+    ex_AF_AF2
 }
