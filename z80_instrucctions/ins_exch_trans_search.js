@@ -147,6 +147,30 @@ function ldi(cpu) {
 
 }
 
+/**
+ * ldir
+ * 
+ * This 2-byte instruction transfers a byte of data from the memory location addressed by the
+ * contents of the HL register pair to the memory location addressed by the DE register pair.
+ * Both these register pairs are incremented and the Byte Counter (BC) Register pair is decremented. 
+ * If decrementing allows the BC to go to 0, the instruction is terminated. If BC is
+ * not 0, the program counter is decremented by two and the instruction is repeated. 
+ * Interrupts are recognized and two refresh cycles are executed after each data transfer. When the
+ * BC is set to 0 prior to instruction execution, the instruction loops through 64 KB.
+ * Clock: 21T (BC != 0) ; 16T (BC == 0)
+ */
+ function ldir(cpu) {
+    const regs = cpu.registers.regs16;    
+    let bc = regs.get(regs.idx.BC);
+
+    ldi(cpu);
+
+    // Repeat condition
+    if((bc - 1) == 0){
+        cpu.registers.regsSp.PC -= 2;
+    }
+}
+
 module.exports = {
     ex_DE_HL,
     ex_AF_AF2,
@@ -154,5 +178,6 @@ module.exports = {
     ex_ptrSP_HL,
     ex_ptrSP_IX,
     ex_ptrSP_IY,
-    ldi
+    ldi,
+    ldir
 }
