@@ -257,6 +257,36 @@ contents of the Accumulator. With a true compare, a condition bit is set. Then H
 
 }
 
+/**
+ * cpir
+ * 
+ * The contents of the memory location addressed by the HL register pair is compared with
+ * the contents of the Accumulator. During a compare operation, a condition bit is set. HL is
+ * incremented and the Byte Counter (register pair BC) is decremented. If decrementing
+ * causes BC to go to 0 or if A = (HL), the instruction is terminated. If BC is not 0 and A ≠
+ * (HL), the program counter is decremented by two and the instruction is repeated. 
+ * Interrupts are recognized and two refresh cycles are executed after each data transfer.
+ * If BC is set to 0 before instruction execution, the instruction loops through 64 KB if no
+ * match is found.
+ * Clock: 21T (BC != 0 && A != (HL)); 16T (BC == 0 || A ==(HL))
+ */
+function cpir(cpu) {
+    const regs16 = cpu.registers.regs16;
+    const regs8 = cpu.registers.regs8;
+    const mem = cpu.memory;
+
+    const a = regs8.get(regs8.idx.A);
+    const hl = regs16.get(regs16.idx.HL);    
+    const diff = a - mem[hl];
+    cpi(cpu);
+    const bc = regs16.get(regs16.idx.BC);
+
+    if(bc != 0 && diff != 0){
+        cpu.registers.regsSp.PC -= 2;
+    }
+
+}
+
 module.exports = {
     ex_DE_HL,
     ex_AF_AF2,
@@ -268,5 +298,6 @@ module.exports = {
     ldir,
     ldd,
     lddr,
-    cpi
+    cpi,
+    cpir
 }
