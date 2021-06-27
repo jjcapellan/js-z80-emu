@@ -96,3 +96,14 @@ test('ld_SP_HL(cpu)', t => {
     const hl = regs16.get(regs16.idx.HL);
     t.is(sp, hl);
 });
+
+test('push_qq(cpu, qqIndex)', t => {
+    regsSp.SP = 0x1007;
+    const qqIndex = regs16.idx.AF;
+    regs16.set(qqIndex, 0x2233);
+    instr.push_qq(cpu, qqIndex); // push AF
+    const sp = regsSp.SP;
+    t.is(mem[0x1006], 0x22);
+    t.is(mem[0x1005], 0x33);
+    t.is(sp, 0x1005);
+});

@@ -194,6 +194,27 @@ function ld_SP_IY(cpu) {
     regs.regsSp.SP = regs.regsSp.IY;
 }
 
+/**
+ * PUSH qq
+ * 
+ * The contents of the register pair qq are pushed to the external memory last-in, first-out
+ * (LIFO) stack. The Stack Pointer (SP) Register pair holds the 16-bit address of the current
+ * top of the Stack. This instruction first decrements SP and loads the high-order byte of 
+ * register pair qq to the memory address specified by the SP. The SP is decremented again and
+ * loads the low-order byte of qq to the memory location corresponding to this new address
+ * in the SP. The operand qq identifies register pair BC, DE, HL, or AF.
+ * Clock: 11T
+ */
+function push_qq(cpu, qqIndex) {
+    const regs = cpu.registers;
+    const mem = cpu.memory;
+    const qq = regs.regs16.get(qqIndex);
+    regs.regsSp.SP--;
+    mem[regs.regsSp.SP] = (qq & 0xff00) >> 8;
+    regs.regsSp.SP--;
+    mem[regs.regsSp.SP] = qq & 0xff;
+}
+
 module.exports = {
     ld_dd_nn,
     ld_IX_nn,
@@ -208,5 +229,6 @@ module.exports = {
     ld_ptrnn_IY,
     ld_SP_HL,
     ld_SP_IX,
-    ld_SP_IY
+    ld_SP_IY,
+    push_qq
 }
