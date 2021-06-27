@@ -172,6 +172,17 @@ function ld_SP_HL(cpu) {
     regs.regsSp.SP = regs.regs16.get(regs.regs16.idx.HL);
 }
 
+/**
+ * LD SP, IX
+ * 
+ * The 2-byte contents of Index Register IX are loaded to the Stack Pointer (SP)
+ * Clock: 10T
+ */
+function ld_SP_IX(cpu) {
+    const regs = cpu.registers;
+    regs.regsSp.SP = regs.regsSp.IX;
+}
+
 module.exports = {
     ld_dd_nn,
     ld_IX_nn,
@@ -184,5 +195,6 @@ module.exports = {
     ld_ptrnn_dd,
     ld_ptrnn_IX,
     ld_ptrnn_IY,
-    ld_SP_HL
+    ld_SP_HL,
+    ld_SP_IX
 }
