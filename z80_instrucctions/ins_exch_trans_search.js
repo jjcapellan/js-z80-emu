@@ -293,7 +293,7 @@ function cpir(cpu) {
  * The contents of the memory location addressed by the HL register pair is compared with
  * the contents of the Accumulator. During a compare operation, a condition bit is set. The
  * HL and Byte Counter (register pair BC) are decremented.
- * Clock: 16T
+ * Clock: 21T (BC != 0 && A != (HL)); 16T (BC == 0 || A ==(HL))
  */
 function cpd(cpu) {
     const regs16 = cpu.registers.regs16;
@@ -318,6 +318,35 @@ function cpd(cpu) {
 
 }
 
+/**
+ * cpdr
+ * 
+ * The contents of the memory location addressed by the HL register pair is compared with
+ * the contents of the Accumulator. During a compare operation, a condition bit is set. The
+ * HL and Byte Counter (BC) Register pairs are decremented. If decrementing allows the BC
+ * to go to 0 or if A = (HL), the instruction is terminated. If BC is not 0 and A = (HL), the
+ * program counter is decremented by two and the instruction is repeated. Interrupts are 
+ * recognized and two refresh cycles execute after each data transfer. When the BC is set to 0,
+ * prior to instruction execution, the instruction loops through 64 KB if no match is found
+ * Clock: 16T
+ */
+function cpdr(cpu) {
+    const regs16 = cpu.registers.regs16;
+    const regs8 = cpu.registers.regs8;
+    const mem = cpu.memory;
+
+    const a = regs8.get(regs8.idx.A);
+    const hl = regs16.get(regs16.idx.HL);    
+    const diff = a - mem[hl];
+    cpd(cpu);
+    const bc = regs16.get(regs16.idx.BC);
+
+    if(bc != 0 && diff != 0){
+        cpu.registers.regsSp.PC -= 2;
+    }
+
+}
+
 module.exports = {
     ex_DE_HL,
     ex_AF_AF2,
@@ -331,5 +360,6 @@ module.exports = {
     lddr,
     cpi,
     cpir,
-    cpd
+    cpd,
+    cpdr
 }
