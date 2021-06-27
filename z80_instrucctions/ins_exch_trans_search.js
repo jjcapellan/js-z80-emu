@@ -57,8 +57,29 @@ function exx(cpu) {
     regs.set(regs.idx.HL, hl, true);
 }
 
+/**
+ * ex (SP), HL
+ * 
+ * The low-order byte contained in register pair HL is exchanged with the contents of the
+ * memory address specified by the contents of register pair SP (Stack Pointer), and the 
+ * highorder byte of HL is exchanged with the next highest memory address (SP+1)
+ * Clock: 19T
+ */
+ function ex_ptrSP_HL(cpu) {
+    const regs = cpu.registers.regs8;
+    const sp = cpu.registers.regsSp.SP;
+    const mem = cpu.memory;
+    const h = regs.get(regs.idx.H);
+    const l = regs.get(regs.idx.L);
+    regs.set(regs.idx.H, mem[sp + 1]);
+    regs.set(regs.idx.L, mem[sp]);
+    mem[sp] = l;
+    mem[sp + 1] = h;
+}
+
 module.exports = {
     ex_DE_HL,
     ex_AF_AF2,
-    exx
+    exx,
+    ex_ptrSP_HL
 }
