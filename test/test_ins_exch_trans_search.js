@@ -68,3 +68,17 @@ test('ex_ptrSP_HL(cpu)', t => {
     t.is(mem[0x8857], 0x70);
     t.is(sp, 0x8856);
 });
+
+test('ex_ptrSP_IX(cpu)', t => {
+    regsSp.IX = 0x3988;
+    regsSp.SP = 0x0100;
+    mem[0x0100] = 0x90;
+    mem[0x0101] = 0x48;
+    instr.ex_ptrSP_IX(cpu); // EX (SP), IX
+    const ix = regsSp.IX;
+    const sp = regsSp.SP;
+    t.is(ix, 0x4890);
+    t.is(mem[0x0100], 0x88);
+    t.is(mem[0x0101], 0x39);
+    t.is(sp, 0x0100);
+});
