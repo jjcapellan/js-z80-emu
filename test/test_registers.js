@@ -26,7 +26,7 @@ test('regs16.get from 2 regs8.set', t => {
     regs8.set(regs8.idx.H, 0xe5);
     regs8.set(regs8.idx.L, 0xcc);    
     const hl = regs16.get(regs16.idx.HL);
-    t.is(hl, 0xcce5); // little-endian
+    t.is(hl, 0xe5cc);
 });
 
 test('flags.set/get', t => {
