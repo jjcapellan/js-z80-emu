@@ -180,7 +180,7 @@ function ldir(cpu) {
  * pair are decremented.
  * Clock: 16T
  */
-function ldd(cpu) {
+function ldd(cpu, bucle = false) {
     const regs = cpu.registers.regs16;
     const mem = cpu.memory;
     const flags = cpu.registers.flags;
@@ -196,8 +196,33 @@ function ldd(cpu) {
     
     //Flags
     flags.set(flags.idx.H, false);
-    flags.set(flags.idx.PV, (bc - 1) != 0);
+    flags.set(flags.idx.PV, ((bc - 1) != 0) && !bucle);
     flags.set(flags.idx.N, false);
+
+}
+
+/**
+ * lddr
+ * 
+ * This 2-byte instruction transfers a byte of data from the memory location addressed by the
+ * contents of the HL register pair to the memory location addressed by the contents of the
+ * DE register pair. Then both of these registers, and the BC (Byte Counter), are decremented. 
+ * If decrementing causes BC to go to 0, the instruction is terminated. If BC is not 0,
+ * the program counter is decremented by two and the instruction is repeated. Interrupts are
+ * recognized and two refresh cycles execute after each data transfer.
+ * When the BC is set to 0, prior to instruction execution, the instruction loops through 64 KB.
+ * Clock: 21T (BC != 0); 22T (BC == 0)
+ */
+function lddr(cpu) {
+    const regs = cpu.registers.regs16;    
+    let bc = regs.get(regs.idx.BC);
+
+    ldd(cpu, true);
+
+    // Repeat condition
+    if((bc - 1) == 0){
+        cpu.registers.regsSp.PC -= 2;
+    }
 
 }
 
@@ -210,5 +235,6 @@ module.exports = {
     ex_ptrSP_IY,
     ldi,
     ldir,
-    ldd
+    ldd,
+    lddr
 }
