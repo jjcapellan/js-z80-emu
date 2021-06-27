@@ -287,6 +287,37 @@ function cpir(cpu) {
 
 }
 
+/**
+ * cpd
+ * 
+ * The contents of the memory location addressed by the HL register pair is compared with
+ * the contents of the Accumulator. During a compare operation, a condition bit is set. The
+ * HL and Byte Counter (register pair BC) are decremented.
+ * Clock: 16T
+ */
+function cpd(cpu) {
+    const regs16 = cpu.registers.regs16;
+    const regs8 = cpu.registers.regs8;
+    const flags = cpu.registers.flags;
+    const mem = cpu.memory;
+
+    const a = regs8.get(regs8.idx.A);
+    let hl = regs16.get(regs16.idx.HL);
+    let bc = regs16.get(regs16.idx.BC);
+    const diff = a - mem[hl];
+
+    regs16.set(regs16.idx.HL, hl - 1);
+    regs16.set(regs16.idx.BC, bc - 1);
+
+    // Flags
+    flags.set(flags.idx.S, diff < 0);
+    flags.set(flags.idx.Z, diff == 0);
+    flags.set(flags.idx.H, (a & 0b1000) < (mem[hl] & 0b1000));
+    flags.set(flags.idx.PV, (bc-1) != 0);
+    flags.set(flags.idx.N, true);
+
+}
+
 module.exports = {
     ex_DE_HL,
     ex_AF_AF2,
@@ -299,5 +330,6 @@ module.exports = {
     ldd,
     lddr,
     cpi,
-    cpir
+    cpir,
+    cpd
 }
