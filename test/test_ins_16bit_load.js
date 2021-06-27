@@ -80,3 +80,11 @@ test('ld_ptrnn_dd(cpu, ddIndex, ptrnn)', t => {
     t.is(e, mem[ptrnn + 1]);
     t.is(d, mem[ptrnn]);
 });
+
+test('ld_ptrnn_IX(cpu, ptrnn)', t => {
+    const ptrnn = 0x4243;
+    regsSp.IX = 0x1c16;
+    instr.ld_ptrnn_IX(cpu, ptrnn); // LD (nn), IX
+    t.is(mem[ptrnn + 1], 0x1c);
+    t.is(mem[ptrnn], 0x16);
+});
