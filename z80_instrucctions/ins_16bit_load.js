@@ -301,6 +301,28 @@ function push_IY(cpu) {
     regsSp.IX = ix;
 }
 
+/**
+ * POP IY
+ * 
+ * The top two bytes of the external memory last-in, first-out (LIFO) stack are popped to
+ * Index Register IY. The Stack Pointer (SP) Register pair holds the 16-bit address of the
+ * current top of the Stack. This instruction first loads to the low-order portion of IY the byte
+ * at the memory location corresponding to the contents of SP; then SP is incremented and
+ * the contents of the corresponding adjacent memory location are loaded to the high-order
+ * portion of IY. The SP is incremented again.
+ * Clock: 14T
+ */
+ function pop_IY(cpu) {
+    const regsSp = cpu.registers.regsSp;
+    const mem = cpu.memory;
+    let iy = 0;
+    iy = mem[regsSp.SP];
+    regsSp.SP++;
+    iy = iy | (mem[regsSp.SP] << 8);
+    regsSp.SP++;
+    regsSp.IY = iy;
+}
+
 module.exports = {
     ld_dd_nn,
     ld_IX_nn,
@@ -320,5 +342,6 @@ module.exports = {
     push_IX,
     push_IY,
     pop_qq,
-    pop_IX
+    pop_IX,
+    pop_IY
 }
