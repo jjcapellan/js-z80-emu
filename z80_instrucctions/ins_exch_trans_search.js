@@ -159,7 +159,7 @@ function ldi(cpu) {
  * BC is set to 0 prior to instruction execution, the instruction loops through 64 KB.
  * Clock: 21T (BC != 0) ; 16T (BC == 0)
  */
- function ldir(cpu) {
+function ldir(cpu) {
     const regs = cpu.registers.regs16;    
     let bc = regs.get(regs.idx.BC);
 
@@ -171,6 +171,36 @@ function ldi(cpu) {
     }
 }
 
+/**
+ * ldd
+ * 
+ * This 2-byte instruction transfers a byte of data from the memory location addressed by the
+ * contents of the HL register pair to the memory location addressed by the contents of the
+ * DE register pair. Then both of these register pairs including the Byte Counter (BC) Register 
+ * pair are decremented.
+ * Clock: 16T
+ */
+function ldd(cpu) {
+    const regs = cpu.registers.regs16;
+    const mem = cpu.memory;
+    const flags = cpu.registers.flags;
+
+    let hl = regs.get(regs.idx.HL);
+    let de = regs.get(regs.idx.DE);
+    let bc = regs.get(regs.idx.BC);
+
+    mem[de] = mem[hl];
+    regs.set(regs.idx.HL, hl - 1);
+    regs.set(regs.idx.DE, de - 1);
+    regs.set(regs.idx.BC, bc - 1);
+    
+    //Flags
+    flags.set(flags.idx.H, false);
+    flags.set(flags.idx.PV, (bc - 1) != 0);
+    flags.set(flags.idx.N, false);
+
+}
+
 module.exports = {
     ex_DE_HL,
     ex_AF_AF2,
@@ -179,5 +209,6 @@ module.exports = {
     ex_ptrSP_IX,
     ex_ptrSP_IY,
     ldi,
-    ldir
+    ldir,
+    ldd
 }
