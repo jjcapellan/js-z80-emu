@@ -11,7 +11,7 @@
  * The 2-byte contents of register pairs DE and HL are exchanged.
  * Clock: 4T
  */
-function ex_DE_HL(cpu){
+function ex_DE_HL(cpu) {
     const regs = cpu.registers.regs16;
     const de = regs.get(regs.idx.DE);
     const hl = regs.get(regs.idx.HL);
@@ -26,7 +26,7 @@ function ex_DE_HL(cpu){
  * are exchanged. Register pair AF consists of registers A′ and F′.
  * Clock: 4T
  */
-function ex_AF_AF2(cpu){
+function ex_AF_AF2(cpu) {
     const regs = cpu.registers.regs16;
     const af = regs.get(regs.idx.AF);
     const af2 = regs.get(regs.idx.AF, true);
@@ -41,7 +41,7 @@ function ex_AF_AF2(cpu){
  * BC', DE', and HL', respectively.
  * Clock: 4T
  */
-function exx(cpu){
+function exx(cpu) {
     const regs = cpu.registers.regs16;
     const bc = regs.get(regs.idx.BC);
     const de = regs.get(regs.idx.DE);
