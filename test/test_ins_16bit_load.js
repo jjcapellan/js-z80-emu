@@ -107,3 +107,14 @@ test('push_qq(cpu, qqIndex)', t => {
     t.is(mem[0x1005], 0x33);
     t.is(sp, 0x1005);
 });
+
+test('push_IX(cpu)', t => {
+    regsSp.SP = 0x1007;
+    const ix = 0x1214;
+    regsSp.IX = ix;
+    instr.push_IX(cpu); // push IX
+    const sp = regsSp.SP;
+    t.is(mem[0x1006], 0x12);
+    t.is(mem[0x1005], 0x14);
+    t.is(sp, 0x1005);
+});
