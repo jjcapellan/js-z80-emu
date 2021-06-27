@@ -139,11 +139,26 @@ function ld_ptrnn_dd(cpu, ddIndex, ptrnn) {
  * the low-order byte of nn.
  * Clock: 20T
  */
- function ld_ptrnn_IX(cpu, ptrnn) {
+function ld_ptrnn_IX(cpu, ptrnn) {
     const ix = cpu.registers.regsSp.IX;
     const mem = cpu.memory;
     mem[ptrnn] = ix & 0xff;
     mem[ptrnn + 1] = (ix & 0xff00) >> 8;
+}
+
+/**
+ * LD (nn), IY
+ * 
+ * The low-order byte in Index Register IY is loaded to memory address (nn); the upper order
+ * byte is loaded to the next highest address (nn + 1). The first n operand after the op code is
+ * the low-order byte of nn.
+ * Clock: 20T
+ */
+function ld_ptrnn_IY(cpu, ptrnn) {
+    const iy = cpu.registers.regsSp.IY;
+    const mem = cpu.memory;
+    mem[ptrnn] = iy & 0xff;
+    mem[ptrnn + 1] = (iy & 0xff00) >> 8;
 }
 
 module.exports = {
@@ -156,5 +171,6 @@ module.exports = {
     ld_IY_ptrnn,
     ld_ptrnn_HL,
     ld_ptrnn_dd,
-    ld_ptrnn_IX
+    ld_ptrnn_IX,
+    ld_ptrnn_IY
 }
