@@ -117,11 +117,42 @@ function ex_ptrSP_IY(cpu) {
     mem[sp + 1] = iyH;
 }
 
+/**
+ * ldi
+ * 
+ * A byte of data is transferred from the memory location addressed, by the contents of the
+ * HL register pair to the memory location addressed by the contents of the DE register pair.
+ * Then both these register pairs are incremented and the Byte Counter (BC) Register pair is
+ * decremented.
+ * Clock: 16T
+ */
+function ldi(cpu) {
+    const regs = cpu.registers.regs16;
+    const mem = cpu.memory;
+    const flags = cpu.registers.flags;
+
+    let hl = regs.get(regs.idx.HL);
+    let de = regs.get(regs.idx.DE);
+    let bc = regs.get(regs.idx.BC);
+
+    mem[de] = mem[hl];
+    regs.set(regs.idx.HL, hl + 1);
+    regs.set(regs.idx.DE, de + 1);
+    regs.set(regs.idx.BC, bc - 1);
+    
+    //Flags
+    flags.set(flags.idx.H, false);
+    flags.set(flags.idx.PV, (bc - 1) != 0);
+    flags.set(flags.idx.N, false);
+
+}
+
 module.exports = {
     ex_DE_HL,
     ex_AF_AF2,
     exx,
     ex_ptrSP_HL,
     ex_ptrSP_IX,
-    ex_ptrSP_IY
+    ex_ptrSP_IY,
+    ldi
 }

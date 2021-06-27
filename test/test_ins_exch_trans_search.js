@@ -82,3 +82,22 @@ test('ex_ptrSP_IX(cpu)', t => {
     t.is(mem[0x0101], 0x39);
     t.is(sp, 0x0100);
 });
+
+test('ldi(cpu)', t => {
+    regs16.set(regs16.idx.HL, 0x1111);
+    regs16.set(regs16.idx.DE, 0x2222);
+    regs16.set(regs16.idx.BC, 0x07);    
+    mem[0x1111] = 0x88;
+    mem[0x2222] = 0x66;
+    instr.ldi(cpu); // LDI
+    const hl = regs16.get(regs16.idx.HL);
+    const de = regs16.get(regs16.idx.DE);
+    const bc = regs16.get(regs16.idx.BC);
+    const PV_flag = flags.get(flags.idx.PV);
+    t.is(hl, 0x1112);
+    t.is(de, 0x2223);
+    t.is(bc, 0x06);
+    t.is(mem[0x1111], 0x88);
+    t.is(mem[0x2222], 0x88);
+    t.is(PV_flag, true);
+});
