@@ -88,3 +88,11 @@ test('ld_ptrnn_IX(cpu, ptrnn)', t => {
     t.is(mem[ptrnn + 1], 0x1c);
     t.is(mem[ptrnn], 0x16);
 });
+
+test('ld_SP_HL(cpu)', t => {
+    regs16.set(regs16.idx.HL, 0x2526);
+    instr.ld_SP_HL(cpu); // LD SP, HL
+    const sp = regsSp.SP;
+    const hl = regs16.get(regs16.idx.HL);
+    t.is(sp, hl);
+});

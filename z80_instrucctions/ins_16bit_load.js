@@ -161,6 +161,17 @@ function ld_ptrnn_IY(cpu, ptrnn) {
     mem[ptrnn + 1] = (iy & 0xff00) >> 8;
 }
 
+/**
+ * LD SP, HL
+ * 
+ * The contents of the register pair HL are loaded to the Stack Pointer (SP).
+ * Clock: 6T
+ */
+function ld_SP_HL(cpu) {
+    const regs = cpu.registers;
+    regs.regsSp.SP = regs.regs16.get(regs.regs16.idx.HL);
+}
+
 module.exports = {
     ld_dd_nn,
     ld_IX_nn,
@@ -172,5 +183,6 @@ module.exports = {
     ld_ptrnn_HL,
     ld_ptrnn_dd,
     ld_ptrnn_IX,
-    ld_ptrnn_IY
+    ld_ptrnn_IY,
+    ld_SP_HL
 }
