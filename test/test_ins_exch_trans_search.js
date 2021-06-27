@@ -28,3 +28,25 @@ test('ex_AF_AF2(cpu)', t => {
     t.is(af, 0x5944);
     t.is(af2, 0x9900);
 });
+
+test('exx(cpu)', t => {
+    regs16.set(regs16.idx.BC, 0x1112);   
+    regs16.set(regs16.idx.DE, 0x1314);
+    regs16.set(regs16.idx.HL, 0x1516);  
+    regs16.set(regs16.idx.BC, 0x1718, true);  
+    regs16.set(regs16.idx.DE, 0x1920, true);  
+    regs16.set(regs16.idx.HL, 0x2122, true);  
+    instr.exx(cpu); // EXX
+    const bc = regs16.get(regs16.idx.BC);
+    const de = regs16.get(regs16.idx.DE);
+    const hl = regs16.get(regs16.idx.HL);
+    const bc2 = regs16.get(regs16.idx.BC, true);
+    const de2 = regs16.get(regs16.idx.DE, true);
+    const hl2 = regs16.get(regs16.idx.HL, true);
+    t.is(bc, 0x1718);
+    t.is(de, 0x1920);
+    t.is(hl, 0x2122);
+    t.is(bc2, 0x1112);
+    t.is(de2, 0x1314);
+    t.is(hl2, 0x1516);
+});
