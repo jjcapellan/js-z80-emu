@@ -175,7 +175,10 @@ function decode0x2X(cpu, byte) {
         case 0x25:
             break;
 
-        case 0x26:
+        case 0x26:// LD H, n
+            const n = cpu.getByte();
+            const rIndex = cpu.registers.regs8.idx.H;
+            instr_8b_load.ld_r_n(cpu, rIndex, n);
             break;
 
         case 0x27:
