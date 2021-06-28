@@ -1,5 +1,5 @@
 const test = require('ava');
-const regs = require('../z80_registers');
+const regs = require('../src/z80_registers');
 const regs8 = regs.regs8;
 const regs16 = regs.regs16;
 const flags = regs.flags;
