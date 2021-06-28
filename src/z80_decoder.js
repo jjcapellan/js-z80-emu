@@ -312,6 +312,9 @@ function decode0x4X(cpu, byte) {
             break;
 
         case 0x44:
+            rIndex = cpu.registers.regs8.B;
+            r2Index = cpu.registers.regs8.H;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
         case 0x45:
