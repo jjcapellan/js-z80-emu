@@ -159,7 +159,11 @@ function decode0x2X(cpu, byte) {
             instr_16b_load.ld_dd_nn(cpu, ddIndex, nn);
             break;
 
-        case 0x22:
+        case 0x22: // LD (nn), HL
+            const lsb = cpu.getByte();
+            const hsb = cpu.getByte();
+            const ptrnn = (hsb << 8) | lsb;
+            instr_16b_load.ld_ptrnn_HL(cpu, ptrnn);
             break;
 
         case 0x23:
