@@ -43,14 +43,15 @@ function decode0x0X(cpu, byte) {
         case 0x07:
             break;
 
-        case 0x08:
+        case 0x08: // EX AF, AF'
             instr_exch_trans.ex_AF_AF2(cpu);
             break;
 
-        case 0x09:
+        case 0x09:            
             break;
 
-        case 0x0a:
+        case 0x0a: // LD A, (BC)
+            instr_8b_load.ld_A_ptrBC(cpu);            
             break;
 
         case 0x0b:
