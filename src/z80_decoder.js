@@ -288,6 +288,65 @@ function decode0x3X(cpu, byte) {
     }
 }
 
+function decode0x4X(cpu, byte) {
+    switch(byte) {
+        case 0x40:
+            break;
+
+        case 0x41: // ld r,r2
+            rIndex = cpu.registers.regs8.B;
+            r2Index = cpu.registers.regs8.C;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
+            break;
+
+        case 0x42:
+            break;
+
+        case 0x43:
+            break;
+
+        case 0x44:
+            break;
+
+        case 0x45:
+            break;
+
+        case 0x46:
+            break;
+
+        case 0x47:
+            break;
+
+        case 0x48:
+            break;
+
+        case 0x49:
+            break;
+
+        case 0x4a:
+            break;
+
+        case 0x4b:
+            break;
+
+        case 0x4c:
+            break;
+
+        case 0x4d:
+            break;
+
+        case 0x4e:
+            break;
+
+        case 0x4f:
+            break;
+
+        default:
+            break;
+    }
+
+}
+
 function decode(cpu, byte) {
     const hn = byte >> 4;
     const ln = byte & 0xf;
@@ -348,3 +407,61 @@ function decode(cpu, byte) {
             break;
     }
 }
+
+/*
+function d(cpu, byte) {
+    switch(byte) {
+        case 0x0:
+            break;
+
+        case 0x1:
+            break;
+
+        case 0x2:
+            break;
+
+        case 0x3:
+            break;
+
+        case 0x4:
+            break;
+
+        case 0x5:
+            break;
+
+        case 0x6:
+            break;
+
+        case 0x7:
+            break;
+
+        case 0x8:
+            break;
+
+        case 0x9:
+            break;
+
+        case 0xa:
+            break;
+
+        case 0xb:
+            break;
+
+        case 0xc:
+            break;
+
+        case 0xd:
+            break;
+
+        case 0xe:
+            break;
+
+        case 0xf:
+            break;
+
+        default:
+            break;
+    }
+
+}
+*/
