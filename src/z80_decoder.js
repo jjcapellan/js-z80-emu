@@ -91,7 +91,8 @@ function decode0x1X(cpu, byte) {
             instr_16b_load.ld_dd_nn(cpu, ddIndex, nn);
             break;
 
-        case 0x12:
+        case 0x12: // //LD (DE), A
+            instr_8b_load.ld_ptrDE_A(cpu);
             break;
 
         case 0x13:
