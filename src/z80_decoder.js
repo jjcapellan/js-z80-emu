@@ -79,7 +79,7 @@ function decode0x0X(cpu, byte) {
 }
 
 function decode0x1X(cpu, byte) {
-    switch(byte){
+    switch (byte) {
         case 0x10:
             break;
 
@@ -146,6 +146,66 @@ function decode0x1X(cpu, byte) {
     }
 }
 
+function decode0x2X(cpu, byte) {
+    switch(byte){
+        case 0x20:
+            break;
+
+        case 0x21: // LD dd, nn
+            const lsb = cpu.getByte();
+            const hsb = cpu.getByte();
+            const nn = (hsb << 8) | lsb;
+            const ddIndex = cpu.registers.regs16.idx.HL;
+            instr_16b_load.ld_dd_nn(cpu, ddIndex, nn);
+            break;
+
+        case 0x22:
+            break;
+
+        case 0x23:
+            break;
+
+        case 0x24:
+            break;
+
+        case 0x25:
+            break;
+
+        case 0x26:
+            break;
+
+        case 0x27:
+            break;
+
+        case 0x28:
+            break;
+
+        case 0x29:
+            break;
+
+        case 0x2a:
+            break;
+
+        case 0x2b:
+            break;
+
+        case 0x2c:
+            break;
+
+        case 0x2d:
+            break;
+
+        case 0x2e:
+            break;
+
+        case 0x2f:
+            break;
+
+        default:
+            break;
+    }
+}
+
 function decode(cpu, byte) {
     const hn = byte >> 4;
     const ln = byte & 0xf;
@@ -156,6 +216,7 @@ function decode(cpu, byte) {
             break;
 
         case 0x1:
+            decode0x1X(cpu, byte);
             break;
 
         case 0x2:
