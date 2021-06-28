@@ -23,6 +23,15 @@ class Z80 {
         }
     }
 
+    /**
+     * Returns a byte from memory and increments PC by one.
+     * @returns byte from memory address PC
+     */
+    getByte(){
+        this.registers.regsSp.PC++;
+        return this.memory[this.registers.regsSp.PC - 1];
+    }
+
     step() {
         // TODO
     }
