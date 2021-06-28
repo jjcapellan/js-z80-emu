@@ -119,7 +119,8 @@ function decode0x1X(cpu, byte) {
         case 0x19:
             break;
 
-        case 0x1a:
+        case 0x1a: // LD A, (DE)
+            instr_8b_load.ld_A_ptrDE(cpu);
             break;
 
         case 0x1b:
@@ -131,7 +132,10 @@ function decode0x1X(cpu, byte) {
         case 0x1d:
             break;
 
-        case 0x1e:
+        case 0x1e: // LD r, n
+            const n = cpu.getByte();
+            const rIndex = cpu.registers.regs8.idx.E;
+            instr_8b_load.ld_r_n(cpu, rIndex, n);
             break;
 
         case 0x1f:
