@@ -368,6 +368,8 @@ function decode0x4X(cpu, byte) {
             break;
 
         case 0x4e:
+            const rIndex = cpu.registers.regs8.idx.C;   
+            instr_8b_load.ld_r_ptrHL(cpu, rIndex);
             break;
 
         case 0x4f:
