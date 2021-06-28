@@ -355,10 +355,16 @@ function decode0x4X(cpu, byte) {
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
-        case 0x4c:
+        case 0x4c: // LD C, H
+            const rIndex = cpu.registers.regs8.C;
+            const r2Index = cpu.registers.regs8.H;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
-        case 0x4d:
+        case 0x4d: // LD C, L
+            const rIndex = cpu.registers.regs8.C;
+            const r2Index = cpu.registers.regs8.L;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
         case 0x4e:
