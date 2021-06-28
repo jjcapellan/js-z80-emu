@@ -299,31 +299,33 @@ function decode0x4X(cpu, byte) {
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
-        case 0x42:
+        case 0x42: // ld r,r2
             rIndex = cpu.registers.regs8.B;
             r2Index = cpu.registers.regs8.D;
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
-        case 0x43:
+        case 0x43: // ld r,r2
             rIndex = cpu.registers.regs8.B;
             r2Index = cpu.registers.regs8.E;
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
-        case 0x44:
+        case 0x44: // ld r,r2
             rIndex = cpu.registers.regs8.B;
             r2Index = cpu.registers.regs8.H;
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
-        case 0x45:
+        case 0x45: // ld r,r2
             rIndex = cpu.registers.regs8.B;
             r2Index = cpu.registers.regs8.L;
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
-        case 0x46:
+        case 0x46: // LD r, (HL)
+            const rIndex = cpu.registers.regs8.B;
+            instr_8b_load.ld_r_ptrHL(cpu, rIndex);
             break;
 
         case 0x47:
