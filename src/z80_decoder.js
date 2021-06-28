@@ -147,7 +147,7 @@ function decode0x1X(cpu, byte) {
 }
 
 function decode0x2X(cpu, byte) {
-    switch(byte){
+    switch (byte) {
         case 0x20:
             break;
 
@@ -206,10 +206,72 @@ function decode0x2X(cpu, byte) {
         case 0x2d:
             break;
 
-        case 0x2e:
+        case 0x2e: // LD r, n
+            const n = cpu.getByte();
+            const rIndex = cpu.registers.regs8.idx.L;
+            instr_8b_load.ld_r_n(cpu, rIndex, n);
             break;
 
         case 0x2f:
+            break;
+
+        default:
+            break;
+    }
+}
+
+function decode0x3X(cpu, byte) {
+    switch (byte) {
+        case 0x30:
+            break;
+
+        case 0x31:
+            break;
+
+        case 0x32:// LD (nn), A
+            const lsb = cpu.getByte();
+            const hsb = cpu.getByte();
+            const ptrnn = (hsb << 8) | lsb;
+            instr_8b_load.ld_ptrnn_A(cpu, ptrnn);
+            break;
+
+        case 0x33:
+            break;
+
+        case 0x34:
+            break;
+
+        case 0x35:
+            break;
+
+        case 0x36:
+            break;
+
+        case 0x37:
+            break;
+
+        case 0x38:
+            break;
+
+        case 0x39:
+            break;
+
+        case 0x3a:
+            break;
+
+        case 0x3b:
+            break;
+
+        case 0x3c:
+            break;
+
+        case 0x3d:
+            break;
+
+        case 0x3e:
+            break;
+
+        case 0x3f:
             break;
 
         default:
@@ -231,6 +293,7 @@ function decode(cpu, byte) {
             break;
 
         case 0x2:
+            decode0x2X(cpu, byte);
             break;
 
         case 0x3:
