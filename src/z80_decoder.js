@@ -4,7 +4,8 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-const instr_16b_load = require('./z80_instrucctions/ins_16bit_load')
+const instr_16b_load = require('./z80_instrucctions/ins_16bit_load');
+const instr_8b_load = require('./z80_instrucctions/ins_8bit_load');
 
 function decode0x0X(cpu, byte) {
     switch (byte) {
@@ -19,7 +20,8 @@ function decode0x0X(cpu, byte) {
             instr_16b_load.ld_dd_nn(cpu, ddIndex, nn);
             break;
 
-        case 0x02:
+        case 0x02: //LD (BC), A
+            instr_8b_load.ld_ptrBC_A(cpu);
             break;
 
         case 0x03:
@@ -31,7 +33,10 @@ function decode0x0X(cpu, byte) {
         case 0x05:
             break;
 
-        case 0x06:
+        case 0x06: // LD r, n
+            const n = cpu.getByte();
+            const rIndex = cpu.registers.regs8.idx.B;
+            instr_8b_load.ld_r_n(cpu, rIndex, n);
             break;
 
         case 0x07:
@@ -73,7 +78,7 @@ function decode(cpu, byte) {
 
     switch (hn) {
         case 0x0:
-
+            decode0x0X(cpu, byte);
             break;
 
         case 0x1:
