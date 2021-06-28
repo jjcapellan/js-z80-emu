@@ -190,7 +190,11 @@ function decode0x2X(cpu, byte) {
         case 0x29:
             break;
 
-        case 0x2a:
+        case 0x2a: // LD HL, (nn)
+            const lsb = cpu.getByte();
+            const hsb = cpu.getByte();
+            const ptrnn = (hsb << 8) | lsb;
+            instr_16b_load.ld_HL_ptrnn(cpu, ptrnn);
             break;
 
         case 0x2b:
