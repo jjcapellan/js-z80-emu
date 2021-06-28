@@ -294,49 +294,49 @@ function decode0x4X(cpu, byte) {
             break;
 
         case 0x41: // ld r,r2
-            rIndex = cpu.registers.regs8.B;
-            r2Index = cpu.registers.regs8.C;
+            rIndex = cpu.registers.regs8.idx.B;
+            r2Index = cpu.registers.regs8.idx.C;
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
         case 0x42: // ld r,r2
-            rIndex = cpu.registers.regs8.B;
-            r2Index = cpu.registers.regs8.D;
+            rIndex = cpu.registers.regs8.idx.B;
+            r2Index = cpu.registers.regs8.idx.D;
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
         case 0x43: // ld r,r2
-            rIndex = cpu.registers.regs8.B;
-            r2Index = cpu.registers.regs8.E;
+            rIndex = cpu.registers.regs8.idx.B;
+            r2Index = cpu.registers.regs8.idx.E;
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
         case 0x44: // ld r,r2
-            rIndex = cpu.registers.regs8.B;
-            r2Index = cpu.registers.regs8.H;
+            rIndex = cpu.registers.regs8.idx.B;
+            r2Index = cpu.registers.regs8.idx.H;
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
         case 0x45: // ld r,r2
-            rIndex = cpu.registers.regs8.B;
-            r2Index = cpu.registers.regs8.L;
+            rIndex = cpu.registers.regs8.idx.B;
+            r2Index = cpu.registers.regs8.idx.L;
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
         case 0x46: // LD r, (HL)
-            const rIndex = cpu.registers.regs8.B;
+            const rIndex = cpu.registers.regs8.idx.B;
             instr_8b_load.ld_r_ptrHL(cpu, rIndex);
             break;
 
         case 0x47: // LD r, r'
-            const rIndex = cpu.registers.regs8.B;
-            const r2Index = cpu.registers.regs8.A;
+            const rIndex = cpu.registers.regs8.idx.B;
+            const r2Index = cpu.registers.regs8.idx.A;
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
         case 0x48: // LD C, B
-            const rIndex = cpu.registers.regs8.C;
-            const r2Index = cpu.registers.regs8.B;
+            const rIndex = cpu.registers.regs8.idx.C;
+            const r2Index = cpu.registers.regs8.idx.B;
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
@@ -344,26 +344,26 @@ function decode0x4X(cpu, byte) {
             break;
 
         case 0x4a: // LD C, D
-            const rIndex = cpu.registers.regs8.C;
-            const r2Index = cpu.registers.regs8.D;
+            const rIndex = cpu.registers.regs8.idx.C;
+            const r2Index = cpu.registers.regs8.idx.D;
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
         case 0x4b: // LD C, E
-            const rIndex = cpu.registers.regs8.C;
-            const r2Index = cpu.registers.regs8.E;
+            const rIndex = cpu.registers.regs8.idx.C;
+            const r2Index = cpu.registers.regs8.idx.E;
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
         case 0x4c: // LD C, H
-            const rIndex = cpu.registers.regs8.C;
-            const r2Index = cpu.registers.regs8.H;
+            const rIndex = cpu.registers.regs8.idx.C;
+            const r2Index = cpu.registers.regs8.idx.H;
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
         case 0x4d: // LD C, L
-            const rIndex = cpu.registers.regs8.C;
-            const r2Index = cpu.registers.regs8.L;
+            const rIndex = cpu.registers.regs8.idx.C;
+            const r2Index = cpu.registers.regs8.idx.L;
             instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
             break;
 
