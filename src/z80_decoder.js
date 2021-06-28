@@ -480,6 +480,102 @@ function decode0x5X(cpu, byte) {
 
 }
 
+function decode0x6X(cpu, byte) {
+    switch(byte) {
+        case 0x60: // LD H, B
+            rIndex = cpu.registers.regs8.idx.H;
+            r2Index = cpu.registers.regs8.idx.B;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
+            break;
+
+        case 0x61: // LD H, C
+            rIndex = cpu.registers.regs8.idx.H;
+            r2Index = cpu.registers.regs8.idx.C;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
+            break;
+
+        case 0x62: // LD H, D
+            rIndex = cpu.registers.regs8.idx.H;
+            r2Index = cpu.registers.regs8.idx.D;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
+            break;
+
+        case 0x63: // LD H, E
+            rIndex = cpu.registers.regs8.idx.H;
+            r2Index = cpu.registers.regs8.idx.E;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
+            break;
+
+        case 0x64: // LD H, H ?
+            break;
+
+        case 0x65: // LD H, B
+            rIndex = cpu.registers.regs8.idx.H;
+            r2Index = cpu.registers.regs8.idx.B;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
+            break;
+
+        case 0x66: // LD H, (HL)
+            const rIndex = cpu.registers.regs8.idx.H;
+            instr_8b_load.ld_r_ptrHL(cpu, rIndex);
+            break;
+
+        case 0x67: // LD H, A
+            rIndex = cpu.registers.regs8.idx.H;
+            r2Index = cpu.registers.regs8.idx.A;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
+            break;
+
+        case 0x68: // LD L, B
+            rIndex = cpu.registers.regs8.idx.L;
+            r2Index = cpu.registers.regs8.idx.B;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
+            break;
+
+        case 0x69: // LD L, C
+            rIndex = cpu.registers.regs8.idx.L;
+            r2Index = cpu.registers.regs8.idx.C;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
+            break;
+
+        case 0x6a: // LD L, D
+            rIndex = cpu.registers.regs8.idx.L;
+            r2Index = cpu.registers.regs8.idx.D;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
+            break;
+
+        case 0x6b: // LD L,E
+            rIndex = cpu.registers.regs8.idx.L;
+            r2Index = cpu.registers.regs8.idx.E;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
+            break;
+
+        case 0x6c: // LD L, H
+            rIndex = cpu.registers.regs8.idx.L;
+            r2Index = cpu.registers.regs8.idx.H;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
+            break;
+
+        case 0x6d: // LD L, L ?
+            break;
+
+        case 0x6e: // LD L, (HL)
+            const rIndex = cpu.registers.regs8.idx.L;
+            instr_8b_load.ld_r_ptrHL(cpu, rIndex);
+            break;
+
+        case 0x6f: // LD L, A
+            rIndex = cpu.registers.regs8.idx.L;
+            r2Index = cpu.registers.regs8.idx.A;
+            instr_8b_load.ld_r_r2(cpu, rIndex, r2Index);
+            break;
+
+        default:
+            break;
+    }
+
+}
+
 function decode(cpu, byte) {
     const hn = byte >> 4;
     const ln = byte & 0xf;
@@ -510,6 +606,7 @@ function decode(cpu, byte) {
             break;
 
         case 0x6:
+            decode0x6X(cpu, byte);
             break;
 
         case 0x7:
