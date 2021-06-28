@@ -63,7 +63,10 @@ function decode0x0X(cpu, byte) {
         case 0x0d:
             break;
 
-        case 0x0e:
+        case 0x0e: // LD r, n
+            const n = cpu.getByte();
+            const rIndex = cpu.registers.regs8.idx.C;
+            instr_8b_load.ld_r_n(cpu, rIndex, n);
             break;
 
         case 0x0f:
