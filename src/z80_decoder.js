@@ -274,7 +274,10 @@ function decode0x3X(cpu, byte) {
         case 0x3d:
             break;
 
-        case 0x3e:
+        case 0x3e: //LD r, n
+            const n = cpu.getByte();
+            const rIndex = cpu.registers.regs8.idx.A;
+            instr_8b_load.ld_r_n(cpu, rIndex, n);
             break;
 
         case 0x3f:
