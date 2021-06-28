@@ -244,7 +244,9 @@ function decode0x3X(cpu, byte) {
         case 0x35:
             break;
 
-        case 0x36:
+        case 0x36: // LD (HL), n
+            const n = cpu.getByte();
+            instr_8b_load.ld_ptrHL_n(cpu, n);
             break;
 
         case 0x37:
@@ -256,7 +258,11 @@ function decode0x3X(cpu, byte) {
         case 0x39:
             break;
 
-        case 0x3a:
+        case 0x3a: // LD A, (nn)
+            const lsb = cpu.getByte();
+            const hsb = cpu.getByte();
+            const ptrnn = (hsb << 8) | lsb;
+            instr_8b_load.ld_A_ptrnn(cpu, ptrnn);
             break;
 
         case 0x3b:
