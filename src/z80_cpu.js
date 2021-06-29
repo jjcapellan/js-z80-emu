@@ -5,6 +5,7 @@
 
 const registers = require('./z80_registers');
 const memory = require('./z80_memory');
+const decode = require('./z80_decoder');
 
 class Z80 {
     constructor() {
@@ -33,7 +34,8 @@ class Z80 {
     }
 
     step() {
-        // TODO
+        const byte = this.getByte();
+        decode(this, byte);        
     }
 
     getPC() {
