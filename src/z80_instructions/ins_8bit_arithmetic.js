@@ -118,11 +118,29 @@ function adc_A_r(cpu, rIndex) {
     setAddFlags(cpu, a, n);
 }
 
+/**
+* ADC A, n
+* 
+* The n operand, along with the Carry Flag (C in the F Register) is added to the contents of
+* the Accumulator, and the result is stored in the Accumulator.
+* Clock: 7T
+*/
+function adc_A_n(cpu, n) {
+    const regs = cpu.registers.regs8;
+    const flags = cpu.registers.flags;
+    const c = flags.get(flags.idx.C);
+    const a = regs.get(regs.idx.A);
+    n += c;
+    regs.set(regs.idx.A, a + n);
+    setAddFlags(cpu, a, n);
+}
+
 module.exports = {
     add_A_r,
     add_A_n,
     add_A_ptrHL,
     add_A_ptrIXplusd,
     add_A_ptrIYplusd,
-    adc_A_r
+    adc_A_r,
+    adc_A_n
 }
