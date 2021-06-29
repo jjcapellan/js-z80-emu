@@ -7,7 +7,7 @@
 
 const { regsSp } = require("../z80_registers");
 
-function setAddFlags(cpu, s1, s2){
+function setAddFlags(cpu, s1, s2) {
     const flags = cpu.registers.flags;
     const sum = s1 + s2;
     flags.set(flags.idx.S, (sum & 0x80) != 0);
@@ -100,10 +100,29 @@ function add_A_ptrIYplusd(cpu, d) {
     setAddFlags(cpu, a, n);
 }
 
+/**
+* ADC A, r
+* 
+* The r operand, along with the Carry Flag (C in the F Register) is added to the contents of
+* the Accumulator, and the result is stored in the Accumulator.
+* Clock: 4T
+*/
+function adc_A_r(cpu, rIndex) {
+    const regs = cpu.registers.regs8;
+    const flags = cpu.registers.flags;
+    const c = flags.get(flags.idx.C);
+    const r = regs.get(rIndex);
+    const a = regs.get(regs.idx.A);
+    const n = r + c;
+    regs.set(regs.idx.A, a + n);
+    setAddFlags(cpu, a, n);
+}
+
 module.exports = {
     add_A_r,
     add_A_n,
     add_A_ptrHL,
     add_A_ptrIXplusd,
-    add_A_ptrIYplusd
+    add_A_ptrIYplusd,
+    adc_A_r
 }
