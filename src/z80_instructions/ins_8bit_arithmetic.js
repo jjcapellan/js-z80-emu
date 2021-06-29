@@ -95,7 +95,7 @@ function add_A_ptrIYplusd(cpu, d) {
     const regsSp = cpu.registers.regsSp;
     const a = regs.get(regs.idx.A);
     const iy = regsSp.IY;
-    const n = ix + d;
+    const n = cpu.memory[iy + d];
     regs.set(regs.idx.A, a + n);
     setAddFlags(cpu, a, n);
 }
