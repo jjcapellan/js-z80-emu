@@ -173,7 +173,7 @@ function adc_A_ptrIXplusd(cpu, d) {
     const a = regs8.get(regs8.idx.A);
     const n = cpu.memory[ix + d] + c;
 
-    regs.set(regs.idx.A, a + n);
+    regs8.set(regs8.idx.A, a + n);
     setAddFlags(cpu, a, n);
 }
 
@@ -194,7 +194,7 @@ function adc_A_ptrIYplusd(cpu, d) {
     const a = regs8.get(regs8.idx.A);
     const n = cpu.memory[iy + d] + c;
 
-    regs.set(regs.idx.A, a + n);
+    regs8.set(regs8.idx.A, a + n);
     setAddFlags(cpu, a, n);
 }
 
