@@ -29,6 +29,27 @@ function add_A_r(cpu, rIndex){
     flags.set(flags.idx.C, (result & 0b100000000) == 1);
 }
 
+ /**
+ * ADD A, n
+ * 
+ * The n integer is added to the contents of the Accumulator, and the results are stored in the
+ * Accumulator.
+ * Clock: 7T
+ */
+  function add_A_n(cpu, n){
+    const regs = cpu.registers.regs8;
+    const a = regs.get(regs.idx.A);
+    regs.set(regs.idx.A, a + n);
+    // Flags
+    const result = a + n;
+    flags.set(flags.idx.S, (result & 0b10000000) != 0);
+    flags.set(flags.idx.Z, result == 0);
+    flags.set(flags.idx.H, ((n & 0b1000) + (a & 0b1000)) == 0b10);
+    flags.set(flags.idx.PV, (result & 0b100000000) == 1);
+    flags.set(flags.idx.N, false);
+    flags.set(flags.idx.C, (result & 0b100000000) == 1);
+}
+
 module.exports = {
     add_A_r
 }
