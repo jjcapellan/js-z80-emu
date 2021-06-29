@@ -136,18 +136,16 @@ test('ld_A_ptrnn(cpu, nn)', t => {
 
 test('ld_ptrBC_A(cpu)', t => {   
     regs16.set(regs16.idx.BC, 0x892c);
-    cpu.memory[0x892c] = 0x64;
+    regs8.set(regs8.idx.A, 0x12);
     instr.ld_ptrBC_A(cpu); // LD (BC), A
-    const a = regs8.get(regs8.idx.A);
-    t.is(a, 0x64);
+    t.is(cpu.memory[0x892c], 0x12);
 });
 
 test('ld_ptrDE_A(cpu)', t => {   
     regs16.set(regs16.idx.DE, 0x890c);
-    cpu.memory[0x890c] = 0x60;
+    regs8.set(regs8.idx.A, 0x16);
     instr.ld_ptrDE_A(cpu); // LD (DE), A
-    const a = regs8.get(regs8.idx.A);
-    t.is(a, 0x60);
+    t.is(cpu.memory[0x892c], 0x16);
 });
 
 test('ld_ptrnn_A(cpu, nn)', t => {   

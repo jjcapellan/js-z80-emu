@@ -203,7 +203,8 @@ function ld_r_ptrHL(cpu, rIndex) {
  function ld_ptrBC_A(cpu) {
     const regs = cpu.registers;
     const ptr = regs.regs16.get(regs.regs16.idx.BC);
-    regs.regs8.set(regs.regs8.idx.A, cpu.memory[ptr]);
+    const a = regs.regs8.get(regs.regs8.idx.A);
+    cpu.memory[ptr] = a;
 }
 
 /**
@@ -216,7 +217,8 @@ function ld_r_ptrHL(cpu, rIndex) {
  function ld_ptrDE_A(cpu) {
     const regs = cpu.registers;
     const ptr = regs.regs16.get(regs.regs16.idx.DE);
-    regs.regs8.set(regs.regs8.idx.A, cpu.memory[ptr]);
+    const a = regs.regs8.get(regs.regs8.idx.A);
+    cpu.memory[ptr] = a;
 }
 
 /**
