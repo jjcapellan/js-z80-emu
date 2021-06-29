@@ -145,7 +145,7 @@ test('ld_ptrDE_A(cpu)', t => {
     regs16.set(regs16.idx.DE, 0x890c);
     regs8.set(regs8.idx.A, 0x16);
     instr.ld_ptrDE_A(cpu); // LD (DE), A
-    t.is(cpu.memory[0x892c], 0x16);
+    t.is(cpu.memory[0x890c], 0x16);
 });
 
 test('ld_ptrnn_A(cpu, nn)', t => {   
