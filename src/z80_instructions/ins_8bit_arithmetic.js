@@ -135,6 +135,27 @@ function adc_A_n(cpu, n) {
     setAddFlags(cpu, a, n);
 }
 
+/**
+* ADC A, (HL)
+* 
+* The content of memory address (HL), along with the Carry Flag (C in the F Register) is added to the contents of
+* the Accumulator, and the result is stored in the Accumulator.
+* Clock: 7T
+*/
+function adc_A_ptrHL(cpu) {
+    const regs8 = cpu.registers.regs8;
+    const regs16 = cpu.registers.regs16;
+    const flags = cpu.registers.flags;
+
+    const hl = regs16.get(regs16.idx.HL);
+    const c = flags.get(flags.idx.C);
+    const a = regs8.get(regs8.idx.A);
+    const n = cpu.memory[hl] + c;
+
+    regs.set(regs.idx.A, a + n);
+    setAddFlags(cpu, a, n);
+}
+
 module.exports = {
     add_A_r,
     add_A_n,
@@ -142,5 +163,6 @@ module.exports = {
     add_A_ptrIXplusd,
     add_A_ptrIYplusd,
     adc_A_r,
-    adc_A_n
+    adc_A_n,
+    adc_A_ptrHL
 }
