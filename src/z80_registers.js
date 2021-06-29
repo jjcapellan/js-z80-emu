@@ -16,7 +16,7 @@ const isLE = checkLittleEndian();
 
 // Registers of 8 bits: B C D E H L A F B' C' D' E' H' L' A' F'
 const regs8 = {
-    idx: { B: 0 + isLE, C: 1 - isLE, D: 2 + isLE, E: 3 - + isLE, H: 4 + isLE, L: 5 - isLE, A: 6 + isLE, F: 7 - isLE},
+    idx: { B: 0 + isLE, C: 1 - isLE, D: 2 + isLE, E: 3 - isLE, H: 4 + isLE, L: 5 - isLE, A: 6 + isLE, F: 7 - isLE},
     /**
      * 
      * @param {number} regIdx One value from regs8.idx
