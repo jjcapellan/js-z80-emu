@@ -7,6 +7,17 @@
 
 const { regsSp } = require("../z80_registers");
 
+function setAddFlags(cpu, s1, s2){
+    const flags = cpu.registers.flags;
+    const sum = s1 + s2;
+    flags.set(flags.idx.S, (sum & 0x80) != 0);
+    flags.set(flags.idx.Z, sum == 0);
+    flags.set(flags.idx.H, ((s1 & 0x8) + (s2 & 0x8)) == 0b10);
+    flags.set(flags.idx.PV, (sum & 0x100) == 1);
+    flags.set(flags.idx.N, false);
+    flags.set(flags.idx.C, (sum & 0x100) == 1);
+}
+
 /**
 * ADD A, r
 * 
@@ -19,14 +30,7 @@ function add_A_r(cpu, rIndex) {
     const r = regs.get(rIndex);
     const a = regs.get(regs.idx.A);
     regs.set(regs.idx.A, a + r);
-    // Flags
-    const result = a + r;
-    flags.set(flags.idx.S, (result & 0b10000000) != 0);
-    flags.set(flags.idx.Z, result == 0);
-    flags.set(flags.idx.H, ((r & 0b1000) + (a & 0b1000)) == 0b10);
-    flags.set(flags.idx.PV, (result & 0b100000000) == 1);
-    flags.set(flags.idx.N, false);
-    flags.set(flags.idx.C, (result & 0b100000000) == 1);
+    setAddFlags(cpu, a, r);
 }
 
 /**
@@ -40,14 +44,7 @@ function add_A_n(cpu, n) {
     const regs = cpu.registers.regs8;
     const a = regs.get(regs.idx.A);
     regs.set(regs.idx.A, a + n);
-    // Flags
-    const result = a + n;
-    flags.set(flags.idx.S, (result & 0b10000000) != 0);
-    flags.set(flags.idx.Z, result == 0);
-    flags.set(flags.idx.H, ((n & 0b1000) + (a & 0b1000)) == 0b10);
-    flags.set(flags.idx.PV, (result & 0b100000000) == 1);
-    flags.set(flags.idx.N, false);
-    flags.set(flags.idx.C, (result & 0b100000000) == 1);
+    setAddFlags(cpu, a, n);
 }
 
 /**
@@ -64,14 +61,7 @@ function add_A_ptrHL(cpu) {
     const hl = regs16.get(regs16.idx.HL);
     const n = cpu.memory[hl];
     regs.set(regs.idx.A, a + n);
-    // Flags
-    const result = a + n;
-    flags.set(flags.idx.S, (result & 0b10000000) != 0);
-    flags.set(flags.idx.Z, result == 0);
-    flags.set(flags.idx.H, ((n & 0b1000) + (a & 0b1000)) == 0b10);
-    flags.set(flags.idx.PV, (result & 0b100000000) == 1);
-    flags.set(flags.idx.N, false);
-    flags.set(flags.idx.C, (result & 0b100000000) == 1);
+    setAddFlags(cpu, a, n);
 }
 
 /**
@@ -89,14 +79,7 @@ function add_A_ptrIXplusd(cpu, d) {
     const ix = regsSp.IX;
     const n = ix + d;
     regs.set(regs.idx.A, a + n);
-    // Flags
-    const result = a + n;
-    flags.set(flags.idx.S, (result & 0b10000000) != 0);
-    flags.set(flags.idx.Z, result == 0);
-    flags.set(flags.idx.H, ((n & 0b1000) + (a & 0b1000)) == 0b10);
-    flags.set(flags.idx.PV, (result & 0b100000000) == 1);
-    flags.set(flags.idx.N, false);
-    flags.set(flags.idx.C, (result & 0b100000000) == 1);
+    setAddFlags(cpu, a, n);
 }
 
 /**
@@ -114,14 +97,7 @@ function add_A_ptrIYplusd(cpu, d) {
     const iy = regsSp.IY;
     const n = ix + d;
     regs.set(regs.idx.A, a + n);
-    // Flags
-    const result = a + n;
-    flags.set(flags.idx.S, (result & 0b10000000) != 0);
-    flags.set(flags.idx.Z, result == 0);
-    flags.set(flags.idx.H, ((n & 0b1000) + (a & 0b1000)) == 0b10);
-    flags.set(flags.idx.PV, (result & 0b100000000) == 1);
-    flags.set(flags.idx.N, false);
-    flags.set(flags.idx.C, (result & 0b100000000) == 1);
+    setAddFlags(cpu, a, n);
 }
 
 module.exports = {
