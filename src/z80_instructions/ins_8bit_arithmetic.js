@@ -152,7 +152,7 @@ function adc_A_ptrHL(cpu) {
     const a = regs8.get(regs8.idx.A);
     const n = cpu.memory[hl] + c;
 
-    regs.set(regs.idx.A, a + n);
+    regs8.set(regs8.idx.A, a + n);
     setAddFlags(cpu, a, n);
 }
 
