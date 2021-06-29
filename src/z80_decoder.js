@@ -4,9 +4,9 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-const instr_16b_load = require('./z80_instrucctions/ins_16bit_load');
-const instr_8b_load = require('./z80_instrucctions/ins_8bit_load');
-const instr_exch_trans = require('./z80_instrucctions/ins_exch_trans_search');
+const instr_16b_load = require('./z80_instructions/ins_16bit_load');
+const instr_8b_load = require('./z80_instructions/ins_8bit_load');
+const instr_exch_trans = require('./z80_instructions/ins_exch_trans_search');
 
 function decode0x0X(cpu, byte) {
     switch (byte) {

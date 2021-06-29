@@ -1,6 +1,6 @@
 const test = require('ava');
 const z80 = require('../src/z80_cpu');
-const instr = require('../src/z80_instrucctions/ins_8bit_load');
+const instr = require('../src/z80_instructions/ins_8bit_load');
 
 const cpu = new z80();
 const regs8 = cpu.registers.regs8;
