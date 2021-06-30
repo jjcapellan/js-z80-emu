@@ -151,3 +151,54 @@ test('sub_A_ptrIYplusd(cpu, d)', t => {
     const a = regs8.get(regs8.idx.A);
     t.is(a, 0x11);
 });
+
+test('subc_A_r(cpu, rIndex)', t => {
+    regs8.set(regs8.idx.A, 0x1);
+    regs8.set(regs8.idx.B, 0x4);
+    const rIndex = regs8.idx.B;
+    flags.set(flags.idx.C, true);
+    instr.subc_A_r(cpu, rIndex); // SUBC A, B
+    const a = regs8.get(regs8.idx.A);
+    t.is(a, 256 + (0x1 - (0x4 + 0x1))); // +256 convert signed to unsigned
+});
+
+test('subc_A_n(cpu, n)', t => {
+    regs8.set(regs8.idx.A, 0x1);
+    const n = 0x1c;
+    flags.set(flags.idx.C, true);
+    instr.subc_A_n(cpu, n); // SUBC A, n
+    const a = regs8.get(regs8.idx.A);
+    t.is(a, 256 + (0x1 - (0x1c + 0x1)));
+});
+
+test('subc_A_ptrHL(cpu)', t => {
+    regs8.set(regs8.idx.A, 0x1);
+    regs16.set(regs16.idx.HL, 0x1212);
+    mem[0x1212] = 0x11;
+    flags.set(flags.idx.C, true);
+    instr.subc_A_ptrHL(cpu); // SUBC A, (HL)
+    const a = regs8.get(regs8.idx.A);
+    t.is(a, 256 + (0x1 - (0x11 + 0x1)));
+});
+
+test('subc_A_ptrIXplusd(cpu, d)', t => {
+    regs8.set(regs8.idx.A, 0x1);
+    regsSp.IX = 0x4;
+    const d = 0x1;
+    mem[0x5] = 0x25;
+    flags.set(flags.idx.C, true);
+    instr.subc_A_ptrIXplusd(cpu, d); // SUBC A, (IX + d)
+    const a = regs8.get(regs8.idx.A);
+    t.is(a, 256 + (0x1 - (0x25 + 0x1)));
+});
+
+test('subc_A_ptrIYplusd(cpu, d)', t => {
+    regs8.set(regs8.idx.A, 0x1);
+    regsSp.IY = 0x4;
+    const d = 0x1;
+    mem[0x5] = 0x25;
+    flags.set(flags.idx.C, true);
+    instr.subc_A_ptrIYplusd(cpu, d); // SUB A, (IY + d)
+    const a = regs8.get(regs8.idx.A);
+    t.is(a, 256 + (0x1 - (0x25 + 0x1)));
+});
