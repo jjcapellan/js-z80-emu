@@ -291,6 +291,104 @@ function sub_A_ptrIYplusd(cpu, d) {
     setSubsFlags(cpu, a, n);
 }
 
+/**
+* SUBC A, r
+* 
+* The r operand, along with the Carry Flag (C in the F Register) is substracted to the contents of
+* the Accumulator, and the result is stored in the Accumulator.
+* Clock: 4T
+*/
+function subc_A_r(cpu, rIndex) {
+    const regs = cpu.registers.regs8;
+    const flags = cpu.registers.flags;
+    const c = flags.get(flags.idx.C);
+    const r = regs.get(rIndex);
+    const a = regs.get(regs.idx.A);
+    const n = r + c;
+    regs.set(regs.idx.A, a + n);
+    setSubsFlags(cpu, a, n);
+}
+
+/**
+* SUBC A, n
+* 
+* The n operand, along with the Carry Flag (C in the F Register) is substracted to the contents of
+* the Accumulator, and the result is stored in the Accumulator.
+* Clock: 7T
+*/
+function subc_A_n(cpu, n) {
+    const regs = cpu.registers.regs8;
+    const flags = cpu.registers.flags;
+    const c = flags.get(flags.idx.C);
+    const a = regs.get(regs.idx.A);
+    n += c;
+    regs.set(regs.idx.A, a + n);
+    setSubsFlags(cpu, a, n);
+}
+
+/**
+* SUBC A, (HL)
+* 
+* The content of memory address (HL), along with the Carry Flag (C in the F Register) is substracted to the contents of
+* the Accumulator, and the result is stored in the Accumulator.
+* Clock: 7T
+*/
+function subc_A_ptrHL(cpu) {
+    const regs8 = cpu.registers.regs8;
+    const regs16 = cpu.registers.regs16;
+    const flags = cpu.registers.flags;
+
+    const hl = regs16.get(regs16.idx.HL);
+    const c = flags.get(flags.idx.C);
+    const a = regs8.get(regs8.idx.A);
+    const n = cpu.memory[hl] + c;
+
+    regs8.set(regs8.idx.A, a + n);
+    setSubsFlags(cpu, a, n);
+}
+
+/**
+* SUBC A, (IX + d)
+* 
+* The content of memory address(IX + d), along with the Carry Flag (C in the F Register) is substracted 
+* to the contents of the Accumulator, and the result is stored in the Accumulator.
+* Clock: 19T
+*/
+function subc_A_ptrIXplusd(cpu, d) {
+    const regs8 = cpu.registers.regs8;
+    const regsSp = cpu.registers.regsSp;
+    const flags = cpu.registers.flags;
+
+    const ix = regsSp.IX;
+    const c = flags.get(flags.idx.C);
+    const a = regs8.get(regs8.idx.A);
+    const n = cpu.memory[ix + d] + c;
+
+    regs8.set(regs8.idx.A, a + n);
+    setSubsFlags(cpu, a, n);
+}
+
+/**
+* SUBC A, (IY + d)
+* 
+* The content of memory address(IY + d), along with the Carry Flag (C in the F Register) is substracted 
+* to the contents of the Accumulator, and the result is stored in the Accumulator.
+* Clock: 19T
+*/
+function subc_A_ptrIYplusd(cpu, d) {
+    const regs8 = cpu.registers.regs8;
+    const regsSp = cpu.registers.regsSp;
+    const flags = cpu.registers.flags;
+
+    const iy = regsSp.IY;
+    const c = flags.get(flags.idx.C);
+    const a = regs8.get(regs8.idx.A);
+    const n = cpu.memory[iy + d] + c;
+
+    regs8.set(regs8.idx.A, a + n);
+    setSubsFlags(cpu, a, n);
+}
+
 module.exports = {
     add_A_r,
     add_A_n,
@@ -306,5 +404,10 @@ module.exports = {
     sub_A_n,
     sub_A_ptrHL,
     sub_A_ptrIXplusd,
-    sub_A_ptrIYplusd
+    sub_A_ptrIYplusd,
+    subc_A_r,
+    subc_A_n,
+    subc_A_ptrHL,
+    subc_A_ptrIXplusd,
+    subc_A_ptrIYplusd
 }
