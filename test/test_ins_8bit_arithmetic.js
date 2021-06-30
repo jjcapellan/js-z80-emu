@@ -159,7 +159,7 @@ test('subc_A_r(cpu, rIndex)', t => {
     flags.set(flags.idx.C, true);
     instr.subc_A_r(cpu, rIndex); // SUBC A, B
     const a = regs8.get(regs8.idx.A);
-    t.is(a, 256 + (0x1 - (0x4 + 0x1))); // +256 convert signed to unsigned
+    t.is(a, 256 + (0x1 - (0x4 + 0x1))); // +256 convert negative signed int to unsigned
 });
 
 test('subc_A_n(cpu, n)', t => {
