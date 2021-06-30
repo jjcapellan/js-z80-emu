@@ -305,7 +305,7 @@ function subc_A_r(cpu, rIndex) {
     const r = regs.get(rIndex);
     const a = regs.get(regs.idx.A);
     const n = r + c;
-    regs.set(regs.idx.A, a + n);
+    regs.set(regs.idx.A, a - n);
     setSubsFlags(cpu, a, n);
 }
 
@@ -322,7 +322,7 @@ function subc_A_n(cpu, n) {
     const c = flags.get(flags.idx.C);
     const a = regs.get(regs.idx.A);
     n += c;
-    regs.set(regs.idx.A, a + n);
+    regs.set(regs.idx.A, a - n);
     setSubsFlags(cpu, a, n);
 }
 
@@ -343,7 +343,7 @@ function subc_A_ptrHL(cpu) {
     const a = regs8.get(regs8.idx.A);
     const n = cpu.memory[hl] + c;
 
-    regs8.set(regs8.idx.A, a + n);
+    regs8.set(regs8.idx.A, a - n);
     setSubsFlags(cpu, a, n);
 }
 
@@ -364,7 +364,7 @@ function subc_A_ptrIXplusd(cpu, d) {
     const a = regs8.get(regs8.idx.A);
     const n = cpu.memory[ix + d] + c;
 
-    regs8.set(regs8.idx.A, a + n);
+    regs8.set(regs8.idx.A, a - n);
     setSubsFlags(cpu, a, n);
 }
 
@@ -385,7 +385,7 @@ function subc_A_ptrIYplusd(cpu, d) {
     const a = regs8.get(regs8.idx.A);
     const n = cpu.memory[iy + d] + c;
 
-    regs8.set(regs8.idx.A, a + n);
+    regs8.set(regs8.idx.A, a - n);
     setSubsFlags(cpu, a, n);
 }
 
