@@ -298,7 +298,7 @@ function sub_A_ptrIYplusd(cpu, d) {
 * the Accumulator, and the result is stored in the Accumulator.
 * Clock: 4T
 */
-function subc_A_r(cpu, rIndex) {
+function sbc_A_r(cpu, rIndex) {
     const regs = cpu.registers.regs8;
     const flags = cpu.registers.flags;
     const c = flags.get(flags.idx.C);
@@ -316,7 +316,7 @@ function subc_A_r(cpu, rIndex) {
 * the Accumulator, and the result is stored in the Accumulator.
 * Clock: 7T
 */
-function subc_A_n(cpu, n) {
+function sbc_A_n(cpu, n) {
     const regs = cpu.registers.regs8;
     const flags = cpu.registers.flags;
     const c = flags.get(flags.idx.C);
@@ -333,7 +333,7 @@ function subc_A_n(cpu, n) {
 * the Accumulator, and the result is stored in the Accumulator.
 * Clock: 7T
 */
-function subc_A_ptrHL(cpu) {
+function sbc_A_ptrHL(cpu) {
     const regs8 = cpu.registers.regs8;
     const regs16 = cpu.registers.regs16;
     const flags = cpu.registers.flags;
@@ -354,7 +354,7 @@ function subc_A_ptrHL(cpu) {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 * Clock: 19T
 */
-function subc_A_ptrIXplusd(cpu, d) {
+function sbc_A_ptrIXplusd(cpu, d) {
     const regs8 = cpu.registers.regs8;
     const regsSp = cpu.registers.regsSp;
     const flags = cpu.registers.flags;
@@ -375,7 +375,7 @@ function subc_A_ptrIXplusd(cpu, d) {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 * Clock: 19T
 */
-function subc_A_ptrIYplusd(cpu, d) {
+function sbc_A_ptrIYplusd(cpu, d) {
     const regs8 = cpu.registers.regs8;
     const regsSp = cpu.registers.regsSp;
     const flags = cpu.registers.flags;
@@ -405,9 +405,9 @@ module.exports = {
     sub_A_ptrHL,
     sub_A_ptrIXplusd,
     sub_A_ptrIYplusd,
-    subc_A_r,
-    subc_A_n,
-    subc_A_ptrHL,
-    subc_A_ptrIXplusd,
-    subc_A_ptrIYplusd
+    sbc_A_r,
+    sbc_A_n,
+    sbc_A_ptrHL,
+    sbc_A_ptrIXplusd,
+    sbc_A_ptrIYplusd
 }
