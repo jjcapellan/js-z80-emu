@@ -25,7 +25,7 @@ function setSubsFlags(cpu, s1, s2) {
     flags.set(flags.idx.Z, sum == 0);
     flags.set(flags.idx.H, ((s1 & 0x8) + (s2 & 0x8)) == 0b10);
     flags.set(flags.idx.PV, (sum & 0x100) == 1);
-    flags.set(flags.idx.N, false);
+    flags.set(flags.idx.N, set);
     flags.set(flags.idx.C, (sum & 0x100) == 1);
 }
 
