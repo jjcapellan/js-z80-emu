@@ -15,7 +15,9 @@ test('add_A_r(cpu, rIndex)', t => {
     const rIndex = regs8.idx.D;
     instr.add_A_r(cpu, rIndex); // ADD A, D
     const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
     t.is(a, 0x1d);
+    t.is(f, 0x8);
 });
 
 test('add_A_n(cpu, n)', t => {
@@ -23,7 +25,9 @@ test('add_A_n(cpu, n)', t => {
     const n = 0x1c;
     instr.add_A_n(cpu, n); // ADD A, n
     const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
     t.is(a, 0x1d);
+    t.is(f, 0x8);
 });
 
 test('add_A_ptrHL(cpu)', t => {
@@ -32,7 +36,9 @@ test('add_A_ptrHL(cpu)', t => {
     mem[0x1212] = 0x11;
     instr.add_A_ptrHL(cpu); // ADD A, (HL)
     const a = regs8.get(regs8.idx.A);
-    t.is(a, 0x12);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0, `Expected: 0, Flags: ${f.toString(2)}`);
+    t.is(a, 0x12);    
 });
 
 test('add_A_ptrIXplusd(cpu, d)', t => {
@@ -42,6 +48,8 @@ test('add_A_ptrIXplusd(cpu, d)', t => {
     mem[0x5] = 0x25;
     instr.add_A_ptrIXplusd(cpu, d); // ADD A, (IX + d)
     const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x20);
     t.is(a, 0x26);
 });
 
@@ -52,6 +60,8 @@ test('add_A_ptrIYplusd(cpu, d)', t => {
     mem[0x5] = 0x25;
     instr.add_A_ptrIYplusd(cpu, d); // ADD A, (IY + d)
     const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x20);
     t.is(a, 0x26);
 });
 
@@ -62,6 +72,8 @@ test('adc_A_r(cpu, rIndex)', t => {
     flags.set(flags.idx.C, true);
     instr.adc_A_r(cpu, rIndex); // ADC A, B
     const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0);
     t.is(a, 0x6);
 });
 
@@ -71,6 +83,8 @@ test('adc_A_n(cpu, n)', t => {
     flags.set(flags.idx.C, true);
     instr.adc_A_n(cpu, n); // ADC A, n
     const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x8);
     t.is(a, 0x1e);
 });
 
@@ -81,6 +95,8 @@ test('adc_A_ptrHL(cpu)', t => {
     flags.set(flags.idx.C, true);
     instr.adc_A_ptrHL(cpu); // ADC A, (HL)
     const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x0);
     t.is(a, 0x13);
 });
 
@@ -92,6 +108,8 @@ test('adc_A_ptrIXplusd(cpu, d)', t => {
     flags.set(flags.idx.C, true);
     instr.adc_A_ptrIXplusd(cpu, d); // ADC A, (IX + d)
     const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x20);
     t.is(a, 0x27);
 });
 
@@ -103,6 +121,8 @@ test('adc_A_ptrIYplusd(cpu, d)', t => {
     flags.set(flags.idx.C, true);
     instr.adc_A_ptrIYplusd(cpu, d); // ADC A, (IY + d)
     const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x20);
     t.is(a, 0x27);
 });
 
@@ -168,7 +188,9 @@ test('sbc_A_n(cpu, n)', t => {
     flags.set(flags.idx.C, true);
     instr.sbc_A_n(cpu, n); // SUBC A, n
     const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
     t.is(a, 256 + (0x1 - (0x1c + 0x1)));
+    t.log(`A: ${a.toString(16)} F: ${f.toString(16)}`);
 });
 
 test('sbc_A_ptrHL(cpu)', t => {

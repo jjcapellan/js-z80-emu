@@ -5,18 +5,7 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-const { regsSp } = require("../z80_registers");
-
-function setAddFlags(cpu, s1, s2) {
-    const flags = cpu.registers.flags;
-    const sum = s1 + s2;
-    flags.set(flags.idx.S, (sum & 0x80) != 0);
-    flags.set(flags.idx.Z, sum == 0);
-    flags.set(flags.idx.H, ((s1 & 0x8) + (s2 & 0x8)) == 0b10);
-    flags.set(flags.idx.PV, (sum & 0x100) == 1);
-    flags.set(flags.idx.N, false);
-    flags.set(flags.idx.C, (sum & 0x100) == 1);
-}
+const { regsSp, regs8 } = require("../z80_registers");
 
 function setSubsFlags(cpu, s1, s2) {
     const flags = cpu.registers.flags;
@@ -41,7 +30,9 @@ function add_A_r(cpu, rIndex) {
     const r = regs.get(rIndex);
     const a = regs.get(regs.idx.A);
     regs.set(regs.idx.A, a + r);
-    setAddFlags(cpu, a, r);
+    let f =regs8.get(regs8.idx.F);
+    f |= cpu.tables.addFlagsTable[(a << 8 )| r];
+    regs8.set(regs8.idx.F, f);
 }
 
 /**
@@ -55,7 +46,9 @@ function add_A_n(cpu, n) {
     const regs = cpu.registers.regs8;
     const a = regs.get(regs.idx.A);
     regs.set(regs.idx.A, a + n);
-    setAddFlags(cpu, a, n);
+
+    let f = cpu.tables.addFlagsTable[(a << 8 )| n];
+    regs.set(regs.idx.F, f);
 }
 
 /**
@@ -70,9 +63,11 @@ function add_A_ptrHL(cpu) {
     const regs16 = cpu.registers.regs16;
     const a = regs.get(regs.idx.A);
     const hl = regs16.get(regs16.idx.HL);
-    const n = cpu.memory[hl];
+    const n = cpu.memory[hl];    
     regs.set(regs.idx.A, a + n);
-    setAddFlags(cpu, a, n);
+
+    let f = cpu.tables.addFlagsTable[(a << 8 )| n];
+    regs.set(regs.idx.F, f);
 }
 
 /**
@@ -90,7 +85,9 @@ function add_A_ptrIXplusd(cpu, d) {
     const ix = regsSp.IX;
     const n = cpu.memory[ix + d];
     regs.set(regs.idx.A, a + n);
-    setAddFlags(cpu, a, n);
+
+    let f = cpu.tables.addFlagsTable[(a << 8 )| n];
+    regs.set(regs.idx.F, f);
 }
 
 /**
@@ -108,7 +105,9 @@ function add_A_ptrIYplusd(cpu, d) {
     const iy = regsSp.IY;
     const n = cpu.memory[iy + d];
     regs.set(regs.idx.A, a + n);
-    setAddFlags(cpu, a, n);
+
+    let f = cpu.tables.addFlagsTable[(a << 8 )| n];
+    regs.set(regs.idx.F, f);
 }
 
 /**
@@ -126,7 +125,9 @@ function adc_A_r(cpu, rIndex) {
     const a = regs.get(regs.idx.A);
     const n = r + c;
     regs.set(regs.idx.A, a + n);
-    setAddFlags(cpu, a, n);
+
+    let f = cpu.tables.addFlagsTable[(a << 8 )| n];
+    regs.set(regs.idx.F, f);
 }
 
 /**
@@ -143,7 +144,9 @@ function adc_A_n(cpu, n) {
     const a = regs.get(regs.idx.A);
     n += c;
     regs.set(regs.idx.A, a + n);
-    setAddFlags(cpu, a, n);
+
+    let f = cpu.tables.addFlagsTable[(a << 8 )| n];
+    regs.set(regs.idx.F, f);
 }
 
 /**
@@ -164,7 +167,9 @@ function adc_A_ptrHL(cpu) {
     const n = cpu.memory[hl] + c;
 
     regs8.set(regs8.idx.A, a + n);
-    setAddFlags(cpu, a, n);
+
+    let f = cpu.tables.addFlagsTable[(a << 8 )| n];
+    regs8.set(regs8.idx.F, f);
 }
 
 /**
@@ -185,7 +190,9 @@ function adc_A_ptrIXplusd(cpu, d) {
     const n = cpu.memory[ix + d] + c;
 
     regs8.set(regs8.idx.A, a + n);
-    setAddFlags(cpu, a, n);
+
+    let f = cpu.tables.addFlagsTable[(a << 8 )| n];
+    regs8.set(regs8.idx.F, f);
 }
 
 /**
@@ -206,7 +213,9 @@ function adc_A_ptrIYplusd(cpu, d) {
     const n = cpu.memory[iy + d] + c;
 
     regs8.set(regs8.idx.A, a + n);
-    setAddFlags(cpu, a, n);
+
+    let f = cpu.tables.addFlagsTable[(a << 8 )| n];
+    regs8.set(regs8.idx.F, f);
 }
 
 /**

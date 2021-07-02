@@ -6,11 +6,17 @@
 const registers = require('./z80_registers');
 const memory = require('./z80_memory');
 const decode = require('./z80_decoder');
+const flagTables = require('./z80_flag_tables');
 
 class Z80 {
     constructor() {
         this.memory = memory;
         this.registers = registers;
+
+        let addFlagsArray = flagTables.generateAddFlagsArray();
+        this.tables = {
+            addFlagsTable: addFlagsArray
+        };
     }
 
     /**
