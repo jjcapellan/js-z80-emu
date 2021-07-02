@@ -14,8 +14,10 @@ class Z80 {
         this.registers = registers;
 
         let addFlagsArray = flagTables.generateAddFlagsArray();
+        let subFlagsArray =flagTables.generateSubFlagsArray();
         this.tables = {
-            addFlagsTable: addFlagsArray
+            addFlagsTable: addFlagsArray,
+            subFlagsTable: subFlagsArray
         };
     }
 

@@ -132,6 +132,8 @@ test('sub_A_r(cpu, rIndex)', t => {
     const rIndex = regs8.idx.D;
     instr.sub_A_r(cpu, rIndex); // SUB A, D
     const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x0a);
     t.is(a, 0x1b);
 });
 
@@ -140,6 +142,8 @@ test('sub_A_n(cpu, n)', t => {
     const n = 0x1;
     instr.sub_A_n(cpu, n); // SUB A, n
     const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x0a);
     t.is(a, 0x1b);
 });
 
@@ -149,6 +153,8 @@ test('sub_A_ptrHL(cpu)', t => {
     mem[0x1212] = 0x1;
     instr.sub_A_ptrHL(cpu); // SUB A, (HL)
     const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x02);
     t.is(a, 0x11);
 });
 
@@ -159,6 +165,8 @@ test('sub_A_ptrIXplusd(cpu, d)', t => {
     mem[0x5] = 0x1;
     instr.sub_A_ptrIXplusd(cpu, d); // SUB A, (IX + d)
     const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x02);
     t.is(a, 0x11);
 });
 
@@ -169,6 +177,8 @@ test('sub_A_ptrIYplusd(cpu, d)', t => {
     mem[0x5] = 0x1;
     instr.sub_A_ptrIYplusd(cpu, d); // SUB A, (IY + d)
     const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x02);
     t.is(a, 0x11);
 });
 
@@ -190,7 +200,6 @@ test('sbc_A_n(cpu, n)', t => {
     const a = regs8.get(regs8.idx.A);
     const f = regs8.get(regs8.idx.F);
     t.is(a, 256 + (0x1 - (0x1c + 0x1)));
-    t.log(`A: ${a.toString(16)} F: ${f.toString(16)}`);
 });
 
 test('sbc_A_ptrHL(cpu)', t => {

@@ -23,6 +23,9 @@ const C = 0b00000001;
 const buffer_add = new ArrayBuffer(0x100 * 0x100);
 const flags_add = new Uint8Array(buffer_add);
 
+const buffer_sub = new ArrayBuffer(0x100 * 0x100);
+const flags_sub = new Uint8Array(buffer_sub);
+
 
 
 function generateAddFlagsArray() {
@@ -49,8 +52,34 @@ function generateAddFlagsArray() {
     return flags_add;
 }
 
+function generateSubFlagsArray() {
+    for (let n1 = 0; n1 <= 0xff; n1++) {
+        for (let n2 = 0; n2 <= 0xff; n2++) {
+            let flags = 0;
+            const result = n1 - n2;
+
+            if (result & 0x80) flags |= S;
+            if ((result & 0xff) == 0) flags |= Z;
+            if ((n1 & 0x0f) < (result & 0x0f)) flags |= H;
+            if (result & 0x100) flags |= C;
+            // (n1 and n2 different sign) and (result > n1) -> set PV
+            if (((n1 & 0x80)^(n2 & 0x80)) && (n1 < result)) flags |= PV;
+            if (result & F3) flags |= F3;
+            if (result & F5) flags |= F5;
+            flags |= N;
+
+            let idx = (n1 << 8) | n2;
+
+            flags_sub[idx] = flags;
+        }
+    }
+
+    return flags_sub;
+}
+
 module.exports = {
-    generateAddFlagsArray
+    generateAddFlagsArray,
+    generateSubFlagsArray
 }
 
 
