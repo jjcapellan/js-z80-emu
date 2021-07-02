@@ -26,6 +26,9 @@ const flags_add = new Uint8Array(buffer_add);
 const buffer_sub = new ArrayBuffer(0x100 * 0x100);
 const flags_sub = new Uint8Array(buffer_sub);
 
+const buffer_parity = new ArrayBuffer(0x100 * 0x100);
+const parity = new Uint8Array(buffer_parity);
+
 
 
 function generateAddFlagsArray() {
@@ -39,7 +42,7 @@ function generateAddFlagsArray() {
             if ((n1 & 0x0f) > (result & 0x0f)) flags |= H;
             if (result & 0x100) flags |= C;
             // (n1 and n2 same sign) and (result diferent sign) -> set PV
-            if (!((n1 & 0x80)^(n2 & 0x80)) && ((n1 & 0x80)^(result & 0x80))) flags |= PV;
+            if (!((n1 & 0x80) ^ (n2 & 0x80)) && ((n1 & 0x80) ^ (result & 0x80))) flags |= PV;
             if (result & F3) flags |= F3;
             if (result & F5) flags |= F5;
 
@@ -63,7 +66,7 @@ function generateSubFlagsArray() {
             if ((n1 & 0x0f) < (result & 0x0f)) flags |= H;
             if (result & 0x100) flags |= C;
             // (n1 and n2 different sign) and (result > n1) -> set PV
-            if (((n1 & 0x80)^(n2 & 0x80)) && (n1 < result)) flags |= PV;
+            if (((n1 & 0x80) ^ (n2 & 0x80)) && (n1 < result)) flags |= PV;
             if (result & F3) flags |= F3;
             if (result & F5) flags |= F5;
             flags |= N;
@@ -77,9 +80,18 @@ function generateSubFlagsArray() {
     return flags_sub;
 }
 
+function generateParityArray() {
+    for (let n = 0; n <= 0xff; n++) {
+        let ones = (n & 1) + ((n & 2) >> 1) + ((n & 4) >> 2) + ((n & 8) >> 3) + ((n & 16) >> 4) + ((n & 32) >> 5) + ((n & 64) >> 6) + ((n & 128) >> 7);
+        parity[n] = (ones & 1) ^ 1;
+    }
+    return parity;
+}
+
 module.exports = {
     generateAddFlagsArray,
-    generateSubFlagsArray
+    generateSubFlagsArray,
+    generateParityArray
 }
 
 
