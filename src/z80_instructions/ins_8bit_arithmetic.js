@@ -788,6 +788,19 @@ function cp_ptrIYplusd(cpu, d) {
     regs.set(regs.idx.F, f);
 }
 
+function setFlagsIncDec(cpu, n, VLimit){
+    const regs8 = cpu.registers.regs8;
+    const table = (VLimit == 0x7f) ? cpu.tables.addFlagsTable : cpu.tables.subFlagsTable;
+
+    let f = regs8.get(regs8.idx.F);
+    const c = f & 0x1; // saves flag C, not affected
+    const pv = (n == VLimit) ? 0b100 : 0;
+    f = table[(n << 8) | 1];
+    f |= (f & 0b11111011) | pv;
+    f |= (f & 0b11111110) | c;
+    regs8.set(regs8.idx.F, f);;
+}
+
 /**
 * INC r
 * 
@@ -798,16 +811,11 @@ function inc_r(cpu, rIndex) {
     const regs = cpu.registers.regs8;
     const r = regs.get(rIndex);
 
-    let f = regs8.get(regs8.idx.F);
-    const c = f & 0x1; // saves flag C, not affected
-    const pv = (r == 0x7f) ? 0b100 : 0;
-    f = cpu.tables.addFlagsTable[(r << 8) | 1];
-    f |= (f & 0b11111011) | pv;
-    f |= (f & 0b11111110) | c;
+    setFlagsIncDec(cpu, r, 0x7f);
 
     regs.set(rIndex, r + 1);
 
-    regs8.set(regs8.idx.F, f);
+    
 }
 
 /**
@@ -818,20 +826,12 @@ function inc_r(cpu, rIndex) {
 */
 function inc_ptrHL(cpu) {
     const regs = cpu.registers.regs16;
-    const regs8 = cpu.registers.regs8;
     const hl = regs.get(regs.idx.HL);
     const n = cpu.memory[hl];
 
-    let f = regs8.get(regs8.idx.F);
-    const c = f & 0x1; // saves flag C, not affected
-    const pv = (n == 0x7f) ? 0b100 : 0;
-    f = cpu.tables.addFlagsTable[(n << 8) | 1];
-    f |= (f & 0b11111011) | pv;
-    f |= (f & 0b11111110) | c;
+    setFlagsIncDec(cpu, n, 0x7f);
 
     cpu.memory[hl] = n + 1;
-
-    regs8.set(regs8.idx.F, f);
 }
 
 /**
@@ -842,20 +842,12 @@ function inc_ptrHL(cpu) {
 */
 function inc_ptrIXplusd(cpu, d) {
     const regsSp = cpu.registers.regsSp;
-    const regs8 = cpu.registers.regs8;
     const ix = regsSp.IX;
     const n = cpu.memory[ix + d];
 
-    let f = regs8.get(regs8.idx.F);
-    const c = f & 0x1; // saves flag C, not affected
-    const pv = (n == 0x7f) ? 0b100 : 0;
-    f = cpu.tables.addFlagsTable[(n << 8) | 1];
-    f |= (f & 0b11111011) | pv;
-    f |= (f & 0b11111110) | c;
+    setFlagsIncDec(cpu, n, 0x7f);
 
     cpu.memory[ix + d] = n + 1;
-
-    regs8.set(regs8.idx.F, f);
 }
 
 /**
@@ -866,20 +858,12 @@ function inc_ptrIXplusd(cpu, d) {
 */
 function inc_ptrIYplusd(cpu, d) {
     const regsSp = cpu.registers.regsSp;
-    const regs8 = cpu.registers.regs8;
     const iy = regsSp.IY;
     const n = cpu.memory[iy + d];
 
-    let f = regs8.get(regs8.idx.F);
-    const c = f & 0x1; // saves flag C, not affected
-    const pv = (n == 0x7f) ? 0b100 : 0;
-    f = cpu.tables.addFlagsTable[(n << 8) | 1];
-    f |= (f & 0b11111011) | pv;
-    f |= (f & 0b11111110) | c;
+    setFlagsIncDec(cpu, n, 0x7f);
 
     cpu.memory[iy + d] = n + 1;
-
-    regs8.set(regs8.idx.F, f);
 }
 
 /**
@@ -892,16 +876,9 @@ function dec_r(cpu, rIndex) {
     const regs = cpu.registers.regs8;
     const r = regs.get(rIndex);
 
-    let f = regs8.get(regs8.idx.F);
-    const c = f & 0x1; // saves flag C, not affected
-    const pv = (r == 0x80) ? 0b100 : 0;
-    f = cpu.tables.subFlagsTable[(r << 8) | 1];
-    f |= (f & 0b11111011) | pv;
-    f |= (f & 0b11111110) | c;
+    setFlagsIncDec(cpu, r, 0x80);
 
     regs.set(rIndex, r - 1);
-
-    regs8.set(regs8.idx.F, f);
 }
 
 /**
@@ -912,20 +889,12 @@ function dec_r(cpu, rIndex) {
 */
 function dec_ptrHL(cpu) {
     const regs = cpu.registers.regs16;
-    const regs8 = cpu.registers.regs8;
     const hl = regs.get(regs.idx.HL);
     const n = cpu.memory[hl];
 
-    let f = regs8.get(regs8.idx.F);
-    const c = f & 0x1; // saves flag C, not affected
-    const pv = (n == 0x80) ? 0b100 : 0;
-    f = cpu.tables.subFlagsTable[(n << 8) | 1];
-    f |= (f & 0b11111011) | pv;
-    f |= (f & 0b11111110) | c;
+    setFlagsIncDec(cpu, n, 0x80);
 
     cpu.memory[hl] = n - 1;
-
-    regs8.set(regs8.idx.F, f);
 }
 
 /**
@@ -936,20 +905,12 @@ function dec_ptrHL(cpu) {
 */
 function dec_ptrIXplusd(cpu, d) {
     const regsSp = cpu.registers.regsSp;
-    const regs8 = cpu.registers.regs8;
     const ix = regsSp.IX;
     const n = cpu.memory[ix + d];
 
-    let f = regs8.get(regs8.idx.F);
-    const c = f & 0x1; // saves flag C, not affected
-    const pv = (n == 0x80) ? 0b100 : 0;
-    f = cpu.tables.subFlagsTable[(n << 8) | 1];
-    f |= (f & 0b11111011) | pv;
-    f |= (f & 0b11111110) | c;
+    setFlagsIncDec(cpu, n, 0x80);
 
     cpu.memory[ix + d] = n - 1;
-
-    regs8.set(regs8.idx.F, f);
 }
 
 /**
@@ -960,20 +921,12 @@ function dec_ptrIXplusd(cpu, d) {
 */
 function dec_ptrIYplusd(cpu, d) {
     const regsSp = cpu.registers.regsSp;
-    const regs8 = cpu.registers.regs8;
     const iy = regsSp.IY;
     const n = cpu.memory[iy + d];
 
-    let f = regs8.get(regs8.idx.F);
-    const c = f & 0x1; // saves flag C, not affected
-    const pv = (n == 0x80) ? 0b100 : 0;
-    f = cpu.tables.subFlagsTable[(n << 8) | 1];
-    f |= (f & 0b11111011) | pv;
-    f |= (f & 0b11111110) | c;
+    setFlagsIncDec(cpu, n, 0x80);
 
     cpu.memory[iy + d] = n - 1;
-
-    regs8.set(regs8.idx.F, f);
 }
 
 module.exports = {
