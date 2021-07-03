@@ -233,3 +233,47 @@ test('sbc_A_ptrIYplusd(cpu, d)', t => {
     const a = regs8.get(regs8.idx.A);
     t.is(a, 256 + (0x1 - (0x25 + 0x1)));
 });
+
+test('and_r(cpu, rIndex)', t => {
+    const rIndex = regs8.idx.D;
+    regs8.set(regs8.idx.A, 0x36);    
+    regs8.set(rIndex, 0x25);    
+    instr.and_r(cpu, rIndex); // AND D
+    const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x34, `Flags: ${f}, Expected: 0x34`);
+    t.is(a, 0x36 & 0x25);
+});
+
+test('and_n(cpu, n)', t => {
+    const n = 0x1c;
+    regs8.set(regs8.idx.A, 0x36);    
+    instr.and_n(cpu, n); // AND n
+    const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x14, `Flags: ${f.toString(16)}, Expected: 0x14`);
+    t.is(a, 0x36 & 0x1c);
+});
+
+test('and_ptrHL(cpu)', t => {
+    regs16.set(regs16.idx.HL, 0x1212);
+    const hl = regs16.get(regs16.idx.HL);
+    cpu.memory[hl] = 0x2c;
+    regs8.set(regs8.idx.A, 0x36);    
+    instr.and_ptrHL(cpu); // AND (HL)
+    const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x34, `Flags: ${f.toString(16)}, Expected: 0x34`);
+    t.is(a, 0x36 & 0x2c, `Result: ${a}, Expected: ${0x36 & 0x2c}`);
+});
+
+test('and_ptrIXplusd(cpu, d)', t => {
+    const d = 0x42;
+    regsSp.IX = 0x06;
+    const ix = regsSp.IX;
+    cpu.memory[ix + d] = 0x6a;
+    regs8.set(regs8.idx.A, 0x36);    
+    instr.and_ptrIXplusd(cpu, d); // AND (IX + d)
+    const a = regs8.get(regs8.idx.A);
+    t.is(a, 0x36 & 0x6a);
+});
