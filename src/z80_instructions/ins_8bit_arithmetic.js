@@ -694,6 +694,101 @@ function xor_ptrIYplusd(cpu, d) {
     regs8.set(regs8.idx.A, a ^ n);
 }
 
+/**
+* CP r
+* 
+* The contents of the register r operand are compared with the contents of the Accumulator. If there
+* is a true compare, the Z flag is set. The execution of this instruction does not affect the
+* contents of the Accumulator. r identifies registers B, C, D, E, H, L, or A.
+* Clock: 4T
+*/
+function cp_r(cpu, rIndex) {
+    const regs = cpu.registers.regs8;
+    const r = regs.get(rIndex);
+    const a = regs.get(regs.idx.A);
+
+    let f = cpu.tables.subFlagsTable[(a << 8 )| r];
+    f = f | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
+    regs.set(regs.idx.F, f);
+}
+
+/**
+* CP n
+* 
+* The 8bit number n is compared with the contents of the Accumulator. If there
+* is a true compare, the Z flag is set. The execution of this instruction does not affect the
+* contents of the Accumulator.
+* Clock: 7T
+*/
+function cp_n(cpu, n) {
+    const regs = cpu.registers.regs8;
+    const a = regs.get(regs.idx.A);
+
+    let f = cpu.tables.subFlagsTable[(a << 8 )| n];
+    f = f | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
+    regs.set(regs.idx.F, f);
+}
+
+/**
+* CP (HL)
+* 
+* The content of HL memory address is compared with the contents of the Accumulator. If there
+* is a true compare, the Z flag is set. The execution of this instruction does not affect the
+* contents of the Accumulator.
+* Clock: 7T
+*/
+function cp_ptrHL(cpu) {
+    const regs = cpu.registers.regs8;
+    const regs16 = cpu.registers.regs16;
+    const a = regs.get(regs.idx.A);
+    const hl = regs16.get(regs16.idx.HL);
+    const n = cpu.memory[hl];
+
+    let f = cpu.tables.subFlagsTable[(a << 8 )| n];
+    f = f | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
+    regs.set(regs.idx.F, f);
+}
+
+/**
+* CP (IX + d)
+* 
+* The content of (IX + d) memory address is compared with the contents of the Accumulator. If there
+* is a true compare, the Z flag is set. The execution of this instruction does not affect the
+* contents of the Accumulator.
+* Clock: 19T
+*/
+function cp_ptrIXplusd(cpu, d) {
+    const regs = cpu.registers.regs8;
+    const regsSp = cpu.registers.regsSp;
+    const a = regs.get(regs.idx.A);
+    const ix = regsSp.IX;
+    const n = cpu.memory[ix + d];
+
+    let f = cpu.tables.subFlagsTable[(a << 8 )| n];
+    f = f | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
+    regs.set(regs.idx.F, f);
+}
+
+/**
+* CP (IY + d)
+* 
+* The content of (IY + d) memory address is compared with the contents of the Accumulator. If there
+* is a true compare, the Z flag is set. The execution of this instruction does not affect the
+* contents of the Accumulator.
+* Clock: 19T
+*/
+function cp_ptrIYplusd(cpu, d) {
+    const regs = cpu.registers.regs8;
+    const regsSp = cpu.registers.regsSp;
+    const a = regs.get(regs.idx.A);
+    const iy = regsSp.IY;
+    const n = cpu.memory[iy + d];
+
+    let f = cpu.tables.subFlagsTable[(a << 8 )| n];
+    f = f | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
+    regs.set(regs.idx.F, f);
+}
+
 module.exports = {
     add_A_r,
     add_A_n,
@@ -729,5 +824,10 @@ module.exports = {
     xor_n,
     xor_ptrHL,
     xor_ptrIXplusd,
-    xor_ptrIYplusd
+    xor_ptrIYplusd,
+    cp_r,
+    cp_n,
+    cp_ptrHL,
+    cp_ptrIXplusd,
+    cp_ptrIYplusd
 }
