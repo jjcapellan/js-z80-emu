@@ -502,6 +502,102 @@ function and_ptrIYplusd(cpu, d) {
     regs8.set(regs8.idx.A, a & n);
 }
 
+/**
+* OR r
+* 
+* A logical OR operation is performed between the byte specified by register r and the
+* byte contained in the Accumulator; the result is stored in the Accumulator.
+* r identifies registers B, C, D, E, H, L, or A.
+* Clock: 4T
+*/
+function or_r(cpu, rIndex) {
+    const regs8 = cpu.registers.regs8;
+
+    const a = regs8.get(regs8.idx.A);
+    const r = regs8.get(rIndex);
+    let f = cpu.tables.orFlagsTable[(a << 8 )| r];
+    regs8.set(regs8.idx.F, f);
+
+    regs8.set(regs8.idx.A, a | r);
+}
+
+/**
+* OR n
+* 
+* A logical OR operation is performed between the byte n and the
+* byte contained in the Accumulator; the result is stored in the Accumulator.
+* Clock: 7T
+*/
+function or_n(cpu, n) {
+    const regs8 = cpu.registers.regs8;
+
+    const a = regs8.get(regs8.idx.A);
+    let f = cpu.tables.orFlagsTable[(a << 8 )| n];
+    regs8.set(regs8.idx.F, f);
+
+    regs8.set(regs8.idx.A, a | n);
+}
+
+/**
+* OR (HL)
+* 
+* A logical OR operation is performed between the byte located at HL memory address and the
+* byte contained in the Accumulator; the result is stored in the Accumulator.
+* Clock: 7T
+*/
+function or_ptrHL(cpu) {
+    const regs8 = cpu.registers.regs8;
+    const regs16 = cpu.registers.regs16;
+
+    const hl = regs16.get(regs16.idx.HL);
+    const n = cpu.memory[hl];
+    const a = regs8.get(regs8.idx.A);
+    let f = cpu.tables.orFlagsTable[(a << 8 )| n];
+    regs8.set(regs8.idx.F, f);
+
+    regs8.set(regs8.idx.A, a | n);
+}
+
+/**
+* OR (IX + d)
+* 
+* A logical OR operation is performed between the byte located at (IX + d) memory address and the
+* byte contained in the Accumulator; the result is stored in the Accumulator.
+* Clock: 19T
+*/
+function or_ptrIXplusd(cpu, d) {
+    const regs8 = cpu.registers.regs8;
+    const regsSp = cpu.registers.regsSp;
+
+    const ix = regsSp.IX;
+    const n = cpu.memory[ix + d];
+    const a = regs8.get(regs8.idx.A);
+    let f = cpu.tables.orFlagsTable[(a << 8 )| n];
+    regs8.set(regs8.idx.F, f);
+
+    regs8.set(regs8.idx.A, a | n);
+}
+
+/**
+* OR (IY + d)
+* 
+* A logical OR operation is performed between the byte located at (IY + d) memory address and the
+* byte contained in the Accumulator; the result is stored in the Accumulator.
+* Clock: 19T
+*/
+function or_ptrIYplusd(cpu, d) {
+    const regs8 = cpu.registers.regs8;
+    const regsSp = cpu.registers.regsSp;
+
+    const iy = regsSp.IY;
+    const n = cpu.memory[iy + d];
+    const a = regs8.get(regs8.idx.A);
+    let f = cpu.tables.orFlagsTable[(a << 8 )| n];
+    regs8.set(regs8.idx.F, f);
+
+    regs8.set(regs8.idx.A, a | n);
+}
+
 module.exports = {
     add_A_r,
     add_A_n,
@@ -526,5 +622,10 @@ module.exports = {
     and_r,
     and_n,
     and_ptrHL,
-    and_ptrIXplusd
+    and_ptrIXplusd,
+    or_r,
+    or_n,
+    or_ptrHL,
+    or_ptrIXplusd,
+    or_ptrIYplusd
 }
