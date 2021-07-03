@@ -19,8 +19,7 @@ function add_A_r(cpu, rIndex) {
     const r = regs.get(rIndex);
     const a = regs.get(regs.idx.A);
     regs.set(regs.idx.A, a + r);
-    let f = regs8.get(regs8.idx.F);
-    f |= cpu.tables.addFlagsTable[(a << 8) | r];
+    let f = cpu.tables.addFlagsTable[(a << 8) | r];
     regs8.set(regs8.idx.F, f);
 }
 
