@@ -789,6 +789,100 @@ function cp_ptrIYplusd(cpu, d) {
     regs.set(regs.idx.F, f);
 }
 
+/**
+* INC r
+* 
+* Register r is incremented and register r identifies any of the registers A, B, C, D, E, H, or L.
+* Clock: 4T
+*/
+function inc_r(cpu, rIndex) {
+    const regs = cpu.registers.regs8;
+    const r = regs.get(rIndex);
+
+    let f = regs8.get(regs8.idx.F);
+    const c = f & 0x1; // saves flag C, not affected
+    const pv = (r == 0x7f)? 0b100: 0;
+    f = cpu.tables.addFlagsTable[(r << 8 )| 1];
+    f |= (f & 0b11111011) | pv ;
+    f |= (f & 0b11111110) | c;
+
+    regs.set(rIndex, r + 1);
+
+    regs8.set(regs8.idx.F, f);
+}
+
+/**
+* INC (HL)
+* 
+* The byte contained in the address specified by the contents of the HL register pair is incremented.
+* Clock: 11T
+*/
+function inc_ptrHL(cpu) {
+    const regs = cpu.registers.regs16;
+    const regs8 = cpu.registers.regs8;
+    const hl = regs.get(regs.idx.HL);
+    const n = cpu.memory[hl];
+
+    let f = regs8.get(regs8.idx.F);
+    const c = f & 0x1; // saves flag C, not affected
+    const pv = (n == 0x7f)? 0b100: 0;
+    f = cpu.tables.addFlagsTable[(n << 8 )| 1];
+    f |= (f & 0b11111011) | pv ;
+    f |= (f & 0b11111110) | c;
+
+    cpu.memory[hl] = n + 1;
+
+    regs8.set(regs8.idx.F, f);
+}
+
+/**
+* INC (IX + d)
+* 
+* The byte contained in the address specified by the contents of (IX + d) is incremented.
+* Clock: 23T
+*/
+function inc_ptrIXplusd(cpu, d) {
+    const regsSp = cpu.registers.regsSp;
+    const regs8 = cpu.registers.regs8;
+    const ix = regsSp.IX;
+    const n = cpu.memory[ix + d];
+
+    let f = regs8.get(regs8.idx.F);
+    const c = f & 0x1; // saves flag C, not affected
+    const pv = (n == 0x7f)? 0b100: 0;
+    f = cpu.tables.addFlagsTable[(n << 8 )| 1];
+    f |= (f & 0b11111011) | pv ;
+    f |= (f & 0b11111110) | c;
+
+    cpu.memory[ix + d] = n + 1;
+
+    regs8.set(regs8.idx.F, f);
+}
+
+/**
+* INC (IY + d)
+* 
+* The byte contained in the address specified by the contents of (IY + d) is incremented.
+* Clock: 23T
+*/
+function inc_ptrIYplusd(cpu, d) {
+    const regsSp = cpu.registers.regsSp;
+    const regs8 = cpu.registers.regs8;
+    const iy = regsSp.IY;
+    const n = cpu.memory[iy + d];
+
+    let f = regs8.get(regs8.idx.F);
+    const c = f & 0x1; // saves flag C, not affected
+    const pv = (n == 0x7f)? 0b100: 0;
+    f = cpu.tables.addFlagsTable[(n << 8 )| 1];
+    f |= (f & 0b11111011) | pv ;
+    f |= (f & 0b11111110) | c;
+
+    cpu.memory[iy + d] = n + 1;
+
+    regs8.set(regs8.idx.F, f);
+}
+
 module.exports = {
     add_A_r,
     add_A_n,
@@ -829,5 +923,9 @@ module.exports = {
     cp_n,
     cp_ptrHL,
     cp_ptrIXplusd,
-    cp_ptrIYplusd
+    cp_ptrIYplusd,
+    inc_r,
+    inc_ptrHL,
+    inc_ptrIXplusd,
+    inc_ptrIYplusd
 }
