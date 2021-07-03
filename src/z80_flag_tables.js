@@ -32,6 +32,9 @@ const flags_and = new Uint8Array(buffer_and);
 const buffer_or = new ArrayBuffer(0x100 * 0x100);
 const flags_or = new Uint8Array(buffer_or);
 
+const buffer_xor = new ArrayBuffer(0x100 * 0x100);
+const flags_xor = new Uint8Array(buffer_xor);
+
 const buffer_parity = new ArrayBuffer(0x100 * 0x100);
 const parity = new Uint8Array(buffer_parity);
 
@@ -135,6 +138,20 @@ function generateOrFlagsArray(){
     return flags_or;
 }
 
+function generateXorFlagsArray(){
+    for (let n1 = 0; n1 <= 0xff; n1++) {
+        for (let n2 = 0; n2 <= 0xff; n2++) {
+            let flags = 0;
+            const result = n1 ^ n2;
+            flags = setSZPNC_AndOrXor(flags, result);
+            let idx = (n1 << 8) | n2;
+            flags_xor[idx] = flags;
+        }
+    }
+
+    return flags_xor;
+}
+
 function generateParityArray() {
     for (let n = 0; n <= 0xff; n++) {
         parity[n] = checkParity(n);
@@ -147,7 +164,8 @@ module.exports = {
     generateSubFlagsArray,
     generateParityArray,
     generateAndFlagsArray,
-    generateOrFlagsArray
+    generateOrFlagsArray,
+    generateXorFlagsArray
 }
 
 
