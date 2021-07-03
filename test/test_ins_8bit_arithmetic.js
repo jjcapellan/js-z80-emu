@@ -321,3 +321,47 @@ test('or_ptrIXplusd(cpu, d)', t => {
     const a = regs8.get(regs8.idx.A);
     t.is(a, 0x36 | 0x6a);
 });
+
+test('xor_r(cpu, rIndex)', t => {
+    const rIndex = regs8.idx.D;
+    regs8.set(regs8.idx.A, 0x36);    
+    regs8.set(rIndex, 0x25);    
+    instr.xor_r(cpu, rIndex); // XOR D
+    const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0);
+    t.is(a, 0x36 ^ 0x25);
+});
+
+test('xor_n(cpu, n)', t => {
+    const n = 0x1c;
+    regs8.set(regs8.idx.A, 0x36);    
+    instr.xor_n(cpu, n); // XOR n
+    const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x28);
+    t.is(a, 0x36 ^ 0x1c);
+});
+
+test('xor_ptrHL(cpu)', t => {
+    regs16.set(regs16.idx.HL, 0x1212);
+    const hl = regs16.get(regs16.idx.HL);
+    cpu.memory[hl] = 0x2c;
+    regs8.set(regs8.idx.A, 0x36);    
+    instr.xor_ptrHL(cpu); // XOR (HL)
+    const a = regs8.get(regs8.idx.A);
+    const f = regs8.get(regs8.idx.F);
+    t.is(f, 0x08);
+    t.is(a, 0x36 ^ 0x2c);
+});
+
+test('xor_ptrIXplusd(cpu, d)', t => {
+    const d = 0x42;
+    regsSp.IX = 0x06;
+    const ix = regsSp.IX;
+    cpu.memory[ix + d] = 0x6a;
+    regs8.set(regs8.idx.A, 0x36);    
+    instr.xor_ptrIXplusd(cpu, d); // XOR (IX + d)
+    const a = regs8.get(regs8.idx.A);
+    t.is(a, 0x36 ^ 0x6a);
+});

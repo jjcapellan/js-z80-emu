@@ -598,6 +598,102 @@ function or_ptrIYplusd(cpu, d) {
     regs8.set(regs8.idx.A, a | n);
 }
 
+/**
+* XOR r
+* 
+* A logical XOR operation is performed between the byte specified by register r and the
+* byte contained in the Accumulator; the result is stored in the Accumulator.
+* r identifies registers B, C, D, E, H, L, or A.
+* Clock: 4T
+*/
+function xor_r(cpu, rIndex) {
+    const regs8 = cpu.registers.regs8;
+
+    const a = regs8.get(regs8.idx.A);
+    const r = regs8.get(rIndex);
+    let f = cpu.tables.xorFlagsTable[(a << 8 )| r];
+    regs8.set(regs8.idx.F, f);
+
+    regs8.set(regs8.idx.A, a ^ r);
+}
+
+/**
+* XOR n
+* 
+* A logical XOR operation is performed between the byte n and the
+* byte contained in the Accumulator; the result is stored in the Accumulator.
+* Clock: 7T
+*/
+function xor_n(cpu, n) {
+    const regs8 = cpu.registers.regs8;
+
+    const a = regs8.get(regs8.idx.A);
+    let f = cpu.tables.xorFlagsTable[(a << 8 )| n];
+    regs8.set(regs8.idx.F, f);
+
+    regs8.set(regs8.idx.A, a ^ n);
+}
+
+/**
+* XOR (HL)
+* 
+* A logical XOR operation is performed between the byte located at HL memory address and the
+* byte contained in the Accumulator; the result is stored in the Accumulator.
+* Clock: 7T
+*/
+function xor_ptrHL(cpu) {
+    const regs8 = cpu.registers.regs8;
+    const regs16 = cpu.registers.regs16;
+
+    const hl = regs16.get(regs16.idx.HL);
+    const n = cpu.memory[hl];
+    const a = regs8.get(regs8.idx.A);
+    let f = cpu.tables.xorFlagsTable[(a << 8 )| n];
+    regs8.set(regs8.idx.F, f);
+
+    regs8.set(regs8.idx.A, a ^ n);
+}
+
+/**
+* XOR (IX + d)
+* 
+* A logical XOR operation is performed between the byte located at (IX + d) memory address and the
+* byte contained in the Accumulator; the result is stored in the Accumulator.
+* Clock: 19T
+*/
+function xor_ptrIXplusd(cpu, d) {
+    const regs8 = cpu.registers.regs8;
+    const regsSp = cpu.registers.regsSp;
+
+    const ix = regsSp.IX;
+    const n = cpu.memory[ix + d];
+    const a = regs8.get(regs8.idx.A);
+    let f = cpu.tables.xorFlagsTable[(a << 8 )| n];
+    regs8.set(regs8.idx.F, f);
+
+    regs8.set(regs8.idx.A, a ^ n);
+}
+
+/**
+* XOR (IY + d)
+* 
+* A logical XOR operation is performed between the byte located at (IY + d) memory address and the
+* byte contained in the Accumulator; the result is stored in the Accumulator.
+* Clock: 19T
+*/
+function xor_ptrIYplusd(cpu, d) {
+    const regs8 = cpu.registers.regs8;
+    const regsSp = cpu.registers.regsSp;
+
+    const iy = regsSp.IY;
+    const n = cpu.memory[iy + d];
+    const a = regs8.get(regs8.idx.A);
+    let f = cpu.tables.xorFlagsTable[(a << 8 )| n];
+    regs8.set(regs8.idx.F, f);
+
+    regs8.set(regs8.idx.A, a ^ n);
+}
+
 module.exports = {
     add_A_r,
     add_A_n,
@@ -628,5 +724,10 @@ module.exports = {
     or_n,
     or_ptrHL,
     or_ptrIXplusd,
-    or_ptrIYplusd
+    or_ptrIYplusd,
+    xor_r,
+    xor_n,
+    xor_ptrHL,
+    xor_ptrIXplusd,
+    xor_ptrIYplusd
 }
