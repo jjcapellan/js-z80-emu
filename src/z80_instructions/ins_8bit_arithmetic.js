@@ -708,7 +708,7 @@ function cp_r(cpu, rIndex) {
     const a = regs.get(regs.idx.A);
 
     let f = cpu.tables.subFlagsTable[(a << 8 )| r];
-    f = f | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
+    f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
     regs.set(regs.idx.F, f);
 }
 
@@ -725,7 +725,7 @@ function cp_n(cpu, n) {
     const a = regs.get(regs.idx.A);
 
     let f = cpu.tables.subFlagsTable[(a << 8 )| n];
-    f = f | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
+    f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
     regs.set(regs.idx.F, f);
 }
 
@@ -745,7 +745,7 @@ function cp_ptrHL(cpu) {
     const n = cpu.memory[hl];
 
     let f = cpu.tables.subFlagsTable[(a << 8 )| n];
-    f = f | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
+    f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
     regs.set(regs.idx.F, f);
 }
 
@@ -765,7 +765,7 @@ function cp_ptrIXplusd(cpu, d) {
     const n = cpu.memory[ix + d];
 
     let f = cpu.tables.subFlagsTable[(a << 8 )| n];
-    f = f | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
+    f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
     regs.set(regs.idx.F, f);
 }
 
@@ -785,7 +785,7 @@ function cp_ptrIYplusd(cpu, d) {
     const n = cpu.memory[iy + d];
 
     let f = cpu.tables.subFlagsTable[(a << 8 )| n];
-    f = f | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
+    f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
     regs.set(regs.idx.F, f);
 }
 
