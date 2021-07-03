@@ -882,6 +882,100 @@ function inc_ptrIYplusd(cpu, d) {
     regs8.set(regs8.idx.F, f);
 }
 
+/**
+* DEC r
+* 
+* Register r is decremented and register r identifies any of the registers A, B, C, D, E, H, or L.
+* Clock: 4T
+*/
+function dec_r(cpu, rIndex) {
+    const regs = cpu.registers.regs8;
+    const r = regs.get(rIndex);
+
+    let f = regs8.get(regs8.idx.F);
+    const c = f & 0x1; // saves flag C, not affected
+    const pv = (r == 0x80) ? 0b100 : 0;
+    f = cpu.tables.subFlagsTable[(r << 8) | 1];
+    f |= (f & 0b11111011) | pv;
+    f |= (f & 0b11111110) | c;
+
+    regs.set(rIndex, r - 1);
+
+    regs8.set(regs8.idx.F, f);
+}
+
+/**
+* DEC (HL)
+* 
+* The byte contained in the address specified by the contents of the HL register pair is decremented.
+* Clock: 11T
+*/
+function dec_ptrHL(cpu) {
+    const regs = cpu.registers.regs16;
+    const regs8 = cpu.registers.regs8;
+    const hl = regs.get(regs.idx.HL);
+    const n = cpu.memory[hl];
+
+    let f = regs8.get(regs8.idx.F);
+    const c = f & 0x1; // saves flag C, not affected
+    const pv = (n == 0x80) ? 0b100 : 0;
+    f = cpu.tables.subFlagsTable[(n << 8) | 1];
+    f |= (f & 0b11111011) | pv;
+    f |= (f & 0b11111110) | c;
+
+    cpu.memory[hl] = n - 1;
+
+    regs8.set(regs8.idx.F, f);
+}
+
+/**
+* DEC (IX + d)
+* 
+* The byte contained in the address specified by the contents of (IX + d) is decremented.
+* Clock: 23T
+*/
+function dec_ptrIXplusd(cpu, d) {
+    const regsSp = cpu.registers.regsSp;
+    const regs8 = cpu.registers.regs8;
+    const ix = regsSp.IX;
+    const n = cpu.memory[ix + d];
+
+    let f = regs8.get(regs8.idx.F);
+    const c = f & 0x1; // saves flag C, not affected
+    const pv = (n == 0x80) ? 0b100 : 0;
+    f = cpu.tables.subFlagsTable[(n << 8) | 1];
+    f |= (f & 0b11111011) | pv;
+    f |= (f & 0b11111110) | c;
+
+    cpu.memory[ix + d] = n - 1;
+
+    regs8.set(regs8.idx.F, f);
+}
+
+/**
+* DEC (IY + d)
+* 
+* The byte contained in the address specified by the contents of (IY + d) is incremented.
+* Clock: 23T
+*/
+function dec_ptrIYplusd(cpu, d) {
+    const regsSp = cpu.registers.regsSp;
+    const regs8 = cpu.registers.regs8;
+    const iy = regsSp.IY;
+    const n = cpu.memory[iy + d];
+
+    let f = regs8.get(regs8.idx.F);
+    const c = f & 0x1; // saves flag C, not affected
+    const pv = (n == 0x80) ? 0b100 : 0;
+    f = cpu.tables.subFlagsTable[(n << 8) | 1];
+    f |= (f & 0b11111011) | pv;
+    f |= (f & 0b11111110) | c;
+
+    cpu.memory[iy + d] = n - 1;
+
+    regs8.set(regs8.idx.F, f);
+}
+
 module.exports = {
     add_A_r,
     add_A_n,
