@@ -27,7 +27,7 @@ const buffer_sub = new ArrayBuffer(0x100 * 0x100);
 const flags_sub = new Uint8Array(buffer_sub);
 
 const buffer_and = new ArrayBuffer(0x100 * 0x100);
-const flags_SZPNC_and = new Uint8Array(buffer_and);
+const flags_and = new Uint8Array(buffer_and);
 
 const buffer_parity = new ArrayBuffer(0x100 * 0x100);
 const parity = new Uint8Array(buffer_parity);
@@ -96,6 +96,26 @@ function generateSubFlagsArray() {
     return flags_sub;
 }
 
+function generateAndFlagsArray(){
+    for (let n1 = 0; n1 <= 0xff; n1++) {
+        for (let n2 = 0; n2 <= 0xff; n2++) {
+            let flags = 0;
+            const result = n1 & n2;
+
+            flags = setSZ(flags, result);
+            flags |= H;
+            if (checkParity(result)) flags |= PV;
+            flags = setF3F5(flags, result);
+
+            let idx = (n1 << 8) | n2;
+
+            flags_and[idx] = flags;
+        }
+    }
+
+    return flags_sub;
+}
+
 function generateParityArray() {
     for (let n = 0; n <= 0xff; n++) {
         parity[n] = checkParity(n);
@@ -106,7 +126,8 @@ function generateParityArray() {
 module.exports = {
     generateAddFlagsArray,
     generateSubFlagsArray,
-    generateParityArray
+    generateParityArray,
+    generateAndFlagsArray
 }
 
 

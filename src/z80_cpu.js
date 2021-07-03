@@ -15,9 +15,13 @@ class Z80 {
 
         let addFlagsArray = flagTables.generateAddFlagsArray();
         let subFlagsArray =flagTables.generateSubFlagsArray();
+        let parityArray = flagTables.generateParityArray();
+        let andFlagsArray = flagTables.generateAndFlagsArray();
         this.tables = {
             addFlagsTable: addFlagsArray,
-            subFlagsTable: subFlagsArray
+            subFlagsTable: subFlagsArray,
+            andFlagsTable: andFlagsArray, 
+            parityTable: parityArray
         };
     }
 
