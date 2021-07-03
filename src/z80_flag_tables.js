@@ -26,10 +26,30 @@ const flags_add = new Uint8Array(buffer_add);
 const buffer_sub = new ArrayBuffer(0x100 * 0x100);
 const flags_sub = new Uint8Array(buffer_sub);
 
+const buffer_and = new ArrayBuffer(0x100 * 0x100);
+const flags_SZPNC_and = new Uint8Array(buffer_and);
+
 const buffer_parity = new ArrayBuffer(0x100 * 0x100);
 const parity = new Uint8Array(buffer_parity);
 
 
+function checkParity(n) {
+    let ones = (n & 1) + ((n & 2) >> 1) + ((n & 4) >> 2) + ((n & 8) >> 3) + ((n & 16) >> 4) + ((n & 32) >> 5) + ((n & 64) >> 6) + ((n & 128) >> 7);
+    evenBits = (ones & 1) ^ 1;
+    return evenBits;
+}
+
+function setSZ(flags, n) {
+    if (n & 0x80) flags |= S;
+    if ((n & 0xff) == 0) flags |= Z;
+    return flags;
+}
+
+function setF3F5(flags, n) {
+    if (n & F3) flags |= F3;
+    if (n & F5) flags |= F5;
+    return flags;
+}
 
 function generateAddFlagsArray() {
     for (let n1 = 0; n1 <= 0xff; n1++) {
@@ -37,14 +57,12 @@ function generateAddFlagsArray() {
             let flags = 0;
             const result = n1 + n2;
 
-            if (result & 0x80) flags |= S;
-            if ((result & 0xff) == 0) flags |= Z;
+            flags = setSZ(flags, result);
             if ((n1 & 0x0f) > (result & 0x0f)) flags |= H;
             if (result & 0x100) flags |= C;
             // (n1 and n2 same sign) and (result diferent sign) -> set PV
             if (!((n1 & 0x80) ^ (n2 & 0x80)) && ((n1 & 0x80) ^ (result & 0x80))) flags |= PV;
-            if (result & F3) flags |= F3;
-            if (result & F5) flags |= F5;
+            flags = setF3F5(flags, result);
 
             let idx = (n1 << 8) | n2;
 
@@ -61,14 +79,12 @@ function generateSubFlagsArray() {
             let flags = 0;
             const result = n1 - n2;
 
-            if (result & 0x80) flags |= S;
-            if ((result & 0xff) == 0) flags |= Z;
+            flags = setSZ(flags, result);
             if ((n1 & 0x0f) < (result & 0x0f)) flags |= H;
             if (result & 0x100) flags |= C;
             // (n1 and n2 different sign) and (result > n1) -> set PV
             if (((n1 & 0x80) ^ (n2 & 0x80)) && (n1 < result)) flags |= PV;
-            if (result & F3) flags |= F3;
-            if (result & F5) flags |= F5;
+            flags = setF3F5(flags, result);
             flags |= N;
 
             let idx = (n1 << 8) | n2;
@@ -82,8 +98,7 @@ function generateSubFlagsArray() {
 
 function generateParityArray() {
     for (let n = 0; n <= 0xff; n++) {
-        let ones = (n & 1) + ((n & 2) >> 1) + ((n & 4) >> 2) + ((n & 8) >> 3) + ((n & 16) >> 4) + ((n & 32) >> 5) + ((n & 64) >> 6) + ((n & 128) >> 7);
-        parity[n] = (ones & 1) ^ 1;
+        parity[n] = checkParity(n);
     }
     return parity;
 }
