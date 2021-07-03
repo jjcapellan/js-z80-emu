@@ -1020,5 +1020,9 @@ module.exports = {
     inc_r,
     inc_ptrHL,
     inc_ptrIXplusd,
-    inc_ptrIYplusd
+    inc_ptrIYplusd,
+    dec_r,
+    dec_ptrHL,
+    dec_ptrIXplusd,
+    dec_ptrIYplusd
 }
