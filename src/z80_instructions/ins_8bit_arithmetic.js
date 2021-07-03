@@ -623,6 +623,7 @@ module.exports = {
     and_n,
     and_ptrHL,
     and_ptrIXplusd,
+    and_ptrIYplusd,
     or_r,
     or_n,
     or_ptrHL,
