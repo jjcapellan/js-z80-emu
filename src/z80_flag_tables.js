@@ -113,7 +113,7 @@ function generateAndFlagsArray(){
         }
     }
 
-    return flags_sub;
+    return flags_and;
 }
 
 function generateParityArray() {
