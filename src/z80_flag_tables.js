@@ -111,17 +111,28 @@ function generateAndFlagsArray(){
         for (let n2 = 0; n2 <= 0xff; n2++) {
             let flags = 0;
             const result = n1 & n2;
-
             flags = setSZPNC_AndOrXor(flags, result);
             flags |= H;
-
             let idx = (n1 << 8) | n2;
-
             flags_and[idx] = flags;
         }
     }
 
     return flags_and;
+}
+
+function generateOrFlagsArray(){
+    for (let n1 = 0; n1 <= 0xff; n1++) {
+        for (let n2 = 0; n2 <= 0xff; n2++) {
+            let flags = 0;
+            const result = n1 | n2;
+            flags = setSZPNC_AndOrXor(flags, result);
+            let idx = (n1 << 8) | n2;
+            flags_or[idx] = flags;
+        }
+    }
+
+    return flags_or;
 }
 
 function generateParityArray() {
@@ -135,7 +146,8 @@ module.exports = {
     generateAddFlagsArray,
     generateSubFlagsArray,
     generateParityArray,
-    generateAndFlagsArray
+    generateAndFlagsArray,
+    generateOrFlagsArray
 }
 
 
