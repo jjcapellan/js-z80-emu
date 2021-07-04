@@ -43,3 +43,19 @@ test('daa(cpu)', t => {
     doTest(0x88, C | H | N, (0x88 + 0x9a) & 0xff, 0x27);
     
 });
+
+test('cpl(cpu)', t => {
+
+    function doTest(a0, f0, a1, f1){
+    regs8.set(regs8.idx.A, a0);
+    regs8.set(regs8.idx.F, f0);
+    instr.cpl(cpu); // CPL
+    a = regs8.get(regs8.idx.A);
+    f = regs8.get(regs8.idx.F);    
+    t.is(a, a1, `a0: ${a0.toString(16)}, a1: ${a1.toString(16)}, result_a:${a.toString(16)}`);
+    t.is(f, f1, `a0: ${a0.toString(16)}, f1:${f1.toString(16)}, result_f:${f.toString(16)}`);
+    }
+
+    doTest(0x20, 0, 0xdf, 0x1a);
+    
+});

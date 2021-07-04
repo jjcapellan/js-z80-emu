@@ -49,6 +49,26 @@ function daa(cpu) {
     regs.set(regs.idx.F, flags);
 }
 
+/**
+* CPL
+* 
+* The contents of the Accumulator (Register A) are inverted (one’s complement).
+* Clock: 4T
+*/
+function cpl(cpu) {
+    const regs = cpu.registers.regs8;
+    const a = regs.get(regs.idx.A);
+    let f = regs.get(regs.idx.F);
+    const result = a ^ 0xff;
+
+    f |= H | N;
+    if (result & F3) flags |= F3;
+    if (result & F5) flags |= F5;
+    regs.set(regs.idx.A, a ^ 0xff);
+    regs.set(regs.idx.F, f);
+}
+
 module.exports = {
-    daa
+    daa,
+    cpl
 }
