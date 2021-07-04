@@ -19,12 +19,14 @@ class Z80 {
         let andFlagsArray = flagTables.generateAndFlagsArray();
         let orFlagsArray = flagTables.generateOrFlagsArray();
         let xorFlagsArray = flagTables.generateXorFlagsArray();
+        let daaArray = flagTables.generateDaaArray();
         this.tables = {
             addFlagsTable: addFlagsArray,
             subFlagsTable: subFlagsArray,
             andFlagsTable: andFlagsArray,
             orFlagsTable: orFlagsArray,
             xorFlagsTable: xorFlagsArray,
+            daaTable: daaArray,
             parityTable: parityArray
         };
     }

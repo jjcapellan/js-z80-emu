@@ -38,6 +38,47 @@ const flags_xor = new Uint8Array(buffer_xor);
 const buffer_parity = new ArrayBuffer(0x100 * 0x100);
 const parity = new Uint8Array(buffer_parity);
 
+/**
+ * This array stores the adjusts applied by daa instruction for each possible case.
+ * Cases exposed [here](http://www.z80.info/z80syntx.htm#DAA)
+ * --------------------------------------------------------------------------------
+ * |           | C Flag  | HEX value in | H Flag | HEX value in | Number  | C flag|
+ * | Operation | Before  | upper digit  | Before | lower digit  | added   | After |
+ * |           | DAA     | (bit 7-4)    | DAA    | (bit 3-0)    | to byte | DAA   |
+ * |------------------------------------------------------------------------------|
+ * |           |    0    |     0-9      |   0    |     0-9      |   00    |   0   |
+ * |   ADD     |    0    |     0-8      |   0    |     A-F      |   06    |   0   |
+ * |           |    0    |     0-9      |   1    |     0-3      |   06    |   0   |
+ * |   ADC     |    0    |     A-F      |   0    |     0-9      |   60    |   1   |
+ * |           |    0    |     9-F      |   0    |     A-F      |   66    |   1   |
+ * |   INC     |    0    |     A-F      |   1    |     0-3      |   66    |   1   |
+ * |           |    1    |     0-2      |   0    |     0-9      |   60    |   1   |
+ * |           |    1    |     0-2      |   0    |     A-F      |   66    |   1   |
+ * |           |    1    |     0-3      |   1    |     0-3      |   66    |   1   |
+ * |------------------------------------------------------------------------------|
+ * |   SUB     |    0    |     0-9      |   0    |     0-9      |   00    |   0   |
+ * |   SBC     |    0    |     0-8      |   1    |     6-F      |   FA    |   0   |
+ * |   DEC     |    1    |     7-F      |   0    |     0-9      |   A0    |   1   |
+ * |   NEG     |    1    |     6-F      |   1    |     6-F      |   9A    |   1   |
+ * |------------------------------------------------------------------------------|
+ * 
+ * The array index is a number of 16bits with this structure:
+ * Bits 15-11: zeros
+ * Bit 10: N flag
+ * Bit 9: C flag before DAA
+ * Bit 8: H flag before DAA
+ * Bits 7-4: value in upper digit
+ * Bits 3-0: value in lower digit
+ * 
+ * Each element have this structure:
+ * Bit 8: C flag after DAA
+ * Bits 7-0: number to add to the accumulator.
+ *  
+ */
+const maxIndexDaa = 0x07ff;
+const buffer_daa = new ArrayBuffer(maxIndexDaa + 1);
+const flags_daa = new Uint16Array(buffer_daa);
+
 
 function checkParity(n) {
     let ones = (n & 1) + ((n & 2) >> 1) + ((n & 4) >> 2) + ((n & 8) >> 3) + ((n & 16) >> 4) + ((n & 32) >> 5) + ((n & 64) >> 6) + ((n & 128) >> 7);
@@ -102,14 +143,14 @@ function generateSubFlagsArray() {
     return flags_sub;
 }
 
-function setSZPNC_AndOrXor(flags, result){
+function setSZPNC_AndOrXor(flags, result) {
     flags = setSZ(flags, result);
     if (checkParity(result)) flags |= PV;
     flags = setF3F5(flags, result);
     return flags;
 }
 
-function generateAndFlagsArray(){
+function generateAndFlagsArray() {
     for (let n1 = 0; n1 <= 0xff; n1++) {
         for (let n2 = 0; n2 <= 0xff; n2++) {
             let flags = 0;
@@ -124,7 +165,7 @@ function generateAndFlagsArray(){
     return flags_and;
 }
 
-function generateOrFlagsArray(){
+function generateOrFlagsArray() {
     for (let n1 = 0; n1 <= 0xff; n1++) {
         for (let n2 = 0; n2 <= 0xff; n2++) {
             let flags = 0;
@@ -138,7 +179,7 @@ function generateOrFlagsArray(){
     return flags_or;
 }
 
-function generateXorFlagsArray(){
+function generateXorFlagsArray() {
     for (let n1 = 0; n1 <= 0xff; n1++) {
         for (let n2 = 0; n2 <= 0xff; n2++) {
             let flags = 0;
@@ -159,13 +200,60 @@ function generateParityArray() {
     return parity;
 }
 
+function generateDaaArray() {
+    // N, C and H flags
+    let nch = 0b001;
+    // Upper digit
+    let ud = 0;
+    // Lower digit
+    let ld = 0;
+
+    function getIndex(nch, ud, ld) {
+        return (nch << 8) | ((ud << 4) | ld);
+    }
+
+    function fill(nch, lUd, hUd, lLd, hLd, adjust, carry) {
+        for (ud = lUd; ud <= hUd; ud++) {
+            for (ld = lLd; ld <= hLd; ld++) {
+                let index = getIndex(nch, ud, ld);
+                flags_daa[index] = (carry << 8) | adjust;
+            }
+        }
+    }
+
+    // NCH --> 0 0 0
+    fill(0b000, 0, 0x9, 0, 0x9, 0, 0);
+    fill(0b000, 0, 0x8, 0xa, 0xf, 0x6, 0);
+    fill(0b000, 0xa, 0xf, 0, 0x9, 0x60, 1);
+    fill(0b000, 0x9, 0xf, 0xa, 0xf, 0x66, 1);
+    // NCH --> 0 0 1
+    fill(0b001, 0, 0x9, 0, 0x3, 0x6, 0);
+    fill(0b001, 0xa, 0xf, 0, 0x3, 0x66, 1);
+    // NCH --> 0 1 0
+    fill(0b010, 0, 0x2, 0, 0x9, 0x60, 1);
+    fill(0b010, 0, 0x2, 0xa, 0xf, 0x66, 1);
+    // NCH --> 0 1 1
+    fill(0b011, 0, 0x3, 0, 0x3, 0x66, 1);
+    // NCH --> 1 0 0
+    fill(0b100, 0, 0x9, 0, 0x9, 0, 0);
+    // NCH --> 1 0 1
+    fill(0b101, 0, 0x8, 0x6, 0xf, 0xfa, 0);
+    // NCH --> 1 1 0
+    fill(0b110, 0x7, 0xf, 0, 0x9, 0xa0, 1);
+    // NCH --> 1 1 1
+    fill(0b111, 0x6, 0xf, 0x6, 0xf, 0x9a, 1);
+
+    return flags_daa;
+}
+
 module.exports = {
     generateAddFlagsArray,
     generateSubFlagsArray,
     generateParityArray,
     generateAndFlagsArray,
     generateOrFlagsArray,
-    generateXorFlagsArray
+    generateXorFlagsArray,
+    generateDaaArray
 }
 
 
