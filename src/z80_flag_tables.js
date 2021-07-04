@@ -76,7 +76,7 @@ const parity = new Uint8Array(buffer_parity);
  *  
  */
 const maxIndexDaa = 0x07ff;
-const buffer_daa = new ArrayBuffer(maxIndexDaa + 1);
+const buffer_daa = new ArrayBuffer((maxIndexDaa + 1) * 2);
 const flags_daa = new Uint16Array(buffer_daa);
 
 
