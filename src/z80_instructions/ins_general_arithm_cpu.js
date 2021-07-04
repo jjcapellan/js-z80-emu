@@ -38,7 +38,7 @@ function daa(cpu) {
     if (result & 0x80) flags |= S;
     if ((result & 0xff) == 0) flags |= Z;
     //if ((a & 0x0f) > (result & 0x0f)) flags |= H; <-- fail in tests, try next method in other functions
-    if((a^result)&0x10) flags |= H;
+    if ((a ^ result) & 0x10) flags |= H;
     if (cpu.tables.parityTable[(result & 0xff)]) flags |= PV;
     flags |= (f & N);
     if (result & F3) flags |= F3;
