@@ -171,6 +171,29 @@ function ei(cpu) {
     cpu.registers.iff.IFF2 = true;
 }
 
+/**
+* IM x
+* 
+* The IM 0 instruction sets Interrupt Mode 0. In this mode, the interrupting device can insert
+* any instruction on the data bus for execution by the CPU. The first byte of a multi-byte
+* instruction is read during the interrupt acknowledge cycle. Subsequent bytes are read in by
+* a normal memory read sequence.
+
+* The IM 1 instruction sets Interrupt Mode 1. In this mode, the processor responds to an
+* interrupt by executing a restart at address 0038h.
+*
+* The IM 2 instruction sets the vectored Interrupt Mode 2. This mode allows an indirect call
+* to any memory location by an 8-bit vector supplied from the peripheral device. This vector
+* then becomes the least-significant eight bits of the indirect pointer, while the I Register in
+* the CPU provides the most-significant eight bits. This address points to an address in a
+* vector table that is the starting address for the interrupt service routine.
+*
+* Clock: 8T
+*/
+function im(cpu, interruptMode) {
+    cpu.interruptMode = interruptMode;
+}
+
 module.exports = {
     daa,
     cpl,
@@ -179,5 +202,6 @@ module.exports = {
     scf,
     halt,
     di,
-    ei
+    ei,
+    im
 }
