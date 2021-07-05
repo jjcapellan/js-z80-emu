@@ -117,9 +117,28 @@ function ccf(cpu) {
     regs.set(regs.idx.F, f);
 }
 
+/**
+* SCF
+* 
+* The Carry flag in the F Register is set.
+* Clock: 4T
+*/
+function scf(cpu) {
+    const regs = cpu.registers.regs8;
+    const a = regs.get(regs.idx.A);
+    let f = regs.get(regs.idx.F);
+    f &= (~H);
+    f |= C; 
+    f &=(~N);
+    f = (f & (~F3)) | (a & F3);
+    f = (f & (~F5)) | (a & F5);    
+    regs.set(regs.idx.F, f);
+}
+
 module.exports = {
     daa,
     cpl,
     neg,
-    ccf
+    ccf,
+    scf
 }
