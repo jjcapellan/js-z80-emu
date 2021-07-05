@@ -5,7 +5,19 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-const { regsSp, regs8 } = require("../z80_registers");
+let CPU = {};
+let r8, i8, r16, i16, flags, fi, regsSp, mem;
+const setCPU = (cpu) => {
+    CPU = cpu;
+    mem = CPU.memory;
+    r8 = CPU.registers.regs8;
+    i8 = r8.idx;
+    r16 = CPU.registers.regs16;
+    i16 = r16.idx;
+    regsSp = CPU.registers.regsSp;
+    flags = CPU.registers.flags;
+    fi = flags.idx;
+}
 
 /**
 * ADD A, r
@@ -14,13 +26,12 @@ const { regsSp, regs8 } = require("../z80_registers");
 * stored in the Accumulator. The r symbol identifies the registers A, B, C, D, E, H, or L,
 * Clock: 4T
 */
-function add_A_r(cpu, rIndex) {
-    const regs = cpu.registers.regs8;
-    const r = regs.get(rIndex);
-    const a = regs.get(regs.idx.A);
-    regs.set(regs.idx.A, a + r);
-    let f = cpu.tables.addFlagsTable[(a << 8) | r];
-    regs8.set(regs8.idx.F, f);
+function add_A_r(rIndex) {
+    const r = r8.get(rIndex);
+    const a = r8.get(i8.A);
+    r8.set(i8.A, a + r);
+    let f = CPU.tables.addFlagsTable[(a << 8) | r];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -30,13 +41,11 @@ function add_A_r(cpu, rIndex) {
 * Accumulator.
 * Clock: 7T
 */
-function add_A_n(cpu, n) {
-    const regs = cpu.registers.regs8;
-    const a = regs.get(regs.idx.A);
-    regs.set(regs.idx.A, a + n);
-
-    let f = cpu.tables.addFlagsTable[(a << 8) | n];
-    regs.set(regs.idx.F, f);
+function add_A_n(n) {
+    const a = r8.get(i8.A);
+    r8.set(i8.A, a + n);
+    let f = CPU.tables.addFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -46,16 +55,13 @@ function add_A_n(cpu, n) {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 * Clock: 7T
 */
-function add_A_ptrHL(cpu) {
-    const regs = cpu.registers.regs8;
-    const regs16 = cpu.registers.regs16;
-    const a = regs.get(regs.idx.A);
-    const hl = regs16.get(regs16.idx.HL);
-    const n = cpu.memory[hl];
-    regs.set(regs.idx.A, a + n);
-
-    let f = cpu.tables.addFlagsTable[(a << 8) | n];
-    regs.set(regs.idx.F, f);
+function add_A_ptrHL() {
+    const a = r8.get(i8.A);
+    const hl = r16.get(i16.HL);
+    const n = mem[hl];
+    r8.set(i8.A, a + n);
+    let f = CPU.tables.addFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -66,16 +72,13 @@ function add_A_ptrHL(cpu) {
 * the contents of the Accumulator and the result is stored in the Accumulator.
 * Clock: 19T
 */
-function add_A_ptrIXplusd(cpu, d) {
-    const regs = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-    const a = regs.get(regs.idx.A);
+function add_A_ptrIXplusd(d) {
+    const a = r8.get(i8.A);
     const ix = regsSp.IX;
-    const n = cpu.memory[ix + d];
-    regs.set(regs.idx.A, a + n);
-
-    let f = cpu.tables.addFlagsTable[(a << 8) | n];
-    regs.set(regs.idx.F, f);
+    const n = mem[ix + d];
+    r8.set(i8.A, a + n);
+    let f = CPU.tables.addFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -86,16 +89,13 @@ function add_A_ptrIXplusd(cpu, d) {
 * the contents of the Accumulator, and the result is stored in the Accumulator.
 * Clock: 19T
 */
-function add_A_ptrIYplusd(cpu, d) {
-    const regs = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-    const a = regs.get(regs.idx.A);
+function add_A_ptrIYplusd(d) {
+    const a = r8.get(i8.A);
     const iy = regsSp.IY;
-    const n = cpu.memory[iy + d];
-    regs.set(regs.idx.A, a + n);
-
-    let f = cpu.tables.addFlagsTable[(a << 8) | n];
-    regs.set(regs.idx.F, f);
+    const n = mem[iy + d];
+    r8.set(i8.A, a + n);
+    let f = CPU.tables.addFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -105,17 +105,14 @@ function add_A_ptrIYplusd(cpu, d) {
 * the Accumulator, and the result is stored in the Accumulator.
 * Clock: 4T
 */
-function adc_A_r(cpu, rIndex) {
-    const regs = cpu.registers.regs8;
-    const flags = cpu.registers.flags;
-    const c = flags.get(flags.idx.C);
-    const r = regs.get(rIndex);
-    const a = regs.get(regs.idx.A);
+function adc_A_r(rIndex) {
+    const c = flags.get(fi.C);
+    const r = r8.get(rIndex);
+    const a = r8.get(i8.A);
     const n = r + c;
-    regs.set(regs.idx.A, a + n);
-
-    let f = cpu.tables.addFlagsTable[(a << 8) | n];
-    regs.set(regs.idx.F, f);
+    r8.set(i8.A, a + n);
+    let f = CPU.tables.addFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -125,16 +122,13 @@ function adc_A_r(cpu, rIndex) {
 * the Accumulator, and the result is stored in the Accumulator.
 * Clock: 7T
 */
-function adc_A_n(cpu, n) {
-    const regs = cpu.registers.regs8;
-    const flags = cpu.registers.flags;
-    const c = flags.get(flags.idx.C);
-    const a = regs.get(regs.idx.A);
+function adc_A_n(n) {
+    const c = flags.get(fi.C);
+    const a = r8.get(i8.A);
     n += c;
-    regs.set(regs.idx.A, a + n);
-
-    let f = cpu.tables.addFlagsTable[(a << 8) | n];
-    regs.set(regs.idx.F, f);
+    r8.set(i8.A, a + n);
+    let f = CPU.tables.addFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -144,20 +138,14 @@ function adc_A_n(cpu, n) {
 * the Accumulator, and the result is stored in the Accumulator.
 * Clock: 7T
 */
-function adc_A_ptrHL(cpu) {
-    const regs8 = cpu.registers.regs8;
-    const regs16 = cpu.registers.regs16;
-    const flags = cpu.registers.flags;
-
-    const hl = regs16.get(regs16.idx.HL);
-    const c = flags.get(flags.idx.C);
-    const a = regs8.get(regs8.idx.A);
-    const n = cpu.memory[hl] + c;
-
-    regs8.set(regs8.idx.A, a + n);
-
-    let f = cpu.tables.addFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
+function adc_A_ptrHL() {
+    const hl = r16.get(i16.HL);
+    const c = flags.get(fi.C);
+    const a = r8.get(i8.A);
+    const n = mem[hl] + c;
+    r8.set(i8.A, a + n);
+    let f = CPU.tables.addFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -167,20 +155,14 @@ function adc_A_ptrHL(cpu) {
 * the Accumulator, and the result is stored in the Accumulator.
 * Clock: 19T
 */
-function adc_A_ptrIXplusd(cpu, d) {
-    const regs8 = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-    const flags = cpu.registers.flags;
-
+function adc_A_ptrIXplusd(d) {
     const ix = regsSp.IX;
-    const c = flags.get(flags.idx.C);
-    const a = regs8.get(regs8.idx.A);
-    const n = cpu.memory[ix + d] + c;
-
-    regs8.set(regs8.idx.A, a + n);
-
-    let f = cpu.tables.addFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
+    const c = flags.get(fi.C);
+    const a = r8.get(i8.A);
+    const n = mem[ix + d] + c;
+    r8.set(i8.A, a + n);
+    let f = CPU.tables.addFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -190,20 +172,14 @@ function adc_A_ptrIXplusd(cpu, d) {
 * the Accumulator, and the result is stored in the Accumulator.
 * Clock: 19T
 */
-function adc_A_ptrIYplusd(cpu, d) {
-    const regs8 = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-    const flags = cpu.registers.flags;
-
+function adc_A_ptrIYplusd(d) {
     const iy = regsSp.IY;
-    const c = flags.get(flags.idx.C);
-    const a = regs8.get(regs8.idx.A);
-    const n = cpu.memory[iy + d] + c;
-
-    regs8.set(regs8.idx.A, a + n);
-
-    let f = cpu.tables.addFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
+    const c = flags.get(fi.C);
+    const a = r8.get(i8.A);
+    const n = mem[iy + d] + c;
+    r8.set(i8.A, a + n);
+    let f = CPU.tables.addFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -213,14 +189,12 @@ function adc_A_ptrIYplusd(cpu, d) {
 * stored in the Accumulator. The r symbol identifies the registers A, B, C, D, E, H, or L,
 * Clock: 4T
 */
-function sub_A_r(cpu, rIndex) {
-    const regs = cpu.registers.regs8;
-    const r = regs.get(rIndex);
-    const a = regs.get(regs.idx.A);
-    regs.set(regs.idx.A, a - r);
-
-    let f = cpu.tables.subFlagsTable[(a << 8) | r];
-    regs.set(regs.idx.F, f);
+function sub_A_r(rIndex) {
+    const r = r8.get(rIndex);
+    const a = r8.get(i8.A);
+    r8.set(i8.A, a - r);
+    let f = CPU.tables.subFlagsTable[(a << 8) | r];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -230,13 +204,11 @@ function sub_A_r(cpu, rIndex) {
 * Accumulator.
 * Clock: 7T
 */
-function sub_A_n(cpu, n) {
-    const regs = cpu.registers.regs8;
-    const a = regs.get(regs.idx.A);
-    regs.set(regs.idx.A, a - n);
-
-    let f = cpu.tables.subFlagsTable[(a << 8) | n];
-    regs.set(regs.idx.F, f);
+function sub_A_n(n) {
+    const a = r8.get(i8.A);
+    r8.set(i8.A, a - n);
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -246,16 +218,13 @@ function sub_A_n(cpu, n) {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 * Clock: 7T
 */
-function sub_A_ptrHL(cpu) {
-    const regs = cpu.registers.regs8;
-    const regs16 = cpu.registers.regs16;
-    const a = regs.get(regs.idx.A);
-    const hl = regs16.get(regs16.idx.HL);
-    const n = cpu.memory[hl];
-    regs.set(regs.idx.A, a - n);
-
-    let f = cpu.tables.subFlagsTable[(a << 8) | n];
-    regs.set(regs.idx.F, f);
+function sub_A_ptrHL() {
+    const a = r8.get(i8.A);
+    const hl = r16.get(i16.HL);
+    const n = mem[hl];
+    r8.set(i8.A, a - n);
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -266,16 +235,13 @@ function sub_A_ptrHL(cpu) {
 * to the contents of the Accumulator and the result is stored in the Accumulator.
 * Clock: 19T
 */
-function sub_A_ptrIXplusd(cpu, d) {
-    const regs = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-    const a = regs.get(regs.idx.A);
+function sub_A_ptrIXplusd(d) {
+    const a = r8.get(i8.A);
     const ix = regsSp.IX;
-    const n = cpu.memory[ix + d];
-    regs.set(regs.idx.A, a - n);
-
-    let f = cpu.tables.subFlagsTable[(a << 8) | n];
-    regs.set(regs.idx.F, f);
+    const n = mem[ix + d];
+    r8.set(i8.A, a - n);
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -286,16 +252,13 @@ function sub_A_ptrIXplusd(cpu, d) {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 * Clock: 19T
 */
-function sub_A_ptrIYplusd(cpu, d) {
-    const regs = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-    const a = regs.get(regs.idx.A);
+function sub_A_ptrIYplusd(d) {
+    const a = r8.get(i8.A);
     const iy = regsSp.IY;
-    const n = cpu.memory[iy + d];
-    regs.set(regs.idx.A, a - n);
-
-    let f = cpu.tables.subFlagsTable[(a << 8) | n];
-    regs.set(regs.idx.F, f);
+    const n = mem[iy + d];
+    r8.set(i8.A, a - n);
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -305,17 +268,14 @@ function sub_A_ptrIYplusd(cpu, d) {
 * the Accumulator, and the result is stored in the Accumulator.
 * Clock: 4T
 */
-function sbc_A_r(cpu, rIndex) {
-    const regs = cpu.registers.regs8;
-    const flags = cpu.registers.flags;
-    const c = flags.get(flags.idx.C);
-    const r = regs.get(rIndex);
-    const a = regs.get(regs.idx.A);
+function sbc_A_r(rIndex) {
+    const c = flags.get(fi.C);
+    const r = r8.get(rIndex);
+    const a = r8.get(i8.A);
     const n = r + c;
-    regs.set(regs.idx.A, a - n);
-
-    let f = cpu.tables.subFlagsTable[(a << 8) | n];
-    regs.set(regs.idx.F, f);
+    r8.set(i8.A, a - n);
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -325,16 +285,13 @@ function sbc_A_r(cpu, rIndex) {
 * the Accumulator, and the result is stored in the Accumulator.
 * Clock: 7T
 */
-function sbc_A_n(cpu, n) {
-    const regs = cpu.registers.regs8;
-    const flags = cpu.registers.flags;
-    const c = flags.get(flags.idx.C);
-    const a = regs.get(regs.idx.A);
+function sbc_A_n(n) {
+    const c = flags.get(fi.C);
+    const a = r8.get(i8.A);
     n += c;
-    regs.set(regs.idx.A, a - n);
-
-    let f = cpu.tables.subFlagsTable[(a << 8) | n];
-    regs.set(regs.idx.F, f);
+    r8.set(i8.A, a - n);
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -344,20 +301,14 @@ function sbc_A_n(cpu, n) {
 * the Accumulator, and the result is stored in the Accumulator.
 * Clock: 7T
 */
-function sbc_A_ptrHL(cpu) {
-    const regs8 = cpu.registers.regs8;
-    const regs16 = cpu.registers.regs16;
-    const flags = cpu.registers.flags;
-
-    const hl = regs16.get(regs16.idx.HL);
-    const c = flags.get(flags.idx.C);
-    const a = regs8.get(regs8.idx.A);
-    const n = cpu.memory[hl] + c;
-
-    regs8.set(regs8.idx.A, a - n);
-
-    let f = cpu.tables.subFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
+function sbc_A_ptrHL() {
+    const hl = r16.get(i16.HL);
+    const c = flags.get(fi.C);
+    const a = r8.get(i8.A);
+    const n = mem[hl] + c;
+    r8.set(i8.A, a - n);
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -367,20 +318,14 @@ function sbc_A_ptrHL(cpu) {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 * Clock: 19T
 */
-function sbc_A_ptrIXplusd(cpu, d) {
-    const regs8 = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-    const flags = cpu.registers.flags;
-
+function sbc_A_ptrIXplusd(d) {
     const ix = regsSp.IX;
-    const c = flags.get(flags.idx.C);
-    const a = regs8.get(regs8.idx.A);
-    const n = cpu.memory[ix + d] + c;
-
-    regs8.set(regs8.idx.A, a - n);
-
-    let f = cpu.tables.subFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
+    const c = flags.get(fi.C);
+    const a = r8.get(i8.A);
+    const n = mem[ix + d] + c;
+    r8.set(i8.A, a - n);
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -390,19 +335,14 @@ function sbc_A_ptrIXplusd(cpu, d) {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 * Clock: 19T
 */
-function sbc_A_ptrIYplusd(cpu, d) {
-    const regs8 = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-    const flags = cpu.registers.flags;
-
+function sbc_A_ptrIYplusd(d) {
     const iy = regsSp.IY;
-    const c = flags.get(flags.idx.C);
-    const a = regs8.get(regs8.idx.A);
-    const n = cpu.memory[iy + d] + c;
-    regs8.set(regs8.idx.A, a - n);
-
-    let f = cpu.tables.subFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
+    const c = flags.get(fi.C);
+    const a = r8.get(i8.A);
+    const n = mem[iy + d] + c;
+    r8.set(i8.A, a - n);
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
 }
 
 /**
@@ -413,15 +353,12 @@ function sbc_A_ptrIYplusd(cpu, d) {
 * r identifies registers B, C, D, E, H, L, or A.
 * Clock: 4T
 */
-function and_r(cpu, rIndex) {
-    const regs8 = cpu.registers.regs8;
-
-    const a = regs8.get(regs8.idx.A);
-    const r = regs8.get(rIndex);
-    let f = cpu.tables.andFlagsTable[(a << 8) | r];
-    regs8.set(regs8.idx.F, f);
-
-    regs8.set(regs8.idx.A, a & r);
+function and_r(rIndex) {
+    const a = r8.get(i8.A);
+    const r = r8.get(rIndex);
+    let f = CPU.tables.andFlagsTable[(a << 8) | r];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a & r);
 }
 
 /**
@@ -431,14 +368,11 @@ function and_r(cpu, rIndex) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 * Clock: 7T
 */
-function and_n(cpu, n) {
-    const regs8 = cpu.registers.regs8;
-
-    const a = regs8.get(regs8.idx.A);
-    let f = cpu.tables.andFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
-
-    regs8.set(regs8.idx.A, a & n);
+function and_n(n) {
+    const a = r8.get(i8.A);
+    let f = CPU.tables.andFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a & n);
 }
 
 /**
@@ -448,17 +382,13 @@ function and_n(cpu, n) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 * Clock: 7T
 */
-function and_ptrHL(cpu) {
-    const regs8 = cpu.registers.regs8;
-    const regs16 = cpu.registers.regs16;
-
-    const hl = regs16.get(regs16.idx.HL);
-    const n = cpu.memory[hl];
-    const a = regs8.get(regs8.idx.A);
-    let f = cpu.tables.andFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
-
-    regs8.set(regs8.idx.A, a & n);
+function and_ptrHL() {
+    const hl = r16.get(i16.HL);
+    const n = mem[hl];
+    const a = r8.get(i8.A);
+    let f = CPU.tables.andFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a & n);
 }
 
 /**
@@ -468,17 +398,13 @@ function and_ptrHL(cpu) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 * Clock: 19T
 */
-function and_ptrIXplusd(cpu, d) {
-    const regs8 = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-
+function and_ptrIXplusd(d) {
     const ix = regsSp.IX;
-    const n = cpu.memory[ix + d];
-    const a = regs8.get(regs8.idx.A);
-    let f = cpu.tables.andFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
-
-    regs8.set(regs8.idx.A, a & n);
+    const n = mem[ix + d];
+    const a = r8.get(i8.A);
+    let f = CPU.tables.andFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a & n);
 }
 
 /**
@@ -488,17 +414,13 @@ function and_ptrIXplusd(cpu, d) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 * Clock: 19T
 */
-function and_ptrIYplusd(cpu, d) {
-    const regs8 = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-
+function and_ptrIYplusd(d) {
     const iy = regsSp.IY;
-    const n = cpu.memory[iy + d];
-    const a = regs8.get(regs8.idx.A);
-    let f = cpu.tables.andFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
-
-    regs8.set(regs8.idx.A, a & n);
+    const n = mem[iy + d];
+    const a = r8.get(i8.A);
+    let f = CPU.tables.andFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a & n);
 }
 
 /**
@@ -509,15 +431,12 @@ function and_ptrIYplusd(cpu, d) {
 * r identifies registers B, C, D, E, H, L, or A.
 * Clock: 4T
 */
-function or_r(cpu, rIndex) {
-    const regs8 = cpu.registers.regs8;
-
-    const a = regs8.get(regs8.idx.A);
-    const r = regs8.get(rIndex);
-    let f = cpu.tables.orFlagsTable[(a << 8) | r];
-    regs8.set(regs8.idx.F, f);
-
-    regs8.set(regs8.idx.A, a | r);
+function or_r(rIndex) {
+    const a = r8.get(i8.A);
+    const r = r8.get(rIndex);
+    let f = CPU.tables.orFlagsTable[(a << 8) | r];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a | r);
 }
 
 /**
@@ -527,14 +446,11 @@ function or_r(cpu, rIndex) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 * Clock: 7T
 */
-function or_n(cpu, n) {
-    const regs8 = cpu.registers.regs8;
-
-    const a = regs8.get(regs8.idx.A);
-    let f = cpu.tables.orFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
-
-    regs8.set(regs8.idx.A, a | n);
+function or_n(n) {
+    const a = r8.get(i8.A);
+    let f = CPU.tables.orFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a | n);
 }
 
 /**
@@ -544,17 +460,13 @@ function or_n(cpu, n) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 * Clock: 7T
 */
-function or_ptrHL(cpu) {
-    const regs8 = cpu.registers.regs8;
-    const regs16 = cpu.registers.regs16;
-
-    const hl = regs16.get(regs16.idx.HL);
-    const n = cpu.memory[hl];
-    const a = regs8.get(regs8.idx.A);
-    let f = cpu.tables.orFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
-
-    regs8.set(regs8.idx.A, a | n);
+function or_ptrHL() {
+    const hl = r16.get(i16.HL);
+    const n = mem[hl];
+    const a = r8.get(i8.A);
+    let f = CPU.tables.orFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a | n);
 }
 
 /**
@@ -564,17 +476,13 @@ function or_ptrHL(cpu) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 * Clock: 19T
 */
-function or_ptrIXplusd(cpu, d) {
-    const regs8 = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-
+function or_ptrIXplusd(d) {
     const ix = regsSp.IX;
-    const n = cpu.memory[ix + d];
-    const a = regs8.get(regs8.idx.A);
-    let f = cpu.tables.orFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
-
-    regs8.set(regs8.idx.A, a | n);
+    const n = mem[ix + d];
+    const a = r8.get(i8.A);
+    let f = CPU.tables.orFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a | n);
 }
 
 /**
@@ -584,17 +492,13 @@ function or_ptrIXplusd(cpu, d) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 * Clock: 19T
 */
-function or_ptrIYplusd(cpu, d) {
-    const regs8 = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-
+function or_ptrIYplusd(d) {
     const iy = regsSp.IY;
-    const n = cpu.memory[iy + d];
-    const a = regs8.get(regs8.idx.A);
-    let f = cpu.tables.orFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
-
-    regs8.set(regs8.idx.A, a | n);
+    const n = mem[iy + d];
+    const a = r8.get(i8.A);
+    let f = CPU.tables.orFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a | n);
 }
 
 /**
@@ -605,15 +509,12 @@ function or_ptrIYplusd(cpu, d) {
 * r identifies registers B, C, D, E, H, L, or A.
 * Clock: 4T
 */
-function xor_r(cpu, rIndex) {
-    const regs8 = cpu.registers.regs8;
-
-    const a = regs8.get(regs8.idx.A);
-    const r = regs8.get(rIndex);
-    let f = cpu.tables.xorFlagsTable[(a << 8) | r];
-    regs8.set(regs8.idx.F, f);
-
-    regs8.set(regs8.idx.A, a ^ r);
+function xor_r(rIndex) {
+    const a = r8.get(i8.A);
+    const r = r8.get(rIndex);
+    let f = CPU.tables.xorFlagsTable[(a << 8) | r];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a ^ r);
 }
 
 /**
@@ -623,14 +524,11 @@ function xor_r(cpu, rIndex) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 * Clock: 7T
 */
-function xor_n(cpu, n) {
-    const regs8 = cpu.registers.regs8;
-
-    const a = regs8.get(regs8.idx.A);
-    let f = cpu.tables.xorFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
-
-    regs8.set(regs8.idx.A, a ^ n);
+function xor_n(n) {
+    const a = r8.get(i8.A);
+    let f = CPU.tables.xorFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a ^ n);
 }
 
 /**
@@ -640,17 +538,13 @@ function xor_n(cpu, n) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 * Clock: 7T
 */
-function xor_ptrHL(cpu) {
-    const regs8 = cpu.registers.regs8;
-    const regs16 = cpu.registers.regs16;
-
-    const hl = regs16.get(regs16.idx.HL);
-    const n = cpu.memory[hl];
-    const a = regs8.get(regs8.idx.A);
-    let f = cpu.tables.xorFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
-
-    regs8.set(regs8.idx.A, a ^ n);
+function xor_ptrHL() {
+    const hl = r16.get(i16.HL);
+    const n = mem[hl];
+    const a = r8.get(i8.A);
+    let f = CPU.tables.xorFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a ^ n);
 }
 
 /**
@@ -660,17 +554,13 @@ function xor_ptrHL(cpu) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 * Clock: 19T
 */
-function xor_ptrIXplusd(cpu, d) {
-    const regs8 = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-
+function xor_ptrIXplusd(d) {
     const ix = regsSp.IX;
-    const n = cpu.memory[ix + d];
-    const a = regs8.get(regs8.idx.A);
-    let f = cpu.tables.xorFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
-
-    regs8.set(regs8.idx.A, a ^ n);
+    const n = mem[ix + d];
+    const a = r8.get(i8.A);
+    let f = CPU.tables.xorFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a ^ n);
 }
 
 /**
@@ -680,17 +570,13 @@ function xor_ptrIXplusd(cpu, d) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 * Clock: 19T
 */
-function xor_ptrIYplusd(cpu, d) {
-    const regs8 = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-
+function xor_ptrIYplusd(d) {
     const iy = regsSp.IY;
-    const n = cpu.memory[iy + d];
-    const a = regs8.get(regs8.idx.A);
-    let f = cpu.tables.xorFlagsTable[(a << 8) | n];
-    regs8.set(regs8.idx.F, f);
-
-    regs8.set(regs8.idx.A, a ^ n);
+    const n = mem[iy + d];
+    const a = r8.get(i8.A);
+    let f = CPU.tables.xorFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a ^ n);
 }
 
 /**
@@ -701,14 +587,12 @@ function xor_ptrIYplusd(cpu, d) {
 * contents of the Accumulator. r identifies registers B, C, D, E, H, L, or A.
 * Clock: 4T
 */
-function cp_r(cpu, rIndex) {
-    const regs = cpu.registers.regs8;
-    const r = regs.get(rIndex);
-    const a = regs.get(regs.idx.A);
-
-    let f = cpu.tables.subFlagsTable[(a << 8) | r];
+function cp_r(rIndex) {
+    const r = r8.get(rIndex);
+    const a = r8.get(i8.A);
+    let f = CPU.tables.subFlagsTable[(a << 8) | r];
     f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
-    regs.set(regs.idx.F, f);
+    r8.set(i8.F, f);
 }
 
 /**
@@ -719,13 +603,11 @@ function cp_r(cpu, rIndex) {
 * contents of the Accumulator.
 * Clock: 7T
 */
-function cp_n(cpu, n) {
-    const regs = cpu.registers.regs8;
-    const a = regs.get(regs.idx.A);
-
-    let f = cpu.tables.subFlagsTable[(a << 8) | n];
+function cp_n(n) {
+    const a = r8.get(i8.A);
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
     f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
-    regs.set(regs.idx.F, f);
+    r8.set(i8.F, f);
 }
 
 /**
@@ -736,16 +618,13 @@ function cp_n(cpu, n) {
 * contents of the Accumulator.
 * Clock: 7T
 */
-function cp_ptrHL(cpu) {
-    const regs = cpu.registers.regs8;
-    const regs16 = cpu.registers.regs16;
-    const a = regs.get(regs.idx.A);
-    const hl = regs16.get(regs16.idx.HL);
-    const n = cpu.memory[hl];
-
-    let f = cpu.tables.subFlagsTable[(a << 8) | n];
+function cp_ptrHL() {
+    const a = r8.get(i8.A);
+    const hl = r16.get(i16.HL);
+    const n = mem[hl];
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
     f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
-    regs.set(regs.idx.F, f);
+    r8.set(i8.F, f);
 }
 
 /**
@@ -756,16 +635,13 @@ function cp_ptrHL(cpu) {
 * contents of the Accumulator.
 * Clock: 19T
 */
-function cp_ptrIXplusd(cpu, d) {
-    const regs = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-    const a = regs.get(regs.idx.A);
+function cp_ptrIXplusd(d) {
+    const a = r8.get(i8.A);
     const ix = regsSp.IX;
-    const n = cpu.memory[ix + d];
-
-    let f = cpu.tables.subFlagsTable[(a << 8) | n];
+    const n = mem[ix + d];
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
     f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
-    regs.set(regs.idx.F, f);
+    r8.set(i8.F, f);
 }
 
 /**
@@ -776,29 +652,24 @@ function cp_ptrIXplusd(cpu, d) {
 * contents of the Accumulator.
 * Clock: 19T
 */
-function cp_ptrIYplusd(cpu, d) {
-    const regs = cpu.registers.regs8;
-    const regsSp = cpu.registers.regsSp;
-    const a = regs.get(regs.idx.A);
+function cp_ptrIYplusd(d) {
+    const a = r8.get(i8.A);
     const iy = regsSp.IY;
-    const n = cpu.memory[iy + d];
-
-    let f = cpu.tables.subFlagsTable[(a << 8) | n];
+    const n = mem[iy + d];
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
     f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
-    regs.set(regs.idx.F, f);
+    r8.set(i8.F, f);
 }
 
-function setFlagsIncDec(cpu, n, VLimit){
-    const regs8 = cpu.registers.regs8;
-    const table = (VLimit == 0x7f) ? cpu.tables.addFlagsTable : cpu.tables.subFlagsTable;
-
-    let f = regs8.get(regs8.idx.F);
+function setFlagsIncDec(n, VLimit){
+    const table = (VLimit == 0x7f) ? CPU.tables.addFlagsTable : CPU.tables.subFlagsTable;
+    let f = r8.get(i8.F);
     const c = f & 0x1; // saves flag C, not affected
     const pv = (n == VLimit) ? 0b100 : 0;
     f = table[(n << 8) | 1];
     f |= (f & 0b11111011) | pv;
     f |= (f & 0b11111110) | c;
-    regs8.set(regs8.idx.F, f);;
+    r8.set(i8.F, f);;
 }
 
 /**
@@ -807,15 +678,10 @@ function setFlagsIncDec(cpu, n, VLimit){
 * Register r is incremented and register r identifies any of the registers A, B, C, D, E, H, or L.
 * Clock: 4T
 */
-function inc_r(cpu, rIndex) {
-    const regs = cpu.registers.regs8;
-    const r = regs.get(rIndex);
-
-    setFlagsIncDec(cpu, r, 0x7f);
-
-    regs.set(rIndex, r + 1);
-
-    
+function inc_r(rIndex) {
+    const r = r8.get(rIndex);
+    setFlagsIncDec(r, 0x7f);
+    r8.set(rIndex, r + 1);
 }
 
 /**
@@ -824,14 +690,11 @@ function inc_r(cpu, rIndex) {
 * The byte contained in the address specified by the contents of the HL register pair is incremented.
 * Clock: 11T
 */
-function inc_ptrHL(cpu) {
-    const regs = cpu.registers.regs16;
-    const hl = regs.get(regs.idx.HL);
-    const n = cpu.memory[hl];
-
-    setFlagsIncDec(cpu, n, 0x7f);
-
-    cpu.memory[hl] = n + 1;
+function inc_ptrHL() {
+    const hl = r16.get(i16.HL);
+    const n = mem[hl];
+    setFlagsIncDec(n, 0x7f);
+    mem[hl] = n + 1;
 }
 
 /**
@@ -840,14 +703,11 @@ function inc_ptrHL(cpu) {
 * The byte contained in the address specified by the contents of (IX + d) is incremented.
 * Clock: 23T
 */
-function inc_ptrIXplusd(cpu, d) {
-    const regsSp = cpu.registers.regsSp;
+function inc_ptrIXplusd(d) {
     const ix = regsSp.IX;
-    const n = cpu.memory[ix + d];
-
-    setFlagsIncDec(cpu, n, 0x7f);
-
-    cpu.memory[ix + d] = n + 1;
+    const n = mem[ix + d];
+    setFlagsIncDec(n, 0x7f);
+    mem[ix + d] = n + 1;
 }
 
 /**
@@ -856,14 +716,11 @@ function inc_ptrIXplusd(cpu, d) {
 * The byte contained in the address specified by the contents of (IY + d) is incremented.
 * Clock: 23T
 */
-function inc_ptrIYplusd(cpu, d) {
-    const regsSp = cpu.registers.regsSp;
+function inc_ptrIYplusd(d) {
     const iy = regsSp.IY;
-    const n = cpu.memory[iy + d];
-
-    setFlagsIncDec(cpu, n, 0x7f);
-
-    cpu.memory[iy + d] = n + 1;
+    const n = mem[iy + d];
+    setFlagsIncDec(n, 0x7f);
+    mem[iy + d] = n + 1;
 }
 
 /**
@@ -872,13 +729,10 @@ function inc_ptrIYplusd(cpu, d) {
 * Register r is decremented and register r identifies any of the registers A, B, C, D, E, H, or L.
 * Clock: 4T
 */
-function dec_r(cpu, rIndex) {
-    const regs = cpu.registers.regs8;
-    const r = regs.get(rIndex);
-
-    setFlagsIncDec(cpu, r, 0x80);
-
-    regs.set(rIndex, r - 1);
+function dec_r(rIndex) {
+    const r = r8.get(rIndex);
+    setFlagsIncDec(r, 0x80);
+    r8.set(rIndex, r - 1);
 }
 
 /**
@@ -887,14 +741,11 @@ function dec_r(cpu, rIndex) {
 * The byte contained in the address specified by the contents of the HL register pair is decremented.
 * Clock: 11T
 */
-function dec_ptrHL(cpu) {
-    const regs = cpu.registers.regs16;
-    const hl = regs.get(regs.idx.HL);
-    const n = cpu.memory[hl];
-
-    setFlagsIncDec(cpu, n, 0x80);
-
-    cpu.memory[hl] = n - 1;
+function dec_ptrHL() {
+    const hl = r16.get(i16.HL);
+    const n = mem[hl];
+    setFlagsIncDec(n, 0x80);
+    mem[hl] = n - 1;
 }
 
 /**
@@ -903,14 +754,11 @@ function dec_ptrHL(cpu) {
 * The byte contained in the address specified by the contents of (IX + d) is decremented.
 * Clock: 23T
 */
-function dec_ptrIXplusd(cpu, d) {
-    const regsSp = cpu.registers.regsSp;
+function dec_ptrIXplusd(d) {
     const ix = regsSp.IX;
-    const n = cpu.memory[ix + d];
-
-    setFlagsIncDec(cpu, n, 0x80);
-
-    cpu.memory[ix + d] = n - 1;
+    const n = mem[ix + d];
+    setFlagsIncDec(n, 0x80);
+    mem[ix + d] = n - 1;
 }
 
 /**
@@ -919,14 +767,11 @@ function dec_ptrIXplusd(cpu, d) {
 * The byte contained in the address specified by the contents of (IY + d) is incremented.
 * Clock: 23T
 */
-function dec_ptrIYplusd(cpu, d) {
-    const regsSp = cpu.registers.regsSp;
+function dec_ptrIYplusd(d) {
     const iy = regsSp.IY;
-    const n = cpu.memory[iy + d];
-
-    setFlagsIncDec(cpu, n, 0x80);
-
-    cpu.memory[iy + d] = n - 1;
+    const n = mem[iy + d];
+    setFlagsIncDec(n, 0x80);
+    mem[iy + d] = n - 1;
 }
 
 module.exports = {
@@ -977,5 +822,6 @@ module.exports = {
     dec_r,
     dec_ptrHL,
     dec_ptrIXplusd,
-    dec_ptrIYplusd
+    dec_ptrIYplusd,
+    setCPU
 }
