@@ -62,8 +62,8 @@ function cpl(cpu) {
     const result = a ^ 0xff;
 
     f |= H | N;
-    if (result & F3) flags |= F3;
-    if (result & F5) flags |= F5;
+    if (result & F3) f |= F3;
+    if (result & F5) f |= F5;
     regs.set(regs.idx.A, a ^ 0xff);
     regs.set(regs.idx.F, f);
 }
