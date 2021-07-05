@@ -5,7 +5,19 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-const { regsSp } = require("../z80_registers");
+let CPU = {};
+let r8, i8, r16, i16, flags, fi, regsSp, mem;
+const setCPU = (cpu) => {
+    CPU = cpu;
+    mem = CPU.memory;
+    r8 = CPU.registers.regs8;
+    i8 = r8.idx;
+    r16 = CPU.registers.regs16;
+    i16 = r16.idx;
+    regsSp = CPU.registers.regsSp;
+    flags = CPU.registers.flags;
+    fi = flags.idx;
+}
 
 /**
  * LD r, r'
@@ -15,9 +27,8 @@ const { regsSp } = require("../z80_registers");
  * Clock: 4T
  */
 function ld_r_r2(cpu, rIndex, r2Index) {
-    const regs = cpu.registers.regs8;
-    const r2 = regs.get(r2Index);
-    regs.set(rIndex, r2);
+    const r2 = r8.get(r2Index);
+    r8.set(rIndex, r2);
 }
 
 
@@ -29,7 +40,7 @@ function ld_r_r2(cpu, rIndex, r2Index) {
  * Clock: 7T
  */
 function ld_r_n(cpu, rIndex, n) {
-    cpu.registers.regs8.set(rIndex, n);
+    r8.set(rIndex, n);
 }
 
 /**
@@ -40,9 +51,8 @@ function ld_r_n(cpu, rIndex, n) {
  * Clock: 7T
  */
 function ld_r_ptrHL(cpu, rIndex) {
-    const regs = cpu.registers;
-    const ptrHLcontent = cpu.memory[regs.regs16.get(regs.regs16.idx.HL)];
-    cpu.registers.regs8.set(rIndex, ptrHLcontent);
+    const ptrHLcontent = mem[r16.get(i16.HL)];
+    r8.set(rIndex, ptrHLcontent);
 }
 
 /**
@@ -54,10 +64,9 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 19T
  */
  function ld_r_ptrIXd(cpu, rIndex, d) {
-    const regs = cpu.registers;
-    const ptr = regs.regsSp.IX + d;
-    const ptrContent = cpu.memory[ptr];
-    regs.regs8.set(rIndex, ptrContent);
+    const ptr = regsSp.IX + d;
+    const ptrContent = mem[ptr];
+    r8.set(rIndex, ptrContent);
 }
 
 /**
@@ -69,10 +78,9 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 19T
  */
  function ld_r_ptrIYd(cpu, rIndex, d) {
-    const regs = cpu.registers;
-    const ptr = regs.regsSp.IY + d;
-    const ptrContent = cpu.memory[ptr];
-    regs.regs8.set(rIndex, ptrContent);
+    const ptr = regsSp.IY + d;
+    const ptrContent = mem[ptr];
+    r8.set(rIndex, ptrContent);
 }
 
 /**
@@ -83,9 +91,8 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 7T
  */
  function ld_ptrHL_r(cpu, rIndex) {
-    const regs = cpu.registers;
-    const ptr = regs.regs16.get(regs.regs16.idx.HL);
-    cpu.memory[ptr] = regs.regs8.get(rIndex);
+    const ptr = r16.get(i16.HL);
+    mem[ptr] = r8.get(rIndex);
 }
 
 /**
@@ -97,9 +104,8 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 19T
  */
  function ld_ptrIXd_r(cpu, rIndex, d) {
-    const regs = cpu.registers;
-    const ptr = regs.regsSp.IX + d;
-    cpu.memory[ptr] = regs.regs8.get(rIndex);
+    const ptr = regsSp.IX + d;
+    mem[ptr] = r8.get(rIndex);
 }
 
 /**
@@ -111,9 +117,8 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 19T
  */
  function ld_ptrIYd_r(cpu, rIndex, d) {
-    const regs = cpu.registers;
-    const ptr = regs.regsSp.IY + d;
-    cpu.memory[ptr] = regs.regs8.get(rIndex);
+    const ptr = regsSp.IY + d;
+    mem[ptr] = r8.get(rIndex);
 }
 
 /**
@@ -124,9 +129,8 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 10T
  */
  function ld_ptrHL_n(cpu, n) {
-    const regs = cpu.registers;
-    const ptr = regs.regs16.get(regs.regs16.idx.HL);
-    cpu.memory[ptr] = n;
+    const ptr = r16.get(i16.HL);
+    mem[ptr] = n;
 }
 
 /**
@@ -137,9 +141,8 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 19T
  */
  function ld_ptrIXd_n(cpu, n, d) {
-    const regs = cpu.registers;
-    const ptr = regs.regsSp.IX + d;
-    cpu.memory[ptr] = n;
+    const ptr = regsSp.IX + d;
+    mem[ptr] = n;
 }
 
 /**
@@ -150,9 +153,8 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 19T
  */
  function ld_ptrIYd_n(cpu, n, d) {
-    const regs = cpu.registers;
-    const ptr = regs.regsSp.IY + d;
-    cpu.memory[ptr] = n;
+    const ptr = regsSp.IY + d;
+    mem[ptr] = n;
 }
 
 /**
@@ -163,9 +165,8 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 7T
  */
  function ld_A_ptrBC(cpu) {
-    const regs = cpu.registers;
-    const ptr = regs.regs16.get(regs.regs16.idx.BC);
-    regs.regs8.set(regs.regs8.idx.A, cpu.memory[ptr]);
+    const ptr = r16.get(i16.BC);
+    r8.set(i8.A, mem[ptr]);
 }
 
 /**
@@ -176,9 +177,8 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 7T
  */
  function ld_A_ptrDE(cpu) {
-    const regs = cpu.registers;
-    const ptr = regs.regs16.get(regs.regs16.idx.DE);
-    regs.regs8.set(regs.regs8.idx.A, cpu.memory[ptr]);
+    const ptr = r16.get(i16.DE);
+    r8.set(i8.A, mem[ptr]);
 }
 
 /**
@@ -189,8 +189,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 13T
  */
  function ld_A_ptrnn(cpu, nn) {
-    const regs = cpu.registers;
-    regs.regs8.set(regs.regs8.idx.A, cpu.memory[nn]);
+    r8.set(i8.A, mem[nn]);
 }
 
 /**
@@ -201,10 +200,9 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 7T
  */
  function ld_ptrBC_A(cpu) {
-    const regs = cpu.registers;
-    const ptr = regs.regs16.get(regs.regs16.idx.BC);
-    const a = regs.regs8.get(regs.regs8.idx.A);
-    cpu.memory[ptr] = a;
+    const ptr = r16.get(i16.BC);
+    const a = r8.get(i8.A);
+    mem[ptr] = a;
 }
 
 /**
@@ -215,10 +213,9 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 7T
  */
  function ld_ptrDE_A(cpu) {
-    const regs = cpu.registers;
-    const ptr = regs.regs16.get(regs.regs16.idx.DE);
-    const a = regs.regs8.get(regs.regs8.idx.A);
-    cpu.memory[ptr] = a;
+    const ptr = r16.get(i16.DE);
+    const a = r8.get(i8.A);
+    mem[ptr] = a;
 }
 
 /**
@@ -229,8 +226,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 13T
  */
  function ld_ptrnn_A(cpu, nn) {
-    const regs = cpu.registers;
-    cpu.memory[nn] = regs.regs8.get(regs.regs8.idx.A);
+    mem[nn] = r8.get(i8.A);
 }
 
 /**
@@ -240,16 +236,15 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 9T
  */
  function ld_A_I(cpu) {
-    const regs = cpu.registers;
-    const flags = regs.flags;
-    const i = regs.regsSp.I;
-    regs.regs8.set(regs.regs8.idx.A, i);
+    const iff2 = CPU.registers.iff.IFF2;
+    const i = regsSp.I;
+    r8.set(i8.A, i);
     // Flags
-    flags.set(flags.idx.S, (i & 0b10000000) != 0);
-    flags.set(flags.idx.Z, i == 0);
-    flags.set(flags.idx.H, false);
-    flags.set(flags.idx.PV, regs.iff.IFF2);
-    flags.set(flags.idx.N, false);
+    flags.set(fi.S, (i & 0b10000000) != 0);
+    flags.set(fi.Z, i == 0);
+    flags.set(fi.H, false);
+    flags.set(fi.PV, iff2);
+    flags.set(fi.N, false);
 }
 
 /**
@@ -259,16 +254,15 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 9T
  */
  function ld_A_R(cpu) {
-    const regs = cpu.registers;
-    const flags = regs.flags;
-    const r = regs.regsSp.R;
-    regs.regs8.set(regs.regs8.idx.A, r);
+    const iff2 = CPU.registers.iff.IFF2;
+    const r = regsSp.R;
+    r8.set(i8.A, r);
     // Flags
-    flags.set(flags.idx.S, false, (r & 0b10000000) != 0);
-    flags.set(flags.idx.Z, r == 0);
-    flags.set(flags.idx.H, false);
-    flags.set(flags.idx.PV, regs.iff.IFF2);
-    flags.set(flags.idx.N, false);
+    flags.set(fi.S, false, (r & 0b10000000) != 0);
+    flags.set(fi.Z, r == 0);
+    flags.set(fi.H, false);
+    flags.set(fi.PV, iff2);
+    flags.set(fi.N, false);
 }
 
 /**
@@ -278,8 +272,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 9T
  */
  function ld_I_A(cpu) {
-    const regs = cpu.registers;
-    regsSp.I = regs.regs8.get(regs.regs8.idx.A);
+    regsSp.I = r8.get(i8.A);
 }
 
 /**
@@ -289,8 +282,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * Clock: 9T
  */
  function ld_R_A(cpu) {
-    const regs = cpu.registers;
-    regsSp.R = regs.regs8.get(regs.regs8.idx.A);
+    regsSp.R = r8.get(i8.A);
 }
 
 module.exports = {
@@ -314,5 +306,6 @@ module.exports = {
     ld_A_I,
     ld_A_R,
     ld_I_A,
-    ld_R_A
+    ld_R_A,
+    setCPU
 }

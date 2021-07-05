@@ -7,7 +7,8 @@ const registers = require('./z80_registers');
 const memory = require('./z80_memory');
 const decode = require('./z80_decoder');
 const flagTables = require('./z80_flag_tables');
-const i_8bit_arithm = require('./z80_instructions/ins_8bit_arithmetic')
+const i_8bit_arithm = require('./z80_instructions/ins_8bit_arithmetic');
+const i_8bit_load = require('./z80_instructions/ins_8bit_load');
 
 class Z80 {
     constructor() {
@@ -32,7 +33,9 @@ class Z80 {
             daaTable: daaArray,
             parityTable: parityArray
         };
+        
         i_8bit_arithm.setCPU(this);
+        i_8bit_load.setCPU(this);
     }
 
     /**
