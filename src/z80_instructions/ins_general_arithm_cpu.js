@@ -159,6 +159,18 @@ function di(cpu) {
     cpu.registers.iff.IFF2 = false;
 }
 
+/**
+* EI
+* 
+* The enable interrupt instruction sets both interrupt enable flip flops (IFFI and IFF2) to a
+* logic 1, allowing recognition of any maskable interrupt. 
+* Clock: 4T
+*/
+function ei(cpu) {
+    cpu.registers.iff.IFF1 = true;    
+    cpu.registers.iff.IFF2 = true;
+}
+
 module.exports = {
     daa,
     cpl,
@@ -166,5 +178,6 @@ module.exports = {
     ccf,
     scf,
     halt,
-    di
+    di,
+    ei
 }
