@@ -12,6 +12,7 @@ class Z80 {
     constructor() {
         this.memory = memory;
         this.registers = registers;
+        this.isHalt = false;
 
         let addFlagsArray = flagTables.generateAddFlagsArray();
         let subFlagsArray =flagTables.generateSubFlagsArray();
