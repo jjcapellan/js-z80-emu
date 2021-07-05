@@ -68,7 +68,37 @@ function cpl(cpu) {
     regs.set(regs.idx.F, f);
 }
 
+
+
+/**
+* NEG
+* 
+* The contents of the Accumulator are negated (two’s complement). This method is the
+* same as subtracting the contents of the Accumulator from zero. 
+* Clock: 8T
+*/
+function neg(cpu) {
+    const regs = cpu.registers.regs8;
+    const a = regs.get(regs.idx.A);
+    const result = (0 - a) & 0xff;
+
+    let f = cpu.tables.subFlagsTable[0 | a];
+    if(a == 0x80) {
+        f |= PV;
+    } else {
+        f &= (PV ^ 0xff);
+    }
+    if (a != 0){
+        f |= C;
+    } else {
+        f &= (C ^ 0xff);
+    }
+    regs.set(regs.idx.A, result);
+    regs.set(regs.idx.F, f);
+}
+
 module.exports = {
     daa,
-    cpl
+    cpl,
+    neg
 }

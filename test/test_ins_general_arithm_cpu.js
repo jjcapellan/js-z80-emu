@@ -59,3 +59,20 @@ test('cpl(cpu)', t => {
     doTest(0x20, 0, 0xdf, 0x1a);
     
 });
+
+test('neg(cpu)', t => {
+
+    function doTest(a0, f0, a1, f1){
+    regs8.set(regs8.idx.A, a0);
+    regs8.set(regs8.idx.F, f0);
+    instr.neg(cpu); // NEG
+    a = regs8.get(regs8.idx.A);
+    f = regs8.get(regs8.idx.F);    
+    t.is(a, a1, `a0: ${a0.toString(16)}, a1: ${a1.toString(16)}, result_a:${a.toString(16)}`);
+    t.is(f, f1, `a0: ${a0.toString(16)}, f1:${f1.toString(16)}, result_f:${f.toString(16)}`);
+    }
+
+    doTest(0x40, 0, 0xc0, 0x83);
+    doTest(0xef, 0, 0x11, 0x13);
+    
+});
