@@ -135,6 +135,18 @@ function scf(cpu) {
     regs.set(regs.idx.F, f);
 }
 
+/**
+* HALT
+* 
+* The HALT instruction suspends CPU operation until a subsequent interrupt or reset is
+* received. While in the HALT state, the processor executes NOPs to maintain memory
+* refresh logic.
+* Clock: 4T
+*/
+function halt(cpu) {
+    cpu.isHalt = true;    
+}
+
 module.exports = {
     daa,
     cpl,
