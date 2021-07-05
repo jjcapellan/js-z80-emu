@@ -6,17 +6,14 @@
  */
 
  let CPU = {};
- let r8, i8, r16, i16, flags, fi, regsSp, mem;
+ let r8, i8, r16, regsSp, mem;
  const setCPU = (cpu) => {
      CPU = cpu;
      mem = CPU.memory;
      r8 = CPU.registers.regs8;
      i8 = r8.idx;
      r16 = CPU.registers.regs16;
-     i16 = r16.idx;
      regsSp = CPU.registers.regsSp;
-     flags = CPU.registers.flags;
-     fi = flags.idx;
  }
 
 /**
