@@ -147,10 +147,24 @@ function halt(cpu) {
     cpu.isHalt = true;    
 }
 
+/**
+* DI
+* 
+* DI disables the maskable interrupt by resetting the interrupt enable flip-flops (IFF1 and
+* IFF2). 
+* Clock: 4T
+*/
+function di(cpu) {
+    cpu.registers.iff.IFF1 = false;    
+    cpu.registers.iff.IFF2 = false;
+}
+
 module.exports = {
     daa,
     cpl,
     neg,
     ccf,
-    scf
+    scf,
+    halt,
+    di
 }
