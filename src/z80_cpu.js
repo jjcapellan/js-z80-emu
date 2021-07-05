@@ -13,6 +13,7 @@ class Z80 {
         this.memory = memory;
         this.registers = registers;
         this.isHalt = false;
+        this.interruptMode = 0;
 
         let addFlagsArray = flagTables.generateAddFlagsArray();
         let subFlagsArray =flagTables.generateSubFlagsArray();
