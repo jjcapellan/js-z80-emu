@@ -9,34 +9,34 @@ const regsSp = cpu.registers.regsSp;
 const flags = cpu.registers.flags;
 const mem = cpu.memory;
 
-test('ex_DE_HL(cpu)', t => {
+test('ex_DE_HL()', t => {
     regs16.set(regs16.idx.DE, 0x2822);
     regs16.set(regs16.idx.HL, 0x499a);
-    instr.ex_DE_HL(cpu); // EX DE, HL
+    instr.ex_DE_HL(); // EX DE, HL
     const de = regs16.get(regs16.idx.DE);
     const hl = regs16.get(regs16.idx.HL);
     t.is(de, 0x499a);
     t.is(hl, 0x2822);
 });
 
-test('ex_AF_AF2(cpu)', t => {
+test('ex_AF_AF2()', t => {
     regs16.set(regs16.idx.AF, 0x9900);
     regs16.set(regs16.idx.AF, 0x5944, true);
-    instr.ex_AF_AF2(cpu); // EX AF, AF'
+    instr.ex_AF_AF2(); // EX AF, AF'
     const af = regs16.get(regs16.idx.AF);
     const af2 = regs16.get(regs16.idx.AF, true);
     t.is(af, 0x5944);
     t.is(af2, 0x9900);
 });
 
-test('exx(cpu)', t => {
+test('exx()', t => {
     regs16.set(regs16.idx.BC, 0x1112);
     regs16.set(regs16.idx.DE, 0x1314);
     regs16.set(regs16.idx.HL, 0x1516);
     regs16.set(regs16.idx.BC, 0x1718, true);
     regs16.set(regs16.idx.DE, 0x1920, true);
     regs16.set(regs16.idx.HL, 0x2122, true);
-    instr.exx(cpu); // EXX
+    instr.exx(); // EXX
     const bc = regs16.get(regs16.idx.BC);
     const de = regs16.get(regs16.idx.DE);
     const hl = regs16.get(regs16.idx.HL);
@@ -51,12 +51,12 @@ test('exx(cpu)', t => {
     t.is(hl2, 0x1516);
 });
 
-test('ex_ptrSP_HL(cpu)', t => {
+test('ex_ptrSP_HL()', t => {
     regs16.set(regs16.idx.HL, 0x7012);
     regsSp.SP = 0x8856;
     mem[0x8856] = 0x11;
     mem[0x8857] = 0x22;
-    instr.ex_ptrSP_HL(cpu); // EX (SP), HL
+    instr.ex_ptrSP_HL(); // EX (SP), HL
     const hl = regs16.get(regs16.idx.HL);
     const h = regs8.get(regs8.idx.H);
     const l = regs8.get(regs8.idx.L);
@@ -69,12 +69,12 @@ test('ex_ptrSP_HL(cpu)', t => {
     t.is(sp, 0x8856);
 });
 
-test('ex_ptrSP_IX(cpu)', t => {
+test('ex_ptrSP_IX()', t => {
     regsSp.IX = 0x3988;
     regsSp.SP = 0x0100;
     mem[0x0100] = 0x90;
     mem[0x0101] = 0x48;
-    instr.ex_ptrSP_IX(cpu); // EX (SP), IX
+    instr.ex_ptrSP_IX(); // EX (SP), IX
     const ix = regsSp.IX;
     const sp = regsSp.SP;
     t.is(ix, 0x4890);
@@ -83,13 +83,13 @@ test('ex_ptrSP_IX(cpu)', t => {
     t.is(sp, 0x0100);
 });
 
-test('ldi(cpu)', t => {
+test('ldi()', t => {
     regs16.set(regs16.idx.HL, 0x1111);
     regs16.set(regs16.idx.DE, 0x2222);
     regs16.set(regs16.idx.BC, 0x07);    
     mem[0x1111] = 0x88;
     mem[0x2222] = 0x66;
-    instr.ldi(cpu); // LDI
+    instr.ldi(); // LDI
     const hl = regs16.get(regs16.idx.HL);
     const de = regs16.get(regs16.idx.DE);
     const bc = regs16.get(regs16.idx.BC);
@@ -102,12 +102,12 @@ test('ldi(cpu)', t => {
     t.is(PV_flag, true);
 });
 
-test('cpi(cpu)', t => {
+test('cpi()', t => {
     regs16.set(regs16.idx.HL, 0x1111);
     regs16.set(regs16.idx.BC, 0x0001);
     regs8.set(regs8.idx.A, 0x3b);    
     mem[0x1111] = 0x3b;
-    instr.cpi(cpu); // CPI
+    instr.cpi(); // CPI
     const hl = regs16.get(regs16.idx.HL);
     const bc = regs16.get(regs16.idx.BC);
     const PV_flag = flags.get(flags.idx.PV);

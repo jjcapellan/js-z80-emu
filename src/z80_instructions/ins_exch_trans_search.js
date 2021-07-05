@@ -5,18 +5,31 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
+ let CPU = {};
+ let r8, i8, r16, i16, flags, fi, regsSp, mem;
+ const setCPU = (cpu) => {
+     CPU = cpu;
+     mem = CPU.memory;
+     r8 = CPU.registers.regs8;
+     i8 = r8.idx;
+     r16 = CPU.registers.regs16;
+     i16 = r16.idx;
+     regsSp = CPU.registers.regsSp;
+     flags = CPU.registers.flags;
+     fi = flags.idx;
+ }
+
 /**
  * ex DE, HL
  * 
  * The 2-byte contents of register pairs DE and HL are exchanged.
  * Clock: 4T
  */
-function ex_DE_HL(cpu) {
-    const regs = cpu.registers.regs16;
-    const de = regs.get(regs.idx.DE);
-    const hl = regs.get(regs.idx.HL);
-    regs.set(regs.idx.DE, hl);
-    regs.set(regs.idx.HL, de);
+function ex_DE_HL() {
+    const de = r16.get(i16.DE);
+    const hl = r16.get(i16.HL);
+    r16.set(i16.DE, hl);
+    r16.set(i16.HL, de);
 }
 
 /**
@@ -26,12 +39,11 @@ function ex_DE_HL(cpu) {
  * are exchanged. Register pair AF consists of registers A′ and F′.
  * Clock: 4T
  */
-function ex_AF_AF2(cpu) {
-    const regs = cpu.registers.regs16;
-    const af = regs.get(regs.idx.AF);
-    const af2 = regs.get(regs.idx.AF, true);
-    regs.set(regs.idx.AF, af2);
-    regs.set(regs.idx.AF, af, true);
+function ex_AF_AF2() {
+    const af = r16.get(i16.AF);
+    const af2 = r16.get(i16.AF, true);
+    r16.set(i16.AF, af2);
+    r16.set(i16.AF, af, true);
 }
 
 /**
@@ -41,20 +53,19 @@ function ex_AF_AF2(cpu) {
  * BC', DE', and HL', respectively.
  * Clock: 4T
  */
-function exx(cpu) {
-    const regs = cpu.registers.regs16;
-    const bc = regs.get(regs.idx.BC);
-    const de = regs.get(regs.idx.DE);
-    const hl = regs.get(regs.idx.HL);
-    const bc2 = regs.get(regs.idx.BC, true);
-    const de2 = regs.get(regs.idx.DE, true);
-    const hl2 = regs.get(regs.idx.HL, true);
-    regs.set(regs.idx.BC, bc2);
-    regs.set(regs.idx.DE, de2);
-    regs.set(regs.idx.HL, hl2);
-    regs.set(regs.idx.BC, bc, true);
-    regs.set(regs.idx.DE, de, true);
-    regs.set(regs.idx.HL, hl, true);
+function exx() {
+    const bc = r16.get(i16.BC);
+    const de = r16.get(i16.DE);
+    const hl = r16.get(i16.HL);
+    const bc2 = r16.get(i16.BC, true);
+    const de2 = r16.get(i16.DE, true);
+    const hl2 = r16.get(i16.HL, true);
+    r16.set(i16.BC, bc2);
+    r16.set(i16.DE, de2);
+    r16.set(i16.HL, hl2);
+    r16.set(i16.BC, bc, true);
+    r16.set(i16.DE, de, true);
+    r16.set(i16.HL, hl, true);
 }
 
 /**
@@ -65,14 +76,12 @@ function exx(cpu) {
  * highorder byte of HL is exchanged with the next highest memory address (SP+1)
  * Clock: 19T
  */
- function ex_ptrSP_HL(cpu) {
-    const regs = cpu.registers.regs8;
-    const sp = cpu.registers.regsSp.SP;
-    const mem = cpu.memory;
-    const h = regs.get(regs.idx.H);
-    const l = regs.get(regs.idx.L);
-    regs.set(regs.idx.H, mem[sp + 1]);
-    regs.set(regs.idx.L, mem[sp]);
+ function ex_ptrSP_HL() {
+    const sp = regsSp.SP;
+    const h = r8.get(i8.H);
+    const l = r8.get(i8.L);
+    r8.set(i8.H, mem[sp + 1]);
+    r8.set(i8.L, mem[sp]);
     mem[sp] = l;
     mem[sp + 1] = h;
 }
@@ -85,14 +94,12 @@ function exx(cpu) {
  * byte of IX is exchanged with the next highest memory address (SP+1).
  * Clock: 23T
  */
-function ex_ptrSP_IX(cpu) {
-    const regs = cpu.registers.regsSp;
-    const sp = regs.SP;
-    const mem = cpu.memory;
-    const ix = regs.IX;
+function ex_ptrSP_IX() {
+    const sp = regsSp.SP;
+    const ix = regsSp.IX;
     const ixH = ix >> 8;
     const ixL = ix & 0xff;
-    regs.IX = (mem[sp + 1] << 8) | mem[sp];
+    regsSp.IX = (mem[sp + 1] << 8) | mem[sp];
     mem[sp] = ixL;
     mem[sp + 1] = ixH;
 }
@@ -105,14 +112,12 @@ function ex_ptrSP_IX(cpu) {
  * byte of IY is exchanged with the next highest memory address (SP+1).
  * Clock: 23T
  */
-function ex_ptrSP_IY(cpu) {
-    const regs = cpu.registers.regsSp;
-    const sp = regs.SP;
-    const mem = cpu.memory;
-    const iy = regs.IY;
+function ex_ptrSP_IY() {
+    const sp = regsSp.SP;
+    const iy = regsSp.IY;
     const iyH = iy >> 8;
     const iyL = iy & 0xff;
-    regs.IY = (mem[sp + 1] << 8) | mem[sp];
+    regsSp.IY = (mem[sp + 1] << 8) | mem[sp];
     mem[sp] = iyL;
     mem[sp + 1] = iyH;
 }
@@ -126,24 +131,21 @@ function ex_ptrSP_IY(cpu) {
  * decremented.
  * Clock: 16T
  */
-function ldi(cpu) {
-    const regs = cpu.registers.regs16;
-    const mem = cpu.memory;
-    const flags = cpu.registers.flags;
+function ldi() {
 
-    let hl = regs.get(regs.idx.HL);
-    let de = regs.get(regs.idx.DE);
-    let bc = regs.get(regs.idx.BC);
+    let hl = r16.get(i16.HL);
+    let de = r16.get(i16.DE);
+    let bc = r16.get(i16.BC);
 
     mem[de] = mem[hl];
-    regs.set(regs.idx.HL, hl + 1);
-    regs.set(regs.idx.DE, de + 1);
-    regs.set(regs.idx.BC, bc - 1);
+    r16.set(i16.HL, hl + 1);
+    r16.set(i16.DE, de + 1);
+    r16.set(i16.BC, bc - 1);
     
     //Flags
-    flags.set(flags.idx.H, false);
-    flags.set(flags.idx.PV, (bc - 1) != 0);
-    flags.set(flags.idx.N, false);
+    flags.set(fi.H, false);
+    flags.set(fi.PV, (bc - 1) != 0);
+    flags.set(fi.N, false);
 
 }
 
@@ -159,15 +161,14 @@ function ldi(cpu) {
  * BC is set to 0 prior to instruction execution, the instruction loops through 64 KB.
  * Clock: 21T (BC != 0) ; 16T (BC == 0)
  */
-function ldir(cpu) {
-    const regs = cpu.registers.regs16;    
-    let bc = regs.get(regs.idx.BC);
+function ldir() {
+    let bc = r16.get(i16.BC);
 
-    ldi(cpu);
+    ldi();
 
     // Repeat condition
     if((bc - 1) == 0){
-        cpu.registers.regsSp.PC -= 2;
+        regsSp.PC -= 2;
     }
 }
 
@@ -180,24 +181,21 @@ function ldir(cpu) {
  * pair are decremented.
  * Clock: 16T
  */
-function ldd(cpu, bucle = false) {
-    const regs = cpu.registers.regs16;
-    const mem = cpu.memory;
-    const flags = cpu.registers.flags;
+function ldd(bucle = false) {
 
-    let hl = regs.get(regs.idx.HL);
-    let de = regs.get(regs.idx.DE);
-    let bc = regs.get(regs.idx.BC);
+    let hl = r16.get(i16.HL);
+    let de = r16.get(i16.DE);
+    let bc = r16.get(i16.BC);
 
     mem[de] = mem[hl];
-    regs.set(regs.idx.HL, hl - 1);
-    regs.set(regs.idx.DE, de - 1);
-    regs.set(regs.idx.BC, bc - 1);
+    r16.set(i16.HL, hl - 1);
+    r16.set(i16.DE, de - 1);
+    r16.set(i16.BC, bc - 1);
     
     //Flags
-    flags.set(flags.idx.H, false);
-    flags.set(flags.idx.PV, ((bc - 1) != 0) && !bucle);
-    flags.set(flags.idx.N, false);
+    flags.set(fi.H, false);
+    flags.set(fi.PV, ((bc - 1) != 0) && !bucle);
+    flags.set(fi.N, false);
 
 }
 
@@ -213,15 +211,14 @@ function ldd(cpu, bucle = false) {
  * When the BC is set to 0, prior to instruction execution, the instruction loops through 64 KB.
  * Clock: 21T (BC != 0); 22T (BC == 0)
  */
-function lddr(cpu) {
-    const regs = cpu.registers.regs16;    
-    let bc = regs.get(regs.idx.BC);
+function lddr() {
+    let bc = r16.get(i16.BC);
 
-    ldd(cpu, true);
+    ldd(true);
 
     // Repeat condition
     if((bc - 1) == 0){
-        cpu.registers.regsSp.PC -= 2;
+        regsSp.PC -= 2;
     }
 
 }
@@ -234,26 +231,22 @@ contents of the Accumulator. With a true compare, a condition bit is set. Then H
  * incremented and the Byte Counter (register pair BC) is decremented.
  * Clock: 16T
  */
- function cpi(cpu) {
-    const regs16 = cpu.registers.regs16;
-    const regs8 = cpu.registers.regs8;
-    const flags = cpu.registers.flags;
-    const mem = cpu.memory;
+ function cpi() {
 
-    const a = regs8.get(regs8.idx.A);
-    let hl = regs16.get(regs16.idx.HL);
-    let bc = regs16.get(regs16.idx.BC);
+    const a = r8.get(i8.A);
+    let hl = r16.get(i16.HL);
+    let bc = r16.get(i16.BC);
     const diff = a - mem[hl];
 
-    regs16.set(regs16.idx.HL, hl + 1);
-    regs16.set(regs16.idx.BC, bc - 1);
+    r16.set(i16.HL, hl + 1);
+    r16.set(i16.BC, bc - 1);
 
     // Flags
-    flags.set(flags.idx.S, diff < 0);
-    flags.set(flags.idx.Z, diff == 0);
-    flags.set(flags.idx.H, (a & 0b1000) < (mem[hl] & 0b1000));
-    flags.set(flags.idx.PV, (bc-1) != 0);
-    flags.set(flags.idx.N, true);
+    flags.set(fi.S, diff < 0);
+    flags.set(fi.Z, diff == 0);
+    flags.set(fi.H, (a & 0b1000) < (mem[hl] & 0b1000));
+    flags.set(fi.PV, (bc-1) != 0);
+    flags.set(fi.N, true);
 
 }
 
@@ -270,19 +263,16 @@ contents of the Accumulator. With a true compare, a condition bit is set. Then H
  * match is found.
  * Clock: 21T (BC != 0 && A != (HL)); 16T (BC == 0 || A ==(HL))
  */
-function cpir(cpu) {
-    const regs16 = cpu.registers.regs16;
-    const regs8 = cpu.registers.regs8;
-    const mem = cpu.memory;
+function cpir() {
 
-    const a = regs8.get(regs8.idx.A);
-    const hl = regs16.get(regs16.idx.HL);    
+    const a = r8.get(i8.A);
+    const hl = r16.get(i16.HL);    
     const diff = a - mem[hl];
-    cpi(cpu);
-    const bc = regs16.get(regs16.idx.BC);
+    cpi();
+    const bc = r16.get(i16.BC);
 
     if(bc != 0 && diff != 0){
-        cpu.registers.regsSp.PC -= 2;
+        regsSp.PC -= 2;
     }
 
 }
@@ -295,26 +285,22 @@ function cpir(cpu) {
  * HL and Byte Counter (register pair BC) are decremented.
  * Clock: 21T (BC != 0 && A != (HL)); 16T (BC == 0 || A ==(HL))
  */
-function cpd(cpu) {
-    const regs16 = cpu.registers.regs16;
-    const regs8 = cpu.registers.regs8;
-    const flags = cpu.registers.flags;
-    const mem = cpu.memory;
+function cpd() {
 
-    const a = regs8.get(regs8.idx.A);
-    let hl = regs16.get(regs16.idx.HL);
-    let bc = regs16.get(regs16.idx.BC);
+    const a = r8.get(i8.A);
+    let hl = r16.get(i16.HL);
+    let bc = r16.get(i16.BC);
     const diff = a - mem[hl];
 
-    regs16.set(regs16.idx.HL, hl - 1);
-    regs16.set(regs16.idx.BC, bc - 1);
+    r16.set(i16.HL, hl - 1);
+    r16.set(i16.BC, bc - 1);
 
     // Flags
-    flags.set(flags.idx.S, diff < 0);
-    flags.set(flags.idx.Z, diff == 0);
-    flags.set(flags.idx.H, (a & 0b1000) < (mem[hl] & 0b1000));
-    flags.set(flags.idx.PV, (bc-1) != 0);
-    flags.set(flags.idx.N, true);
+    flags.set(fi.S, diff < 0);
+    flags.set(fi.Z, diff == 0);
+    flags.set(fi.H, (a & 0b1000) < (mem[hl] & 0b1000));
+    flags.set(fi.PV, (bc-1) != 0);
+    flags.set(fi.N, true);
 
 }
 
@@ -330,19 +316,16 @@ function cpd(cpu) {
  * prior to instruction execution, the instruction loops through 64 KB if no match is found
  * Clock: 16T
  */
-function cpdr(cpu) {
-    const regs16 = cpu.registers.regs16;
-    const regs8 = cpu.registers.regs8;
-    const mem = cpu.memory;
+function cpdr() {
 
-    const a = regs8.get(regs8.idx.A);
-    const hl = regs16.get(regs16.idx.HL);    
+    const a = r8.get(i8.A);
+    const hl = r16.get(i16.HL);    
     const diff = a - mem[hl];
-    cpd(cpu);
-    const bc = regs16.get(regs16.idx.BC);
+    cpd();
+    const bc = r16.get(i16.BC);
 
     if(bc != 0 && diff != 0){
-        cpu.registers.regsSp.PC -= 2;
+        regsSp.PC -= 2;
     }
 
 }
@@ -361,5 +344,6 @@ module.exports = {
     cpi,
     cpir,
     cpd,
-    cpdr
+    cpdr,
+    setCPU
 }

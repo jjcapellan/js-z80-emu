@@ -46,7 +46,7 @@ function decode0x0X(cpu, byte) {
             break;
 
         case 0x08: // EX AF, AF'
-            instr_exch_trans.ex_AF_AF2(cpu);
+            instr_exch_trans.ex_AF_AF2();
             break;
 
         case 0x09:
