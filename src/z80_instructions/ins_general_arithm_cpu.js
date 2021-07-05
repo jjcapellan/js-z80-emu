@@ -97,8 +97,29 @@ function neg(cpu) {
     regs.set(regs.idx.F, f);
 }
 
+/**
+* CCF
+* 
+* The Carry flag in the F Register is inverted.
+* Clock: 4T
+*/
+function ccf(cpu) {
+    const regs = cpu.registers.regs8;
+    const a = regs.get(regs.idx.A);
+    let f = regs.get(regs.idx.F);
+    const hf = f & C;
+    const cf = 1 - hf;
+    f = (f & (~H)) | (H*hf); // set h value
+    f = (f & (~C)) | (C*cf); // set c value
+    f = (f & (~N));          // reset n
+    f = (f & (~F3)) | (a & F3);
+    f = (f & (~F5)) | (a & F5);    
+    regs.set(regs.idx.F, f);
+}
+
 module.exports = {
     daa,
     cpl,
-    neg
+    neg,
+    ccf
 }
