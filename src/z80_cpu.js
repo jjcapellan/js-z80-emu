@@ -11,6 +11,7 @@ const i_8bit_arithm = require('./z80_instructions/ins_8bit_arithmetic');
 const i_8bit_load = require('./z80_instructions/ins_8bit_load');
 const i_16bit_load = require('./z80_instructions/ins_16bit_load');
 const i_exch_trans_search = require('./z80_instructions/ins_exch_trans_search');
+const i_general_arithm = require('./z80_instructions/ins_general_arithm_cpu');
 
 class Z80 {
     constructor() {
@@ -40,6 +41,7 @@ class Z80 {
         i_8bit_load.setCPU(this);
         i_16bit_load.setCPU(this);
         i_exch_trans_search.setCPU(this);
+        i_general_arithm.setCPU(this);
     }
 
     /**

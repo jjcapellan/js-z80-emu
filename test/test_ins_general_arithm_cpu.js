@@ -19,12 +19,12 @@ const PV = 0b00000100;
 const N = 0b00000010;
 const C = 0b00000001;
 
-test('daa(cpu)', t => {
+test('daa()', t => {
 
     function doTest(a0, f0, a1, f1){
     regs8.set(regs8.idx.A, a0);
     regs8.set(regs8.idx.F, f0);
-    instr.daa(cpu); // DAA
+    instr.daa(); // DAA
     a = regs8.get(regs8.idx.A);
     f = regs8.get(regs8.idx.F);    
     t.is(a, a1, `a0: ${a0.toString(16)}, a1: ${a1.toString(16)}, result_a:${a.toString(16)}`);
@@ -44,12 +44,12 @@ test('daa(cpu)', t => {
     
 });
 
-test('cpl(cpu)', t => {
+test('cpl()', t => {
 
     function doTest(a0, f0, a1, f1){
     regs8.set(regs8.idx.A, a0);
     regs8.set(regs8.idx.F, f0);
-    instr.cpl(cpu); // CPL
+    instr.cpl(); // CPL
     a = regs8.get(regs8.idx.A);
     f = regs8.get(regs8.idx.F);    
     t.is(a, a1, `a0: ${a0.toString(16)}, a1: ${a1.toString(16)}, result_a:${a.toString(16)}`);
@@ -60,12 +60,12 @@ test('cpl(cpu)', t => {
     
 });
 
-test('neg(cpu)', t => {
+test('neg()', t => {
 
     function doTest(a0, f0, a1, f1){
     regs8.set(regs8.idx.A, a0);
     regs8.set(regs8.idx.F, f0);
-    instr.neg(cpu); // NEG
+    instr.neg(); // NEG
     a = regs8.get(regs8.idx.A);
     f = regs8.get(regs8.idx.F);    
     t.is(a, a1, `a0: ${a0.toString(16)}, a1: ${a1.toString(16)}, result_a:${a.toString(16)}`);
@@ -77,12 +77,12 @@ test('neg(cpu)', t => {
     
 });
 
-test('ccf(cpu)', t => {
+test('ccf()', t => {
 
     function doTest(a0, f0, a1, f1){
     regs8.set(regs8.idx.A, a0);
     regs8.set(regs8.idx.F, f0);
-    instr.ccf(cpu); // CCF
+    instr.ccf(); // CCF
     a = regs8.get(regs8.idx.A);
     f = regs8.get(regs8.idx.F);    
     t.is(a, a1, `a0: ${a0.toString(16)}, a1: ${a1.toString(16)}, result_a:${a.toString(16)}`);
@@ -94,12 +94,12 @@ test('ccf(cpu)', t => {
     
 });
 
-test('scf(cpu)', t => {
+test('scf()', t => {
 
     function doTest(a0, f0, a1, f1){
     regs8.set(regs8.idx.A, a0);
     regs8.set(regs8.idx.F, f0);
-    instr.scf(cpu); // SCF
+    instr.scf(); // SCF
     a = regs8.get(regs8.idx.A);
     f = regs8.get(regs8.idx.F);    
     t.is(a, a1, `a0: ${a0.toString(16)}, a1: ${a1.toString(16)}, result_a:${a.toString(16)}`);

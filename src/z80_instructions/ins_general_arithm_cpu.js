@@ -5,6 +5,14 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
+ let CPU = {};
+ let r8, i8;
+ const setCPU = (cpu) => {
+     CPU = cpu;
+     r8 = CPU.registers.regs8;
+     i8 = r8.idx;
+ }
+
 //Flag masks
 const S = 0b10000000;
 const Z = 0b01000000;
@@ -22,13 +30,12 @@ const C = 0b00000001;
 * operations. For addition (ADD, ADC, INC) or subtraction (SUB, SBC, DEC, NEG).
 * Clock: 4T
 */
-function daa(cpu) {
-    const regs = cpu.registers.regs8;
-    const f = regs.get(regs.idx.F);
-    const a = regs.get(regs.idx.A);
+function daa() {
+    const f = r8.get(i8.F);
+    const a = r8.get(i8.A);
     // Get adjustment and carry flag
     const nch = ((f & N) << 1) | ((f & C) << 1) | ((f & H) >> 4);
-    const tableData = cpu.tables.daaTable[(nch << 8) | a];
+    const tableData = CPU.tables.daaTable[(nch << 8) | a];
     const adjustment = tableData & 0x00ff;
     const carryFlag = tableData >> 8;
     // Calc of flags
@@ -37,16 +44,15 @@ function daa(cpu) {
     flags |= carryFlag;
     if (result & 0x80) flags |= S;
     if ((result & 0xff) == 0) flags |= Z;
-    //if ((a & 0x0f) > (result & 0x0f)) flags |= H; <-- fail in tests, try next method in other functions
-    if ((a ^ result) & 0x10) flags |= H;
-    if (cpu.tables.parityTable[(result & 0xff)]) flags |= PV;
+    if ((a ^ result) & 0x10) flags |= H; // <-- Try in more test
+    if (CPU.tables.parityTable[(result & 0xff)]) flags |= PV;
     flags |= (f & N);
     if (result & F3) flags |= F3;
     if (result & F5) flags |= F5;
 
 
-    regs.set(regs.idx.A, (result & 0xff));
-    regs.set(regs.idx.F, flags);
+    r8.set(i8.A, (result & 0xff));
+    r8.set(i8.F, flags);
 }
 
 /**
@@ -55,17 +61,16 @@ function daa(cpu) {
 * The contents of the Accumulator (Register A) are inverted (one’s complement).
 * Clock: 4T
 */
-function cpl(cpu) {
-    const regs = cpu.registers.regs8;
-    const a = regs.get(regs.idx.A);
-    let f = regs.get(regs.idx.F);
+function cpl() {
+    const a = r8.get(i8.A);
+    let f = r8.get(i8.F);
     const result = a ^ 0xff;
 
     f |= H | N;
     if (result & F3) f |= F3;
     if (result & F5) f |= F5;
-    regs.set(regs.idx.A, a ^ 0xff);
-    regs.set(regs.idx.F, f);
+    r8.set(i8.A, a ^ 0xff);
+    r8.set(i8.F, f);
 }
 
 
@@ -77,12 +82,11 @@ function cpl(cpu) {
 * same as subtracting the contents of the Accumulator from zero. 
 * Clock: 8T
 */
-function neg(cpu) {
-    const regs = cpu.registers.regs8;
-    const a = regs.get(regs.idx.A);
+function neg() {
+    const a = r8.get(i8.A);
     const result = (0 - a) & 0xff;
 
-    let f = cpu.tables.subFlagsTable[0 | a];
+    let f = CPU.tables.subFlagsTable[0 | a];
     if(a == 0x80) {
         f |= PV;
     } else {
@@ -93,8 +97,8 @@ function neg(cpu) {
     } else {
         f &= (C ^ 0xff);
     }
-    regs.set(regs.idx.A, result);
-    regs.set(regs.idx.F, f);
+    r8.set(i8.A, result);
+    r8.set(i8.F, f);
 }
 
 /**
@@ -103,10 +107,9 @@ function neg(cpu) {
 * The Carry flag in the F Register is inverted.
 * Clock: 4T
 */
-function ccf(cpu) {
-    const regs = cpu.registers.regs8;
-    const a = regs.get(regs.idx.A);
-    let f = regs.get(regs.idx.F);
+function ccf() {
+    const a = r8.get(i8.A);
+    let f = r8.get(i8.F);
     const hf = f & C;
     const cf = 1 - hf;
     f = (f & (~H)) | (H*hf); // set h value
@@ -114,7 +117,7 @@ function ccf(cpu) {
     f = (f & (~N));          // reset n
     f = (f & (~F3)) | (a & F3);
     f = (f & (~F5)) | (a & F5);    
-    regs.set(regs.idx.F, f);
+    r8.set(i8.F, f);
 }
 
 /**
@@ -123,16 +126,15 @@ function ccf(cpu) {
 * The Carry flag in the F Register is set.
 * Clock: 4T
 */
-function scf(cpu) {
-    const regs = cpu.registers.regs8;
-    const a = regs.get(regs.idx.A);
-    let f = regs.get(regs.idx.F);
+function scf() {
+    const a = r8.get(i8.A);
+    let f = r8.get(i8.F);
     f &= (~H);
     f |= C; 
     f &=(~N);
     f = (f & (~F3)) | (a & F3);
     f = (f & (~F5)) | (a & F5);    
-    regs.set(regs.idx.F, f);
+    r8.set(i8.F, f);
 }
 
 /**
@@ -143,8 +145,8 @@ function scf(cpu) {
 * refresh logic.
 * Clock: 4T
 */
-function halt(cpu) {
-    cpu.isHalt = true;    
+function halt() {
+    CPU.isHalt = true;    
 }
 
 /**
@@ -154,9 +156,9 @@ function halt(cpu) {
 * IFF2). 
 * Clock: 4T
 */
-function di(cpu) {
-    cpu.registers.iff.IFF1 = false;    
-    cpu.registers.iff.IFF2 = false;
+function di() {
+    CPU.registers.iff.IFF1 = false;    
+    CPU.registers.iff.IFF2 = false;
 }
 
 /**
@@ -166,9 +168,9 @@ function di(cpu) {
 * logic 1, allowing recognition of any maskable interrupt. 
 * Clock: 4T
 */
-function ei(cpu) {
-    cpu.registers.iff.IFF1 = true;    
-    cpu.registers.iff.IFF2 = true;
+function ei() {
+    CPU.registers.iff.IFF1 = true;    
+    CPU.registers.iff.IFF2 = true;
 }
 
 /**
@@ -190,8 +192,8 @@ function ei(cpu) {
 *
 * Clock: 8T
 */
-function im(cpu, interruptMode) {
-    cpu.interruptMode = interruptMode;
+function im(interruptMode) {
+    CPU.interruptMode = interruptMode;
 }
 
 module.exports = {
@@ -203,5 +205,6 @@ module.exports = {
     halt,
     di,
     ei,
-    im
+    im,
+    setCPU
 }
