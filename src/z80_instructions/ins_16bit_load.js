@@ -5,6 +5,20 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
+ let CPU = {};
+ let r8, i8, r16, i16, flags, fi, regsSp, mem;
+ const setCPU = (cpu) => {
+     CPU = cpu;
+     mem = CPU.memory;
+     r8 = CPU.registers.regs8;
+     i8 = r8.idx;
+     r16 = CPU.registers.regs16;
+     i16 = r16.idx;
+     regsSp = CPU.registers.regsSp;
+     flags = CPU.registers.flags;
+     fi = flags.idx;
+ }
+
 /**
  * LD dd, nn
  * 
@@ -12,8 +26,8 @@
  * HL, or SP register pairs.
  * Clock: 10T
  */
-function ld_dd_nn(cpu, ddIndex, nn) {
-    cpu.registers.regs16.set(ddIndex, nn);
+function ld_dd_nn(ddIndex, nn) {
+    r16.set(ddIndex, nn);
 }
 
 /**
@@ -23,8 +37,8 @@ function ld_dd_nn(cpu, ddIndex, nn) {
  * low-order byte.
  * Clock: 14T
  */
-function ld_IX_nn(cpu, nn) {
-    cpu.registers.regsSp.IX = nn;
+function ld_IX_nn(nn) {
+    regsSp.IX = nn;
 }
 
 /**
@@ -34,8 +48,8 @@ function ld_IX_nn(cpu, nn) {
  * low-order byte.
  * Clock: 14T
  */
-function ld_IY_nn(cpu, nn) {
-    cpu.registers.regsSp.IY = nn;
+function ld_IY_nn(nn) {
+    regsSp.IY = nn;
 }
 
 /**
@@ -47,11 +61,9 @@ function ld_IY_nn(cpu, nn) {
  * low-order byte of nn.
  * Clock: 16T
  */
-function ld_HL_ptrnn(cpu, ptrnn) {
-    const regs8 = cpu.registers.regs8;
-    const mem = cpu.memory;
-    regs8.set(regs8.idx.L, mem[ptrnn]);
-    regs8.set(regs8.idx.H, mem[ptrnn + 1]);
+function ld_HL_ptrnn(ptrnn) {
+    r8.set(i8.L, mem[ptrnn]);
+    r8.set(i8.H, mem[ptrnn + 1]);
 }
 
 /**
@@ -62,12 +74,11 @@ function ld_HL_ptrnn(cpu, ptrnn) {
  * of dd. Register pair dd defines BC, DE, HL, or SP register pairs.
  * Clock: 20T
  */
-function ld_dd_ptrnn(cpu, ddIndex, ptrnn) {
-    const mem = cpu.memory;
+function ld_dd_ptrnn(ddIndex, ptrnn) {
     const dHigh = mem[ptrnn + 1];
     const dLow = mem[ptrnn];
     const ddValue = (dHigh << 8) | dLow;
-    cpu.registers.regs16.set(ddIndex, ddValue);
+    r16.set(ddIndex, ddValue);
 }
 
 /**
@@ -78,12 +89,11 @@ function ld_dd_ptrnn(cpu, ddIndex, ptrnn) {
  * portion of IX. The first n operand after the op code is the low-order byte of nn.
  * Clock: 20T
  */
-function ld_IX_ptrnn(cpu, ptrnn) {
-    const mem = cpu.memory;
+function ld_IX_ptrnn(ptrnn) {
     const ixHigh = mem[ptrnn + 1];
     const ixLow = mem[ptrnn];
     const ixValue = (ixLow << 8) | ixHigh; //little endian
-    cpu.registers.regsSp.IX = ixValue;
+    regsSp.IX = ixValue;
 }
 
 /**
@@ -94,12 +104,11 @@ function ld_IX_ptrnn(cpu, ptrnn) {
  * portion of IY. The first n operand after the op code is the low-order byte of nn.
  * Clock: 20T
  */
- function ld_IY_ptrnn(cpu, ptrnn) {
-    const mem = cpu.memory;
+ function ld_IY_ptrnn(ptrnn) {
     const iyHigh = mem[ptrnn + 1];
     const iyLow = mem[ptrnn];
     const iyValue = (iyLow << 8) | iyHigh; //little endian
-    cpu.registers.regsSp.IY = iyValue;
+    regsSp.IY = iyValue;
 }
 
 /**
@@ -110,11 +119,9 @@ function ld_IX_ptrnn(cpu, ptrnn) {
  * low-order byte of nn.
  * Clock: 16T
  */
-function ld_ptrnn_HL(cpu, ptrnn) {
-    const regs8 = cpu.registers.regs8;
-    const mem = cpu.memory;
-    mem[ptrnn] = regs8.get(regs8.idx.L);
-    mem[ptrnn + 1] = regs8.get(regs8.idx.H);
+function ld_ptrnn_HL(ptrnn) {
+    mem[ptrnn] = r8.get(i8.L);
+    mem[ptrnn + 1] = r8.get(i8.H);
 }
 
 /**
@@ -124,9 +131,8 @@ function ld_ptrnn_HL(cpu, ptrnn) {
  * loaded to memory address (nn + 1). Register pair dd defines either BC, DE, HL, or SP.
  * Clock: 20T
  */
-function ld_ptrnn_dd(cpu, ddIndex, ptrnn) {
-    const dd = cpu.registers.regs16.get(ddIndex);
-    const mem = cpu.memory;
+function ld_ptrnn_dd(ddIndex, ptrnn) {
+    const dd = r16.get(ddIndex);
     mem[ptrnn] = dd & 0xff;
     mem[ptrnn + 1] = (dd & 0xff00) >> 8;
 }
@@ -139,9 +145,8 @@ function ld_ptrnn_dd(cpu, ddIndex, ptrnn) {
  * the low-order byte of nn.
  * Clock: 20T
  */
-function ld_ptrnn_IX(cpu, ptrnn) {
-    const ix = cpu.registers.regsSp.IX;
-    const mem = cpu.memory;
+function ld_ptrnn_IX(ptrnn) {
+    const ix = regsSp.IX;
     mem[ptrnn] = ix & 0xff;
     mem[ptrnn + 1] = (ix & 0xff00) >> 8;
 }
@@ -154,9 +159,8 @@ function ld_ptrnn_IX(cpu, ptrnn) {
  * the low-order byte of nn.
  * Clock: 20T
  */
-function ld_ptrnn_IY(cpu, ptrnn) {
-    const iy = cpu.registers.regsSp.IY;
-    const mem = cpu.memory;
+function ld_ptrnn_IY(ptrnn) {
+    const iy = regsSp.IY;
     mem[ptrnn] = iy & 0xff;
     mem[ptrnn + 1] = (iy & 0xff00) >> 8;
 }
@@ -167,9 +171,8 @@ function ld_ptrnn_IY(cpu, ptrnn) {
  * The contents of the register pair HL are loaded to the Stack Pointer (SP).
  * Clock: 6T
  */
-function ld_SP_HL(cpu) {
-    const regs = cpu.registers;
-    regs.regsSp.SP = regs.regs16.get(regs.regs16.idx.HL);
+function ld_SP_HL() {
+    regsSp.SP = r16.get(r16.idx.HL);
 }
 
 /**
@@ -178,9 +181,8 @@ function ld_SP_HL(cpu) {
  * The 2-byte contents of Index Register IX are loaded to the Stack Pointer (SP)
  * Clock: 10T
  */
-function ld_SP_IX(cpu) {
-    const regs = cpu.registers;
-    regs.regsSp.SP = regs.regsSp.IX;
+function ld_SP_IX() {
+    regsSp.SP = regsSp.IX;
 }
 
 /**
@@ -189,9 +191,8 @@ function ld_SP_IX(cpu) {
  * The 2-byte contents of Index Register IY are loaded to the Stack Pointer (SP)
  * Clock: 10T
  */
-function ld_SP_IY(cpu) {
-    const regs = cpu.registers;
-    regs.regsSp.SP = regs.regsSp.IY;
+function ld_SP_IY() {
+    regsSp.SP = regsSp.IY;
 }
 
 /**
@@ -205,14 +206,12 @@ function ld_SP_IY(cpu) {
  * in the SP. The operand qq identifies register pair BC, DE, HL, or AF.
  * Clock: 11T
  */
-function push_qq(cpu, qqIndex) {
-    const regs = cpu.registers;
-    const mem = cpu.memory;
-    const qq = regs.regs16.get(qqIndex);
-    regs.regsSp.SP--;
-    mem[regs.regsSp.SP] = (qq & 0xff00) >> 8;
-    regs.regsSp.SP--;
-    mem[regs.regsSp.SP] = qq & 0xff;
+function push_qq(qqIndex) {
+    const qq = r16.get(qqIndex);
+    regsSp.SP--;
+    mem[regsSp.SP] = (qq & 0xff00) >> 8;
+    regsSp.SP--;
+    mem[regsSp.SP] = qq & 0xff;
 }
 
 /**
@@ -225,14 +224,12 @@ function push_qq(cpu, qqIndex) {
  * byte to the memory location corresponding to this new address in SP.
  * Clock: 15T
  */
-function push_IX(cpu) {
-    const regs = cpu.registers.regsSp;
-    const mem = cpu.memory;
-    const ix = regs.IX;
-    regs.SP--;
-    mem[regs.SP] = (ix & 0xff00) >> 8;
-    regs.SP--;
-    mem[regs.SP] = ix & 0xff;
+function push_IX() {
+    const ix = regsSp.IX;
+    regsSp.SP--;
+    mem[regsSp.SP] = (ix & 0xff00) >> 8;
+    regsSp.SP--;
+    mem[regsSp.SP] = ix & 0xff;
 }
 
 /**
@@ -245,14 +242,12 @@ function push_IX(cpu) {
  * byte to the memory location corresponding to this new address in SP.
  * Clock: 15T
  */
-function push_IY(cpu) {
-    const regs = cpu.registers.regsSp;
-    const mem = cpu.memory;
-    const iy = regs.IY;
-    regs.SP--;
-    mem[regs.SP] = (iy & 0xff00) >> 8;
-    regs.SP--;
-    mem[regs.SP] = iy & 0xff;
+function push_IY() {
+    const iy = regsSp.IY;
+    regsSp.SP--;
+    mem[regsSp.SP] = (iy & 0xff00) >> 8;
+    regsSp.SP--;
+    mem[regsSp.SP] = iy & 0xff;
 }
 
 /**
@@ -267,16 +262,13 @@ function push_IY(cpu) {
  * DE, HL, or AF.
  * Clock: 10T
  */
- function pop_qq(cpu, qqIndex) {
-    const regsSp = cpu.registers.regsSp;
-    const regs16 = cpu.registers.regs16;
-    const mem = cpu.memory;
+ function pop_qq(qqIndex) {
     let qq = 0;
     qq = mem[regsSp.SP];
     regsSp.SP++;
     qq = qq | (mem[regsSp.SP] << 8);
     regsSp.SP++;
-    regs16.set(qqIndex, qq);
+    r16.set(qqIndex, qq);
 }
 
 /**
@@ -290,9 +282,7 @@ function push_IY(cpu) {
  * portion of IX. The SP is incremented again.
  * Clock: 14T
  */
- function pop_IX(cpu) {
-    const regsSp = cpu.registers.regsSp;
-    const mem = cpu.memory;
+ function pop_IX() {
     let ix = 0;
     ix = mem[regsSp.SP];
     regsSp.SP++;
@@ -312,9 +302,7 @@ function push_IY(cpu) {
  * portion of IY. The SP is incremented again.
  * Clock: 14T
  */
- function pop_IY(cpu) {
-    const regsSp = cpu.registers.regsSp;
-    const mem = cpu.memory;
+ function pop_IY() {
     let iy = 0;
     iy = mem[regsSp.SP];
     regsSp.SP++;
@@ -343,5 +331,6 @@ module.exports = {
     push_IY,
     pop_qq,
     pop_IX,
-    pop_IY
+    pop_IY,
+    setCPU
 }

@@ -20,7 +20,7 @@ function decode0x0X(cpu, byte) {
             hsb = cpu.getByte();
             nn = (hsb << 8) | lsb;
             ddIndex = cpu.registers.regs16.idx.BC;
-            instr_16b_load.ld_dd_nn(cpu, ddIndex, nn);
+            instr_16b_load.ld_dd_nn(ddIndex, nn);
             break;
 
         case 0x02: //LD (BC), A
@@ -90,7 +90,7 @@ function decode0x1X(cpu, byte) {
             hsb = cpu.getByte();
             nn = (hsb << 8) | lsb;
             ddIndex = cpu.registers.regs16.idx.DE;
-            instr_16b_load.ld_dd_nn(cpu, ddIndex, nn);
+            instr_16b_load.ld_dd_nn(ddIndex, nn);
             break;
 
         case 0x12: // LD (DE), A
@@ -158,14 +158,14 @@ function decode0x2X(cpu, byte) {
             hsb = cpu.getByte();
             nn = (hsb << 8) | lsb;
             ddIndex = cpu.registers.regs16.idx.HL;
-            instr_16b_load.ld_dd_nn(cpu, ddIndex, nn);
+            instr_16b_load.ld_dd_nn(ddIndex, nn);
             break;
 
         case 0x22: // LD (nn), HL
             lsb = cpu.getByte();
             hsb = cpu.getByte();
             ptrnn = (hsb << 8) | lsb;
-            instr_16b_load.ld_ptrnn_HL(cpu, ptrnn);
+            instr_16b_load.ld_ptrnn_HL(ptrnn);
             break;
 
         case 0x23:
@@ -196,7 +196,7 @@ function decode0x2X(cpu, byte) {
             lsb = cpu.getByte();
             hsb = cpu.getByte();
             ptrnn = (hsb << 8) | lsb;
-            instr_16b_load.ld_HL_ptrnn(cpu, ptrnn);
+            instr_16b_load.ld_HL_ptrnn(ptrnn);
             break;
 
         case 0x2b:
