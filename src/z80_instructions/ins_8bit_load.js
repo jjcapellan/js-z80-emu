@@ -26,7 +26,7 @@ const setCPU = (cpu) => {
  * registers A, B, C, D, E, H, or L.
  * Clock: 4T
  */
-function ld_r_r2(cpu, rIndex, r2Index) {
+function ld_r_r2(rIndex, r2Index) {
     const r2 = r8.get(r2Index);
     r8.set(rIndex, r2);
 }
@@ -39,7 +39,7 @@ function ld_r_r2(cpu, rIndex, r2Index) {
  * H, or L.
  * Clock: 7T
  */
-function ld_r_n(cpu, rIndex, n) {
+function ld_r_n(rIndex, n) {
     r8.set(rIndex, n);
 }
 
@@ -50,7 +50,7 @@ function ld_r_n(cpu, rIndex, n) {
  * registers A, B, C, D, E, H, or L
  * Clock: 7T
  */
-function ld_r_ptrHL(cpu, rIndex) {
+function ld_r_ptrHL(rIndex) {
     const ptrHLcontent = mem[r16.get(i16.HL)];
     r8.set(rIndex, ptrHLcontent);
 }
@@ -63,7 +63,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * D, E, H, or L
  * Clock: 19T
  */
- function ld_r_ptrIXd(cpu, rIndex, d) {
+ function ld_r_ptrIXd(rIndex, d) {
     const ptr = regsSp.IX + d;
     const ptrContent = mem[ptr];
     r8.set(rIndex, ptrContent);
@@ -77,7 +77,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * D, E, H, or L
  * Clock: 19T
  */
- function ld_r_ptrIYd(cpu, rIndex, d) {
+ function ld_r_ptrIYd(rIndex, d) {
     const ptr = regsSp.IY + d;
     const ptrContent = mem[ptr];
     r8.set(rIndex, ptrContent);
@@ -90,7 +90,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * the HL register pair. The r symbol identifies registers A, B, C, D, E, H, or L.
  * Clock: 7T
  */
- function ld_ptrHL_r(cpu, rIndex) {
+ function ld_ptrHL_r(rIndex) {
     const ptr = r16.get(i16.HL);
     mem[ptr] = r8.get(rIndex);
 }
@@ -103,7 +103,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * The r symbol identifies registers A, B, C, D, E, H, or L.
  * Clock: 19T
  */
- function ld_ptrIXd_r(cpu, rIndex, d) {
+ function ld_ptrIXd_r(rIndex, d) {
     const ptr = regsSp.IX + d;
     mem[ptr] = r8.get(rIndex);
 }
@@ -116,7 +116,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * The r symbol identifies registers A, B, C, D, E, H, or L.
  * Clock: 19T
  */
- function ld_ptrIYd_r(cpu, rIndex, d) {
+ function ld_ptrIYd_r(rIndex, d) {
     const ptr = regsSp.IY + d;
     mem[ptr] = r8.get(rIndex);
 }
@@ -128,7 +128,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * pair.
  * Clock: 10T
  */
- function ld_ptrHL_n(cpu, n) {
+ function ld_ptrHL_n(n) {
     const ptr = r16.get(i16.HL);
     mem[ptr] = n;
 }
@@ -140,7 +140,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * and the two’s complement displacement operand d.
  * Clock: 19T
  */
- function ld_ptrIXd_n(cpu, n, d) {
+ function ld_ptrIXd_n(n, d) {
     const ptr = regsSp.IX + d;
     mem[ptr] = n;
 }
@@ -152,7 +152,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * and the two’s complement displacement operand d.
  * Clock: 19T
  */
- function ld_ptrIYd_n(cpu, n, d) {
+ function ld_ptrIYd_n(n, d) {
     const ptr = regsSp.IY + d;
     mem[ptr] = n;
 }
@@ -164,7 +164,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * loaded to the Accumulator.
  * Clock: 7T
  */
- function ld_A_ptrBC(cpu) {
+ function ld_A_ptrBC() {
     const ptr = r16.get(i16.BC);
     r8.set(i8.A, mem[ptr]);
 }
@@ -176,7 +176,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * loaded to the Accumulator.
  * Clock: 7T
  */
- function ld_A_ptrDE(cpu) {
+ function ld_A_ptrDE() {
     const ptr = r16.get(i16.DE);
     r8.set(i8.A, mem[ptr]);
 }
@@ -188,7 +188,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * The first n operand after the op code is the low-order byte of a 2-byte memory address.
  * Clock: 13T
  */
- function ld_A_ptrnn(cpu, nn) {
+ function ld_A_ptrnn(nn) {
     r8.set(i8.A, mem[nn]);
 }
 
@@ -199,7 +199,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * of the register pair BC.
  * Clock: 7T
  */
- function ld_ptrBC_A(cpu) {
+ function ld_ptrBC_A() {
     const ptr = r16.get(i16.BC);
     const a = r8.get(i8.A);
     mem[ptr] = a;
@@ -212,7 +212,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * of the register pair DE.
  * Clock: 7T
  */
- function ld_ptrDE_A(cpu) {
+ function ld_ptrDE_A() {
     const ptr = r16.get(i16.DE);
     const a = r8.get(i8.A);
     mem[ptr] = a;
@@ -225,7 +225,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * The first n operand after the op code is the low-order byte of nn.
  * Clock: 13T
  */
- function ld_ptrnn_A(cpu, nn) {
+ function ld_ptrnn_A(nn) {
     mem[nn] = r8.get(i8.A);
 }
 
@@ -235,7 +235,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * The contents of the Interrupt Vector Register I are loaded to the Accumulator.
  * Clock: 9T
  */
- function ld_A_I(cpu) {
+ function ld_A_I() {
     const iff2 = CPU.registers.iff.IFF2;
     const i = regsSp.I;
     r8.set(i8.A, i);
@@ -253,7 +253,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * The contents of Memory Refresh Register R are loaded to the Accumulator
  * Clock: 9T
  */
- function ld_A_R(cpu) {
+ function ld_A_R() {
     const iff2 = CPU.registers.iff.IFF2;
     const r = regsSp.R;
     r8.set(i8.A, r);
@@ -271,7 +271,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * The contents of the Accumulator are loaded to the Interrupt Control Vector Register, I
  * Clock: 9T
  */
- function ld_I_A(cpu) {
+ function ld_I_A() {
     regsSp.I = r8.get(i8.A);
 }
 
@@ -281,7 +281,7 @@ function ld_r_ptrHL(cpu, rIndex) {
  * The contents of the Accumulator are loaded to the Memory Refresh register R.
  * Clock: 9T
  */
- function ld_R_A(cpu) {
+ function ld_R_A() {
     regsSp.R = r8.get(i8.A);
 }
 
