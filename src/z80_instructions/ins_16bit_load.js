@@ -5,9 +5,9 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-let CPU, r8, i8, r16, i16, flags, fi, mem;
+let r8, i8, r16, i16, mem;
 function setCPU(data) {
-    ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data);
+    ({ r8, i8, r16, i16, mem } = data);
 }
 
 /**
