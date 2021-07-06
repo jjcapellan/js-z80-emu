@@ -5,18 +5,18 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
- let CPU = {};
- let r8, i8, r16, i16, flags, fi, mem;
- const setCPU = (cpu) => {
-     CPU = cpu;
-     mem = CPU.memory;
-     r8 = CPU.registers.regs8;
-     i8 = r8.idx;
-     r16 = CPU.registers.regs16;
-     i16 = r16.idx;
-     flags = CPU.registers.flags;
-     fi = flags.idx;
- }
+let CPU = {};
+let r8, i8, r16, i16, flags, fi, mem;
+const setCPU = (cpu) => {
+    CPU = cpu;
+    mem = CPU.memory;
+    r8 = CPU.registers.regs8;
+    i8 = r8.idx;
+    r16 = CPU.registers.regs16;
+    i16 = r16.idx;
+    flags = CPU.registers.flags;
+    fi = flags.idx;
+}
 
 /**
  * ex DE, HL
@@ -68,6 +68,20 @@ function exx() {
 }
 
 /**
+ * Helper function for ex (SP), HL/IX/IY ...
+ * @param {number} xxIndex 16bit index (Ex: regs16.idx.AF, regs16.idx.IY, ...)
+ */
+function ex_ptrSP_XX(xxIndex) {
+    const sp = r16.get(i16.SP);
+    const xx = r16.get(xxIndex);
+    const xxH = xx >> 8;
+    const xxL = xx & 0xff;
+    r16.set(xxIndex, (mem[sp + 1] << 8) | mem[sp]);
+    mem[sp] = xxL;
+    mem[sp + 1] = xxH;
+}
+
+/**
  * ex (SP), HL
  * 
  * The low-order byte contained in register pair HL is exchanged with the contents of the
@@ -75,14 +89,8 @@ function exx() {
  * highorder byte of HL is exchanged with the next highest memory address (SP+1)
  * Clock: 19T
  */
- function ex_ptrSP_HL() {
-    const sp = r16.get(i16.SP);
-    const h = r8.get(i8.H);
-    const l = r8.get(i8.L);
-    r8.set(i8.H, mem[sp + 1]);
-    r8.set(i8.L, mem[sp]);
-    mem[sp] = l;
-    mem[sp + 1] = h;
+function ex_ptrSP_HL() {
+    ex_ptrSP_XX(i16.HL);
 }
 
 /**
@@ -94,13 +102,7 @@ function exx() {
  * Clock: 23T
  */
 function ex_ptrSP_IX() {
-    const sp = r16.get(i16.SP);
-    const ix = r16.get(i16.IX);
-    const ixH = ix >> 8;
-    const ixL = ix & 0xff;
-    r16.set(i16.IX, (mem[sp + 1] << 8) | mem[sp]);
-    mem[sp] = ixL;
-    mem[sp + 1] = ixH;
+    ex_ptrSP_XX(i16.IX);
 }
 
 /**
@@ -112,13 +114,7 @@ function ex_ptrSP_IX() {
  * Clock: 23T
  */
 function ex_ptrSP_IY() {
-    const sp = r16.get(i16.SP);
-    const iy = r16.get(i16.IY);
-    const iyH = iy >> 8;
-    const iyL = iy & 0xff;
-    r16.set(i16.IY, (mem[sp + 1] << 8) | mem[sp]) ;
-    mem[sp] = iyL;
-    mem[sp + 1] = iyH;
+    ex_ptrSP_XX(i16.IY);
 }
 
 /**
@@ -140,7 +136,7 @@ function ldi() {
     r16.set(i16.HL, hl + 1);
     r16.set(i16.DE, de + 1);
     r16.set(i16.BC, bc - 1);
-    
+
     //Flags
     flags.set(fi.H, false);
     flags.set(fi.PV, (bc - 1) != 0);
@@ -167,7 +163,7 @@ function ldir() {
     ldi();
 
     // Repeat condition
-    if((bc - 1) == 0){
+    if ((bc - 1) == 0) {
         pc -= 2;
         r16.set(i16.PC, pc);
     }
@@ -192,7 +188,7 @@ function ldd(bucle = false) {
     r16.set(i16.HL, hl - 1);
     r16.set(i16.DE, de - 1);
     r16.set(i16.BC, bc - 1);
-    
+
     //Flags
     flags.set(fi.H, false);
     flags.set(fi.PV, ((bc - 1) != 0) && !bucle);
@@ -219,7 +215,7 @@ function lddr() {
     ldd(true);
 
     // Repeat condition
-    if((bc - 1) == 0){
+    if ((bc - 1) == 0) {
         pc -= 2;
         r16.set(i16.PC, pc);
     }
@@ -234,7 +230,7 @@ contents of the Accumulator. With a true compare, a condition bit is set. Then H
  * incremented and the Byte Counter (register pair BC) is decremented.
  * Clock: 16T
  */
- function cpi() {
+function cpi() {
 
     const a = r8.get(i8.A);
     let hl = r16.get(i16.HL);
@@ -248,7 +244,7 @@ contents of the Accumulator. With a true compare, a condition bit is set. Then H
     flags.set(fi.S, diff < 0);
     flags.set(fi.Z, diff == 0);
     flags.set(fi.H, (a & 0b1000) < (mem[hl] & 0b1000));
-    flags.set(fi.PV, (bc-1) != 0);
+    flags.set(fi.PV, (bc - 1) != 0);
     flags.set(fi.N, true);
 
 }
@@ -269,13 +265,13 @@ contents of the Accumulator. With a true compare, a condition bit is set. Then H
 function cpir() {
 
     const a = r8.get(i8.A);
-    const hl = r16.get(i16.HL);    
+    const hl = r16.get(i16.HL);
     const diff = a - mem[hl];
     let pc = r16.get(i16.PC);
     cpi();
     const bc = r16.get(i16.BC);
 
-    if(bc != 0 && diff != 0){
+    if (bc != 0 && diff != 0) {
         pc -= 2;
         r16.set(i16.PC, pc);
     }
@@ -304,7 +300,7 @@ function cpd() {
     flags.set(fi.S, diff < 0);
     flags.set(fi.Z, diff == 0);
     flags.set(fi.H, (a & 0b1000) < (mem[hl] & 0b1000));
-    flags.set(fi.PV, (bc-1) != 0);
+    flags.set(fi.PV, (bc - 1) != 0);
     flags.set(fi.N, true);
 
 }
@@ -324,13 +320,13 @@ function cpd() {
 function cpdr() {
 
     const a = r8.get(i8.A);
-    const hl = r16.get(i16.HL);    
+    const hl = r16.get(i16.HL);
     const diff = a - mem[hl];
     let pc = r16.get(i16.PC);
     cpd();
     const bc = r16.get(i16.BC);
 
-    if(bc != 0 && diff != 0){
+    if (bc != 0 && diff != 0) {
         pc -= 2;
         r16.set(i16.PC, pc);
     }
