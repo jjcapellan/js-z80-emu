@@ -4,7 +4,7 @@
  */
 
 //// General registers
-const regsBuffer = new ArrayBuffer(16); // buffer of 16 bytes
+const regsBuffer = new ArrayBuffer(26); // buffer of 16 bytes
 const regs8bitArray = new Uint8Array(regsBuffer); // 8bit registers 
 const regs16bitArray = new Uint16Array(regsBuffer); // 16bit registers
 function checkLittleEndian(){
@@ -14,9 +14,9 @@ function checkLittleEndian(){
 };
 const isLE = checkLittleEndian();
 
-// Registers of 8 bits: B C D E H L A F B' C' D' E' H' L' A' F'
+// Registers of 8 bits: B C D E H L A F B' C' D' E' H' L' A' F' I R
 const regs8 = {
-    idx: { B: 0 + isLE, C: 1 - isLE, D: 2 + isLE, E: 3 - isLE, H: 4 + isLE, L: 5 - isLE, A: 6 + isLE, F: 7 - isLE},
+    idx: { B: 0 + isLE, C: 1 - isLE, D: 2 + isLE, E: 3 - isLE, H: 4 + isLE, L: 5 - isLE, A: 6 + isLE, F: 7 - isLE, I: 24, R: 25},
     /**
      * 
      * @param {number} regIdx One value from regs8.idx
@@ -36,7 +36,7 @@ const regs8 = {
 
 // Registers of 16 bits: BC DE HL AF BC' DE' HL' AF'
 const regs16 = {
-    idx: { BC: 0, DE: 1, HL: 2, AF: 3 },
+    idx: { BC: 0, DE: 1, HL: 2, AF: 3, IX: 8, IY: 9, SP: 10, PC: 11 },
 
     /**
      * 
