@@ -5,10 +5,10 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
- let CPU, r8, i8, r16, i16, flags, fi, mem;
- function setCPU(data){
-     ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data); 
- }
+let CPU, r8, i8, r16, i16, flags, fi, mem;
+function setCPU(data) {
+    ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data);
+}
 
 /**
  * LD r, r'
@@ -223,7 +223,7 @@ function ld_ptrnn_A(nn) {
 /**
  * Helper function for ld_A_I and ld_A_R
  */
-function ld_A_X(xIndex){
+function ld_A_X(xIndex) {
     const iff2 = CPU.registers.iff.IFF2;
     const x = r8.get(xIndex);
     r8.set(i8.A, x);
