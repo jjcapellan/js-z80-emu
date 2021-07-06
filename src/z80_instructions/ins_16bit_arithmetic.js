@@ -5,9 +5,9 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-let CPU, r8, i8, r16, i16, flags, fi, mem;
+let r8, i8, r16, i16, flags, fi;
 function setCPU(data) {
-    ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data);
+    ({ r8, i8, r16, i16, flags, fi } = data);
 }
 
 function createFlags(C, N, PV, F3, H, F5, Z, S) {
@@ -100,6 +100,25 @@ function sbc_HL_ss(ssValue) {
 }
 
 /**
+ * Helper function for ADD II, rr BC/DE/IX/IY/SP 
+ */
+function add_II_XX(iiIndex, xxValue) {
+    const xx = xxValue;
+    const ii = r16.get(iiIndex);
+    const sum = xx + ii;
+    const result = sum & 0xffff;
+
+    flags.set(fi.N, false);
+    flags.set(fi.C, (sum & (1 << 16)) != 0);
+    flags.set(fi.H, (((xx ^ ii ^ result) >> 8) & 0x10) != 0);
+    flags.set(fi.F3, ((result >> 8) & (1 << fi.F3)) != 0);
+    flags.set(fi.F5, ((result >> 8) & (1 << fi.F5)) != 0);
+
+
+    r16.set(iiIndex, result);
+}
+
+/**
 * ADD IX, pp
 * 
 * The contents of register pair pp (any of register pairs BC, DE, IX, or SP) are added to the
@@ -107,18 +126,97 @@ function sbc_HL_ss(ssValue) {
 * Clock: 15T
 */
 function add_IX_pp(ppValue) {
-    const pp = ppValue;
-    const hl = r16.get(i16.HL);
-    let f = r8.get(i8.F);
-    const sum = pp + hl;
+    add_II_XX(i16.IX, ppValue);
+}
+
+/**
+* ADD IY, rr
+* 
+* The contents of register pair rr (any of register pairs BC, DE, IY, or SP) are added to the
+* contents of Index Register IY, and the result is stored in IY.
+* Clock: 15T
+*/
+function add_IY_rr(rrValue) {
+    add_II_XX(i16.IY, rrValue);
+}
+
+/**
+* INC ss
+* 
+* The contents of register pair ss (any of register pairs BC, DE, HL, or SP) are incremented.
+* Clock: 6T
+*/
+function inc_ss(ssIndex) {
+    const ss = r16.get(ssIndex);
+    const sum = ss + 1;
     const result = sum & 0xffff;
+    r16.set(ssIndex, result);
+}
 
-    flags.set(fi.N, false);
-    flags.set(fi.C, (sum & (1 << 16)) != 0);
-    flags.set(fi.H, (((pp ^ hl ^ result) >> 8) & 0x10) != 0);
-    flags.set(fi.F3, ((result >> 8) & (1 << fi.F3)) != 0);
-    flags.set(fi.F5, ((result >> 8) & (1 << fi.F5)) != 0);
+/**
+* INC IX
+* 
+* The contents of register IX are incremented.
+* Clock: 10T
+*/
+function inc_IX() {
+    inc_ss(i16.IX);
+}
 
+/**
+* INC IY
+* 
+* The contents of register IY are incremented.
+* Clock: 10T
+*/
+function inc_IY() {
+    inc_ss(i16.IY);
+}
 
-    r16.set(i16.IX, result);
+/**
+* DEC ss
+* 
+* The contents of register pair ss (any of the register pairs BC, DE, HL, or SP) are decremented.
+* Clock: 6T
+*/
+function dec_ss(ssIndex) {
+    const ss = r16.get(ssIndex);
+    const sub = ss - 1;
+    const result = sub & 0xffff;
+    r16.set(ssIndex, result);
+}
+
+/**
+* DEC IX
+* 
+* The contents of register pair IX are decremented.
+* Clock: 10T
+*/
+function dec_IX() {
+    dec_ss(i16.IX);
+}
+
+/**
+* DEC IY
+* 
+* The contents of register pair IY are decremented.
+* Clock: 10T
+*/
+function dec_IY() {
+    dec_ss(i16.IY);
+}
+
+module.exports = {
+    add_HL_ss,
+    add_IX_pp,
+    add_IY_rr,
+    adc_HL_ss,
+    sbc_HL_ss,
+    inc_ss,
+    inc_IX,
+    inc_IY,
+    dec_ss,
+    dec_IX,
+    dec_IY,
+    setCPU
 }

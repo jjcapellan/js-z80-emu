@@ -9,6 +9,7 @@ const decode = require('./z80_decoder');
 const flagTables = require('./z80_flag_tables');
 const i_8bit_arithm = require('./z80_instructions/ins_8bit_arithmetic');
 const i_8bit_load = require('./z80_instructions/ins_8bit_load');
+const i_16bit_arithm = require('./z80_instructions/ins_16bit_arithmetic');
 const i_16bit_load = require('./z80_instructions/ins_16bit_load');
 const i_exch_trans_search = require('./z80_instructions/ins_exch_trans_search');
 const i_general_arithm = require('./z80_instructions/ins_general_arithm_cpu');
@@ -40,6 +41,7 @@ class Z80 {
 
         i_data.setData(this);
         i_8bit_arithm.setCPU(i_data.z80);
+        i_16bit_arithm.setCPU(i_data.z80);
         i_8bit_load.setCPU(i_data.z80);
         i_16bit_load.setCPU(i_data.z80);
         i_exch_trans_search.setCPU(i_data.z80);
