@@ -229,21 +229,28 @@ function ld_ptrnn_A(nn) {
 }
 
 /**
+ * Helper function for ld_A_I and ld_A_R
+ */
+function ld_A_X(xIndex){
+    const iff2 = CPU.registers.iff.IFF2;
+    const x = r8.get(xIndex);
+    r8.set(i8.A, x);
+    // Flags
+    flags.set(fi.S, (x & 0b10000000) != 0);
+    flags.set(fi.Z, x == 0);
+    flags.set(fi.H, false);
+    flags.set(fi.PV, iff2);
+    flags.set(fi.N, false);
+}
+
+/**
  * LD A, I
  * 
  * The contents of the Interrupt Vector Register I are loaded to the Accumulator.
  * Clock: 9T
  */
 function ld_A_I() {
-    const iff2 = CPU.registers.iff.IFF2;
-    const i = r8.get(i8.I);
-    r8.set(i8.A, i);
-    // Flags
-    flags.set(fi.S, (i & 0b10000000) != 0);
-    flags.set(fi.Z, i == 0);
-    flags.set(fi.H, false);
-    flags.set(fi.PV, iff2);
-    flags.set(fi.N, false);
+    ld_A_X(i8.I);
 }
 
 /**
@@ -253,15 +260,7 @@ function ld_A_I() {
  * Clock: 9T
  */
 function ld_A_R() {
-    const iff2 = CPU.registers.iff.IFF2;
-    const r = r8.get(i8.R);
-    r8.set(i8.A, r);
-    // Flags
-    flags.set(fi.S, (r & 0b10000000) != 0);
-    flags.set(fi.Z, r == 0);
-    flags.set(fi.H, false);
-    flags.set(fi.PV, iff2);
-    flags.set(fi.N, false);
+    ld_A_X(i8.R);
 }
 
 /**
