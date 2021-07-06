@@ -51,15 +51,16 @@ function adc_HL_ss(ssIndex) {
     const ss = r16.get(ssIndex);
     const hl = r16.get(i16.HL);
     const cf = flags.get(fi.C);
-    const sum = ss + hl + cf;
+    const n = ss + cf;
+    const sum = hl + n;
     const result = sum & 0xffff;
 
     let f = createFlags(
         (sum & (1 << 16)) != 0,
         false,
-        !((hl & 0x80) ^ (ss & 0x80)) && ((hl & 0x80) ^ (result & 0x80)),
+        !((hl ^ n) & 0x8000) && ((hl ^ result) & 0x8000)?true:false,
         ((result >> 8) & (1 << fi.F3)) != 0,
-        (((ss ^ hl ^ result) >> 8) & 0x10) != 0,
+        (((hl ^ n ^ result) >> 8) & 0x10) != 0,
         ((result >> 8) & (1 << fi.F5)) != 0,
         result == 0,
         (result & (1 << 15)) != 0
