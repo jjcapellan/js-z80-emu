@@ -257,7 +257,7 @@ function ld_A_R() {
     const r = r8.get(i8.R);
     r8.set(i8.A, r);
     // Flags
-    flags.set(fi.S, false, (r & 0b10000000) != 0);
+    flags.set(fi.S, (r & 0b10000000) != 0);
     flags.set(fi.Z, r == 0);
     flags.set(fi.H, false);
     flags.set(fi.PV, iff2);
