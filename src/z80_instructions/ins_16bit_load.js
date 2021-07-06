@@ -59,8 +59,7 @@ function ld_IY_nn(nn) {
  * Clock: 16T
  */
 function ld_HL_ptrnn(ptrnn) {
-    r8.set(i8.L, mem[ptrnn]);
-    r8.set(i8.H, mem[ptrnn + 1]);
+    ld_dd_ptrnn(i16.HL, ptrnn);
 }
 
 /**
@@ -137,9 +136,7 @@ function ld_ptrnn_dd(ddIndex, ptrnn) {
  * Clock: 20T
  */
 function ld_ptrnn_IX(ptrnn) {
-    const ix = r16.get(i16.IX);
-    mem[ptrnn] = ix & 0xff;
-    mem[ptrnn + 1] = (ix & 0xff00) >> 8;
+    ld_ptrnn_dd(i16.IX, ptrnn);
 }
 
 /**
@@ -151,9 +148,7 @@ function ld_ptrnn_IX(ptrnn) {
  * Clock: 20T
  */
 function ld_ptrnn_IY(ptrnn) {
-    const iy = r16.get(i16.IY);
-    mem[ptrnn] = iy & 0xff;
-    mem[ptrnn + 1] = (iy & 0xff00) >> 8;
+    ld_ptrnn_dd(i16.IY, ptrnn);
 }
 
 /**
