@@ -55,17 +55,6 @@ const regs16 = {
     set: (regIdx, value, isAlt = false) => regs16bitArray[regIdx + 4 * isAlt] = value
 }
 
-
-//// Special registers
-/*const regsSp = {
-    I: 0x0,   // 8bit interrupt vector
-    R: 0x0,   // 8bit memory refresh
-    IX: 0x0,  // 16bit index register
-    IY: 0x0,  // 16bit index register
-    SP: 0x0,  // 16bit stack pointer
-    PC: 0x0   // 16bit program counter
-}*/
-
 //// Interrupts IFF (interrupt flipflops)
 const iff = {
     IFF1: false,
