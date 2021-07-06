@@ -5,17 +5,9 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-let CPU = {};
-let r8, i8, r16, i16, flags, fi, mem;
-const setCPU = (cpu) => {
-    CPU = cpu;
-    mem = CPU.memory;
-    r8 = CPU.registers.regs8;
-    i8 = r8.idx;
-    r16 = CPU.registers.regs16;
-    i16 = r16.idx;
-    flags = CPU.registers.flags;
-    fi = flags.idx;
+let CPU, r8, i8, r16, i16, flags, fi, mem;
+function setCPU(data){
+    ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data); 
 }
 
 /**

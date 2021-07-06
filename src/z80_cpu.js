@@ -12,6 +12,7 @@ const i_8bit_load = require('./z80_instructions/ins_8bit_load');
 const i_16bit_load = require('./z80_instructions/ins_16bit_load');
 const i_exch_trans_search = require('./z80_instructions/ins_exch_trans_search');
 const i_general_arithm = require('./z80_instructions/ins_general_arithm_cpu');
+const i_data = require('./cpu.js');
 
 class Z80 {
     constructor() {
@@ -37,11 +38,12 @@ class Z80 {
             parityTable: parityArray
         };
 
-        i_8bit_arithm.setCPU(this);
-        i_8bit_load.setCPU(this);
-        i_16bit_load.setCPU(this);
-        i_exch_trans_search.setCPU(this);
-        i_general_arithm.setCPU(this);
+        i_data.setData(this);
+        i_8bit_arithm.setCPU(i_data.z80);
+        i_8bit_load.setCPU(i_data.z80);
+        i_16bit_load.setCPU(i_data.z80);
+        i_exch_trans_search.setCPU(i_data.z80);
+        i_general_arithm.setCPU(i_data.z80);
     }
 
     /**

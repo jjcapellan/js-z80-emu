@@ -5,23 +5,15 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
- let CPU = {};
- let r8, i8, r16, i16, flags, fi, mem;
- const setCPU = (cpu) => {
-     CPU = cpu;
-     mem = CPU.memory;
-     r8 = CPU.registers.regs8;
-     i8 = r8.idx;
-     r16 = CPU.registers.regs16;
-     i16 = r16.idx;
-     flags = CPU.registers.flags;
-     fi = flags.idx;
- }
+let CPU, r8, i8, r16, i16, flags, fi, mem;
+function setCPU(data) {
+    ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data);
+}
 
- function createFlags(C, N, PV, F3, H, F5, Z, S){
-     return (S << 7) | (Z << 6) | (F5 << 5) | (H << 4) | 
-            (F3 << 3) | (PV << 2) | (N << 1) | C;
- }
+function createFlags(C, N, PV, F3, H, F5, Z, S) {
+    return (S << 7) | (Z << 6) | (F5 << 5) | (H << 4) |
+        (F3 << 3) | (PV << 2) | (N << 1) | C;
+}
 
 /**
 * ADD HL, ss
@@ -33,15 +25,15 @@
 function add_HL_ss(ssIndex) {
     const ss = r16.get(ssIndex);
     const hl = r16.get(i16.HL);
-    let f = r8.get(i8.F);    
+    let f = r8.get(i8.F);
     const sum = ss + hl;
     const result = sum & 0xffff;
 
     flags.set(fi.N, false);
     flags.set(fi.C, (sum & (1 << 16)) != 0);
     flags.set(fi.H, (((ss ^ hl ^ result) >> 8) & 0x10) != 0);
-    flags.set(fi.F3, ((result >> 8) & (1 << fi.F3)) != 0 );
-    flags.set(fi.F5, ((result >> 8) & (1 << fi.F5)) != 0 );
+    flags.set(fi.F3, ((result >> 8) & (1 << fi.F3)) != 0);
+    flags.set(fi.F5, ((result >> 8) & (1 << fi.F5)) != 0);
 
 
     r16.set(i16.HL, result);
@@ -72,7 +64,7 @@ function adc_HL_ss(ssValue) {
         result == 0,
         (result & (1 << 15)) != 0
     );
-    
+
     r8.set(i8.F, f);
     r16.set(i16.HL, result);
 }
@@ -95,14 +87,14 @@ function sbc_HL_ss(ssValue) {
     let f = createFlags(
         (sub & (1 << 16)) != 0,
         true,
-        ((hl & 0x80) ^ ((sl+cf) & 0x80)) && (hl < result),
+        ((hl & 0x80) ^ ((sl + cf) & 0x80)) && (hl < result),
         ((result >> 8) & (1 << fi.F3)) != 0,
         (((ss ^ hl ^ result) >> 8) & 0x10) != 0,
         ((result >> 8) & (1 << fi.F5)) != 0,
         result == 0,
         (result & (1 << 15)) != 0
     );
-    
+
     r8.set(i8.F, f);
     r16.set(i16.HL, result);
 }
@@ -117,15 +109,15 @@ function sbc_HL_ss(ssValue) {
 function add_IX_pp(ppValue) {
     const pp = ppValue;
     const hl = r16.get(i16.HL);
-    let f = r8.get(i8.F);    
+    let f = r8.get(i8.F);
     const sum = pp + hl;
     const result = sum & 0xffff;
 
     flags.set(fi.N, false);
     flags.set(fi.C, (sum & (1 << 16)) != 0);
     flags.set(fi.H, (((pp ^ hl ^ result) >> 8) & 0x10) != 0);
-    flags.set(fi.F3, ((result >> 8) & (1 << fi.F3)) != 0 );
-    flags.set(fi.F5, ((result >> 8) & (1 << fi.F5)) != 0 );
+    flags.set(fi.F3, ((result >> 8) & (1 << fi.F3)) != 0);
+    flags.set(fi.F5, ((result >> 8) & (1 << fi.F5)) != 0);
 
 
     r16.set(i16.IX, result);

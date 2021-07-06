@@ -5,13 +5,10 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
- let CPU = {};
- let r8, i8;
- const setCPU = (cpu) => {
-     CPU = cpu;
-     r8 = CPU.registers.regs8;
-     i8 = r8.idx;
- }
+let CPU, r8, i8, r16, i16, flags, fi, mem;
+function setCPU(data) {
+    ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data);
+}
 
 //Flag masks
 const S = 0b10000000;
@@ -87,12 +84,12 @@ function neg() {
     const result = (0 - a) & 0xff;
 
     let f = CPU.tables.subFlagsTable[0 | a];
-    if(a == 0x80) {
+    if (a == 0x80) {
         f |= PV;
     } else {
         f &= (PV ^ 0xff);
     }
-    if (a != 0){
+    if (a != 0) {
         f |= C;
     } else {
         f &= (C ^ 0xff);
@@ -112,11 +109,11 @@ function ccf() {
     let f = r8.get(i8.F);
     const hf = f & C;
     const cf = 1 - hf;
-    f = (f & (~H)) | (H*hf); // set h value
-    f = (f & (~C)) | (C*cf); // set c value
+    f = (f & (~H)) | (H * hf); // set h value
+    f = (f & (~C)) | (C * cf); // set c value
     f = (f & (~N));          // reset n
     f = (f & (~F3)) | (a & F3);
-    f = (f & (~F5)) | (a & F5);    
+    f = (f & (~F5)) | (a & F5);
     r8.set(i8.F, f);
 }
 
@@ -130,10 +127,10 @@ function scf() {
     const a = r8.get(i8.A);
     let f = r8.get(i8.F);
     f &= (~H);
-    f |= C; 
-    f &=(~N);
+    f |= C;
+    f &= (~N);
     f = (f & (~F3)) | (a & F3);
-    f = (f & (~F5)) | (a & F5);    
+    f = (f & (~F5)) | (a & F5);
     r8.set(i8.F, f);
 }
 
@@ -146,7 +143,7 @@ function scf() {
 * Clock: 4T
 */
 function halt() {
-    CPU.isHalt = true;    
+    CPU.isHalt = true;
 }
 
 /**
@@ -157,7 +154,7 @@ function halt() {
 * Clock: 4T
 */
 function di() {
-    CPU.registers.iff.IFF1 = false;    
+    CPU.registers.iff.IFF1 = false;
     CPU.registers.iff.IFF2 = false;
 }
 
@@ -169,7 +166,7 @@ function di() {
 * Clock: 4T
 */
 function ei() {
-    CPU.registers.iff.IFF1 = true;    
+    CPU.registers.iff.IFF1 = true;
     CPU.registers.iff.IFF2 = true;
 }
 
