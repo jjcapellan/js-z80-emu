@@ -47,8 +47,8 @@ function add_HL_ss(ssIndex) {
 * stored in HL.
 * Clock: 15T
 */
-function adc_HL_ss(ssValue) {
-    const ss = ssValue;
+function adc_HL_ss(ssIndex) {
+    const ss = r16.get(ssIndex);
     const hl = r16.get(i16.HL);
     const cf = flags.get(fi.C);
     const sum = ss + hl + cf;
@@ -77,8 +77,8 @@ function adc_HL_ss(ssValue) {
 * result is stored in HL.
 * Clock: 15T
 */
-function sbc_HL_ss(ssValue) {
-    const ss = ssValue;
+function sbc_HL_ss(ssIndex) {
+    const ss = r16.get(ssIndex);
     const hl = r16.get(i16.HL);
     const cf = flags.get(fi.C);
     const sub = hl - (ss + cf);
@@ -102,8 +102,8 @@ function sbc_HL_ss(ssValue) {
 /**
  * Helper function for ADD II, rr BC/DE/IX/IY/SP 
  */
-function add_II_XX(iiIndex, xxValue) {
-    const xx = xxValue;
+function add_II_XX(iiIndex, xxIndex) {
+    const xx = r16.get(xxIndex);
     const ii = r16.get(iiIndex);
     const sum = xx + ii;
     const result = sum & 0xffff;
@@ -125,8 +125,8 @@ function add_II_XX(iiIndex, xxValue) {
 * contents of Index Register IX, and the results are stored in IX.
 * Clock: 15T
 */
-function add_IX_pp(ppValue) {
-    add_II_XX(i16.IX, ppValue);
+function add_IX_pp(ppIndex) {
+    add_II_XX(i16.IX, ppIndex);
 }
 
 /**
@@ -136,8 +136,8 @@ function add_IX_pp(ppValue) {
 * contents of Index Register IY, and the result is stored in IY.
 * Clock: 15T
 */
-function add_IY_rr(rrValue) {
-    add_II_XX(i16.IY, rrValue);
+function add_IY_rr(rrIndex) {
+    add_II_XX(i16.IY, rrIndex);
 }
 
 /**
