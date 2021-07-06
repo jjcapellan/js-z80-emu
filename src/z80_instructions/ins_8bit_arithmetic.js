@@ -48,6 +48,18 @@ function add_A_n(n) {
 }
 
 /**
+ * Helper for ADD A, (XX)
+ */
+function add_A_ptrXXplusd(xxIndex, d) {
+    const a = r8.get(i8.A);
+    const xx = r16.get(xxIndex);
+    const n = mem[xx + d];
+    r8.set(i8.A, a + n);
+    let f = CPU.tables.addFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+};
+
+/**
 * ADD A, (HL)
 * 
 * The byte at the memory address specified by the contents of the HL register pair is added
@@ -55,12 +67,7 @@ function add_A_n(n) {
 * Clock: 7T
 */
 function add_A_ptrHL() {
-    const a = r8.get(i8.A);
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
-    r8.set(i8.A, a + n);
-    let f = CPU.tables.addFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
+    add_A_ptrXXplusd(i16.HL, 0);
 }
 
 /**
@@ -72,12 +79,7 @@ function add_A_ptrHL() {
 * Clock: 19T
 */
 function add_A_ptrIXplusd(d) {
-    const a = r8.get(i8.A);
-    const ix =r16.get(i16.IX);
-    const n = mem[ix + d];
-    r8.set(i8.A, a + n);
-    let f = CPU.tables.addFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
+    add_A_ptrXXplusd(i16.IX, d);
 }
 
 /**
@@ -89,12 +91,7 @@ function add_A_ptrIXplusd(d) {
 * Clock: 19T
 */
 function add_A_ptrIYplusd(d) {
-    const a = r8.get(i8.A);
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    r8.set(i8.A, a + n);
-    let f = CPU.tables.addFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
+    add_A_ptrXXplusd(i16.IY, d);
 }
 
 /**
@@ -131,6 +128,19 @@ function adc_A_n(n) {
 }
 
 /**
+ * Helper function for ADC A, (XX) 
+ */
+function adc_A_ptrXXplusd(xxIndex, d) {
+    const xx = r16.get(xxIndex);
+    const c = flags.get(fi.C);
+    const a = r8.get(i8.A);
+    const n = mem[xx + d] + c;
+    r8.set(i8.A, a + n);
+    let f = CPU.tables.addFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+}
+
+/**
 * ADC A, (HL)
 * 
 * The content of memory address (HL), along with the Carry Flag (C in the F Register) is added to the contents of
@@ -138,13 +148,7 @@ function adc_A_n(n) {
 * Clock: 7T
 */
 function adc_A_ptrHL() {
-    const hl = r16.get(i16.HL);
-    const c = flags.get(fi.C);
-    const a = r8.get(i8.A);
-    const n = mem[hl] + c;
-    r8.set(i8.A, a + n);
-    let f = CPU.tables.addFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
+    adc_A_ptrXXplusd(i16.HL, 0);
 }
 
 /**
@@ -155,13 +159,7 @@ function adc_A_ptrHL() {
 * Clock: 19T
 */
 function adc_A_ptrIXplusd(d) {
-    const ix =r16.get(i16.IX);
-    const c = flags.get(fi.C);
-    const a = r8.get(i8.A);
-    const n = mem[ix + d] + c;
-    r8.set(i8.A, a + n);
-    let f = CPU.tables.addFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
+    adc_A_ptrXXplusd(i16.IX, d);
 }
 
 /**
@@ -172,13 +170,7 @@ function adc_A_ptrIXplusd(d) {
 * Clock: 19T
 */
 function adc_A_ptrIYplusd(d) {
-    const iy = r16.get(i16.IY);
-    const c = flags.get(fi.C);
-    const a = r8.get(i8.A);
-    const n = mem[iy + d] + c;
-    r8.set(i8.A, a + n);
-    let f = CPU.tables.addFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
+    adc_A_ptrXXplusd(i16.IY, d);
 }
 
 /**
@@ -211,6 +203,18 @@ function sub_A_n(n) {
 }
 
 /**
+ * Helper function for SUB A, (XX)
+ */
+function sub_A_ptrXXplusd(xxIndex, d) {
+    const a = r8.get(i8.A);
+    const xx = r16.get(xxIndex);
+    const n = mem[xx + d];
+    r8.set(i8.A, a - n);
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+}
+
+/**
 * SUB A, (HL)
 * 
 * The byte at the memory address specified by the contents of the HL register pair is substracted
@@ -218,12 +222,7 @@ function sub_A_n(n) {
 * Clock: 7T
 */
 function sub_A_ptrHL() {
-    const a = r8.get(i8.A);
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
-    r8.set(i8.A, a - n);
-    let f = CPU.tables.subFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
+    sub_A_ptrXXplusd(i16.HL, 0);
 }
 
 /**
@@ -235,12 +234,7 @@ function sub_A_ptrHL() {
 * Clock: 19T
 */
 function sub_A_ptrIXplusd(d) {
-    const a = r8.get(i8.A);
-    const ix =r16.get(i16.IX);
-    const n = mem[ix + d];
-    r8.set(i8.A, a - n);
-    let f = CPU.tables.subFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
+    sub_A_ptrXXplusd(i16.IX, d);
 }
 
 /**
@@ -252,12 +246,7 @@ function sub_A_ptrIXplusd(d) {
 * Clock: 19T
 */
 function sub_A_ptrIYplusd(d) {
-    const a = r8.get(i8.A);
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    r8.set(i8.A, a - n);
-    let f = CPU.tables.subFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
+    sub_A_ptrXXplusd(i16.IY, d);
 }
 
 /**
@@ -294,6 +283,19 @@ function sbc_A_n(n) {
 }
 
 /**
+ * Helper function for SBC A, (XX)
+ */
+function sbc_A_ptrXXplusd(xxIndex, d) {
+    const xx = r16.get(xxIndex);
+    const c = flags.get(fi.C);
+    const a = r8.get(i8.A);
+    const n = mem[xx + d] + c;
+    r8.set(i8.A, a - n);
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+}
+
+/**
 * SBC A, (HL)
 * 
 * The content of memory address (HL), along with the Carry Flag (C in the F Register) is substracted to the contents of
@@ -301,13 +303,7 @@ function sbc_A_n(n) {
 * Clock: 7T
 */
 function sbc_A_ptrHL() {
-    const hl = r16.get(i16.HL);
-    const c = flags.get(fi.C);
-    const a = r8.get(i8.A);
-    const n = mem[hl] + c;
-    r8.set(i8.A, a - n);
-    let f = CPU.tables.subFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
+    sbc_A_ptrXXplusd(i16.HL, 0);
 }
 
 /**
@@ -318,13 +314,7 @@ function sbc_A_ptrHL() {
 * Clock: 19T
 */
 function sbc_A_ptrIXplusd(d) {
-    const ix =r16.get(i16.IX);
-    const c = flags.get(fi.C);
-    const a = r8.get(i8.A);
-    const n = mem[ix + d] + c;
-    r8.set(i8.A, a - n);
-    let f = CPU.tables.subFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
+    sbc_A_ptrXXplusd(i16.IX, d);
 }
 
 /**
@@ -335,13 +325,7 @@ function sbc_A_ptrIXplusd(d) {
 * Clock: 19T
 */
 function sbc_A_ptrIYplusd(d) {
-    const iy = r16.get(i16.IY);
-    const c = flags.get(fi.C);
-    const a = r8.get(i8.A);
-    const n = mem[iy + d] + c;
-    r8.set(i8.A, a - n);
-    let f = CPU.tables.subFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
+    sbc_A_ptrXXplusd(i16.IY, d);
 }
 
 /**
@@ -375,6 +359,18 @@ function and_n(n) {
 }
 
 /**
+ * Helper function for AND (XX)
+ */
+function and_ptrXXplusd(xxIndex, d) {
+    const xx = r16.get(xxIndex);
+    const n = mem[xx + d];
+    const a = r8.get(i8.A);
+    let f = CPU.tables.andFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a & n);
+}
+
+/**
 * AND (HL)
 * 
 * A logical AND operation is performed between the byte located at HL memory address and the
@@ -382,12 +378,7 @@ function and_n(n) {
 * Clock: 7T
 */
 function and_ptrHL() {
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
-    const a = r8.get(i8.A);
-    let f = CPU.tables.andFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
-    r8.set(i8.A, a & n);
+    and_ptrXXplusd(i16.HL, 0);
 }
 
 /**
@@ -398,12 +389,7 @@ function and_ptrHL() {
 * Clock: 19T
 */
 function and_ptrIXplusd(d) {
-    const ix =r16.get(i16.IX);
-    const n = mem[ix + d];
-    const a = r8.get(i8.A);
-    let f = CPU.tables.andFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
-    r8.set(i8.A, a & n);
+    and_ptrXXplusd(i16.IX, d);
 }
 
 /**
@@ -414,12 +400,7 @@ function and_ptrIXplusd(d) {
 * Clock: 19T
 */
 function and_ptrIYplusd(d) {
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    const a = r8.get(i8.A);
-    let f = CPU.tables.andFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
-    r8.set(i8.A, a & n);
+    and_ptrXXplusd(i16.IY, d);
 }
 
 /**
@@ -453,6 +434,18 @@ function or_n(n) {
 }
 
 /**
+ * Helper function for OR (XX)
+ */
+function or_ptrXXplusd(xxIndex, d) {
+    const xx = r16.get(xxIndex);
+    const n = mem[xx + d];
+    const a = r8.get(i8.A);
+    let f = CPU.tables.orFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a | n);
+}
+
+/**
 * OR (HL)
 * 
 * A logical OR operation is performed between the byte located at HL memory address and the
@@ -460,12 +453,7 @@ function or_n(n) {
 * Clock: 7T
 */
 function or_ptrHL() {
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
-    const a = r8.get(i8.A);
-    let f = CPU.tables.orFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
-    r8.set(i8.A, a | n);
+    or_ptrXXplusd(i16.HL, 0);
 }
 
 /**
@@ -476,12 +464,7 @@ function or_ptrHL() {
 * Clock: 19T
 */
 function or_ptrIXplusd(d) {
-    const ix =r16.get(i16.IX);
-    const n = mem[ix + d];
-    const a = r8.get(i8.A);
-    let f = CPU.tables.orFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
-    r8.set(i8.A, a | n);
+    or_ptrXXplusd(i16.IX, d);
 }
 
 /**
@@ -492,12 +475,7 @@ function or_ptrIXplusd(d) {
 * Clock: 19T
 */
 function or_ptrIYplusd(d) {
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    const a = r8.get(i8.A);
-    let f = CPU.tables.orFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
-    r8.set(i8.A, a | n);
+    or_ptrXXplusd(i16.IY, d);
 }
 
 /**
@@ -531,6 +509,18 @@ function xor_n(n) {
 }
 
 /**
+ * Helper function for XOR (XX)
+ */
+function xor_ptrXXplusd(xxIndex, d) {
+    const xx = r16.get(xxIndex);
+    const n = mem[xx + d];
+    const a = r8.get(i8.A);
+    let f = CPU.tables.xorFlagsTable[(a << 8) | n];
+    r8.set(i8.F, f);
+    r8.set(i8.A, a ^ n);
+}
+
+/**
 * XOR (HL)
 * 
 * A logical XOR operation is performed between the byte located at HL memory address and the
@@ -538,12 +528,7 @@ function xor_n(n) {
 * Clock: 7T
 */
 function xor_ptrHL() {
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
-    const a = r8.get(i8.A);
-    let f = CPU.tables.xorFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
-    r8.set(i8.A, a ^ n);
+    xor_ptrXXplusd(i16.HL, 0);
 }
 
 /**
@@ -554,12 +539,7 @@ function xor_ptrHL() {
 * Clock: 19T
 */
 function xor_ptrIXplusd(d) {
-    const ix =r16.get(i16.IX);
-    const n = mem[ix + d];
-    const a = r8.get(i8.A);
-    let f = CPU.tables.xorFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
-    r8.set(i8.A, a ^ n);
+    xor_ptrXXplusd(i16.IX, d);
 }
 
 /**
@@ -570,12 +550,7 @@ function xor_ptrIXplusd(d) {
 * Clock: 19T
 */
 function xor_ptrIYplusd(d) {
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    const a = r8.get(i8.A);
-    let f = CPU.tables.xorFlagsTable[(a << 8) | n];
-    r8.set(i8.F, f);
-    r8.set(i8.A, a ^ n);
+    xor_ptrXXplusd(i16.IY, d);
 }
 
 /**
@@ -605,10 +580,21 @@ function cp_r(rIndex) {
 function cp_n(n) {
     const a = r8.get(i8.A);
     let f = CPU.tables.subFlagsTable[(a << 8) | n];
-    f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
+    f = (f & 0b11010111) | (n & 0b00101000); // Overwrites flags F3 and F5 from operand r
     r8.set(i8.F, f);
 }
 
+/**
+ * Helper function for CP (XX)
+ */
+function cp_ptrXXplusd(xxIndex, d) {
+    const a = r8.get(i8.A);
+    const xx = r16.get(xxIndex);
+    const n = mem[xx + d];
+    let f = CPU.tables.subFlagsTable[(a << 8) | n];
+    f = (f & 0b11010111) | (n & 0b00101000); // Overwrites flags F3 and F5 from operand n
+    r8.set(i8.F, f);
+}
 /**
 * CP (HL)
 * 
@@ -618,12 +604,7 @@ function cp_n(n) {
 * Clock: 7T
 */
 function cp_ptrHL() {
-    const a = r8.get(i8.A);
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
-    let f = CPU.tables.subFlagsTable[(a << 8) | n];
-    f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
-    r8.set(i8.F, f);
+    cp_ptrXXplusd(i16.HL, 0);
 }
 
 /**
@@ -635,12 +616,7 @@ function cp_ptrHL() {
 * Clock: 19T
 */
 function cp_ptrIXplusd(d) {
-    const a = r8.get(i8.A);
-    const ix =r16.get(i16.IX);
-    const n = mem[ix + d];
-    let f = CPU.tables.subFlagsTable[(a << 8) | n];
-    f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
-    r8.set(i8.F, f);
+    cp_ptrXXplusd(i16.IX, d);
 }
 
 /**
@@ -652,15 +628,10 @@ function cp_ptrIXplusd(d) {
 * Clock: 19T
 */
 function cp_ptrIYplusd(d) {
-    const a = r8.get(i8.A);
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    let f = CPU.tables.subFlagsTable[(a << 8) | n];
-    f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
-    r8.set(i8.F, f);
+    cp_ptrXXplusd(i16.IY, d);
 }
 
-function setFlagsIncDec(n, VLimit){
+function setFlagsIncDec(n, VLimit) {
     const table = (VLimit == 0x7f) ? CPU.tables.addFlagsTable : CPU.tables.subFlagsTable;
     let f = r8.get(i8.F);
     const c = f & 0x1; // saves flag C, not affected
@@ -703,7 +674,7 @@ function inc_ptrHL() {
 * Clock: 23T
 */
 function inc_ptrIXplusd(d) {
-    const ix =r16.get(i16.IX);
+    const ix = r16.get(i16.IX);
     const n = mem[ix + d];
     setFlagsIncDec(n, 0x7f);
     mem[ix + d] = n + 1;
@@ -754,7 +725,7 @@ function dec_ptrHL() {
 * Clock: 23T
 */
 function dec_ptrIXplusd(d) {
-    const ix =r16.get(i16.IX);
+    const ix = r16.get(i16.IX);
     const n = mem[ix + d];
     setFlagsIncDec(n, 0x80);
     mem[ix + d] = n - 1;
