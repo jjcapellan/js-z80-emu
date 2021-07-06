@@ -5,7 +5,6 @@ const instr = require('../src/z80_instructions/ins_8bit_arithmetic');
 const cpu = new z80();
 const regs8 = cpu.registers.regs8;
 const regs16 = cpu.registers.regs16;
-const regsSp = cpu.registers.regsSp;
 const flags = cpu.registers.flags;
 const mem = cpu.memory;
 
@@ -43,7 +42,7 @@ test('add_A_ptrHL()', t => {
 
 test('add_A_ptrIXplusd(d)', t => {
     regs8.set(regs8.idx.A, 0x1);
-    regsSp.IX = 0x4;
+    regs16.set(regs16.idx.IX, 0x4);
     const d = 0x1;
     mem[0x5] = 0x25;
     instr.add_A_ptrIXplusd(d); // ADD A, (IX + d)
@@ -55,7 +54,7 @@ test('add_A_ptrIXplusd(d)', t => {
 
 test('add_A_ptrIYplusd(d)', t => {
     regs8.set(regs8.idx.A, 0x1);
-    regsSp.IY = 0x4;
+    regs16.set(regs16.idx.IY,0x4);
     const d = 0x1;
     mem[0x5] = 0x25;
     instr.add_A_ptrIYplusd(d); // ADD A, (IY + d)
@@ -102,7 +101,7 @@ test('adc_A_ptrHL()', t => {
 
 test('adc_A_ptrIXplusd(d)', t => {
     regs8.set(regs8.idx.A, 0x1);
-    regsSp.IX = 0x4;
+    regs16.set(regs16.idx.IX,0x4);
     const d = 0x1;
     mem[0x5] = 0x25;
     flags.set(flags.idx.C, true);
@@ -115,7 +114,7 @@ test('adc_A_ptrIXplusd(d)', t => {
 
 test('adc_A_ptrIYplusd(d)', t => {
     regs8.set(regs8.idx.A, 0x1);
-    regsSp.IY = 0x4;
+    regs16.set(regs16.idx.IY,0x4);
     const d = 0x1;
     mem[0x5] = 0x25;
     flags.set(flags.idx.C, true);
@@ -160,7 +159,7 @@ test('sub_A_ptrHL()', t => {
 
 test('sub_A_ptrIXplusd(d)', t => {
     regs8.set(regs8.idx.A, 0x12);
-    regsSp.IX = 0x4;
+    regs16.set(regs16.idx.IX,0x4);
     const d = 0x1;
     mem[0x5] = 0x1;
     instr.sub_A_ptrIXplusd(d); // SUB A, (IX + d)
@@ -172,7 +171,7 @@ test('sub_A_ptrIXplusd(d)', t => {
 
 test('sub_A_ptrIYplusd(d)', t => {
     regs8.set(regs8.idx.A, 0x12);
-    regsSp.IY = 0x4;
+    regs16.set(regs16.idx.IY,0x4);
     const d = 0x1;
     mem[0x5] = 0x1;
     instr.sub_A_ptrIYplusd(d); // SUB A, (IY + d)
@@ -214,7 +213,7 @@ test('sbc_A_ptrHL()', t => {
 
 test('sbc_A_ptrIXplusd(d)', t => {
     regs8.set(regs8.idx.A, 0x1);
-    regsSp.IX = 0x4;
+    regs16.set(regs16.idx.IX,0x4);
     const d = 0x1;
     mem[0x5] = 0x25;
     flags.set(flags.idx.C, true);
@@ -225,7 +224,7 @@ test('sbc_A_ptrIXplusd(d)', t => {
 
 test('sbc_A_ptrIYplusd(d)', t => {
     regs8.set(regs8.idx.A, 0x1);
-    regsSp.IY = 0x4;
+    regs16.set(regs16.idx.IY,0x4);
     const d = 0x1;
     mem[0x5] = 0x25;
     flags.set(flags.idx.C, true);
@@ -269,8 +268,8 @@ test('and_ptrHL()', t => {
 
 test('and_ptrIXplusd(d)', t => {
     const d = 0x42;
-    regsSp.IX = 0x06;
-    const ix = regsSp.IX;
+    regs16.set(regs16.idx.IX,0x06);
+    const ix = regs16.get(regs16.idx.IX);
     cpu.memory[ix + d] = 0x6a;
     regs8.set(regs8.idx.A, 0x36);    
     instr.and_ptrIXplusd(d); // AND (IX + d)
@@ -313,8 +312,8 @@ test('or_ptrHL()', t => {
 
 test('or_ptrIXplusd(d)', t => {
     const d = 0x42;
-    regsSp.IX = 0x06;
-    const ix = regsSp.IX;
+    regs16.set(regs16.idx.IX, 0x06);
+    const ix = regs16.get(regs16.idx.IX);
     cpu.memory[ix + d] = 0x6a;
     regs8.set(regs8.idx.A, 0x36);    
     instr.or_ptrIXplusd(d); // OR (IX + d)
@@ -357,8 +356,8 @@ test('xor_ptrHL()', t => {
 
 test('xor_ptrIXplusd(d)', t => {
     const d = 0x42;
-    regsSp.IX = 0x06;
-    const ix = regsSp.IX;
+    regs16.set(regs16.idx.IX, 0x06);
+    const ix = regs16.get(regs16.idx.IX);
     cpu.memory[ix + d] = 0x6a;
     regs8.set(regs8.idx.A, 0x36);    
     instr.xor_ptrIXplusd(d); // XOR (IX + d)

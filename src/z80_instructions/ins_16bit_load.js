@@ -5,16 +5,16 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
- let CPU = {};
- let r8, i8, r16, regsSp, mem;
- const setCPU = (cpu) => {
-     CPU = cpu;
-     mem = CPU.memory;
-     r8 = CPU.registers.regs8;
-     i8 = r8.idx;
-     r16 = CPU.registers.regs16;
-     regsSp = CPU.registers.regsSp;
- }
+let CPU = {};
+let r8, i8, r16, i16, mem;
+const setCPU = (cpu) => {
+    CPU = cpu;
+    mem = CPU.memory;
+    r8 = CPU.registers.regs8;
+    i8 = r8.idx;
+    r16 = CPU.registers.regs16;
+    i16 = r16.idx;
+}
 
 /**
  * LD dd, nn
@@ -35,7 +35,7 @@ function ld_dd_nn(ddIndex, nn) {
  * Clock: 14T
  */
 function ld_IX_nn(nn) {
-    regsSp.IX = nn;
+    r16.set(i16.IX, nn);
 }
 
 /**
@@ -46,7 +46,7 @@ function ld_IX_nn(nn) {
  * Clock: 14T
  */
 function ld_IY_nn(nn) {
-    regsSp.IY = nn;
+    r16.set(i16.IY, nn);
 }
 
 /**
@@ -87,10 +87,7 @@ function ld_dd_ptrnn(ddIndex, ptrnn) {
  * Clock: 20T
  */
 function ld_IX_ptrnn(ptrnn) {
-    const ixHigh = mem[ptrnn + 1];
-    const ixLow = mem[ptrnn];
-    const ixValue = (ixLow << 8) | ixHigh; //little endian
-    regsSp.IX = ixValue;
+    ld_dd_ptrnn(i16.IX, ptrnn);
 }
 
 /**
@@ -101,11 +98,8 @@ function ld_IX_ptrnn(ptrnn) {
  * portion of IY. The first n operand after the op code is the low-order byte of nn.
  * Clock: 20T
  */
- function ld_IY_ptrnn(ptrnn) {
-    const iyHigh = mem[ptrnn + 1];
-    const iyLow = mem[ptrnn];
-    const iyValue = (iyLow << 8) | iyHigh; //little endian
-    regsSp.IY = iyValue;
+function ld_IY_ptrnn(ptrnn) {
+    ld_dd_ptrnn(i16.IY, ptrnn);
 }
 
 /**
@@ -143,7 +137,7 @@ function ld_ptrnn_dd(ddIndex, ptrnn) {
  * Clock: 20T
  */
 function ld_ptrnn_IX(ptrnn) {
-    const ix = regsSp.IX;
+    const ix = r16.get(i16.IX);
     mem[ptrnn] = ix & 0xff;
     mem[ptrnn + 1] = (ix & 0xff00) >> 8;
 }
@@ -157,7 +151,7 @@ function ld_ptrnn_IX(ptrnn) {
  * Clock: 20T
  */
 function ld_ptrnn_IY(ptrnn) {
-    const iy = regsSp.IY;
+    const iy = r16.get(i16.IY);
     mem[ptrnn] = iy & 0xff;
     mem[ptrnn + 1] = (iy & 0xff00) >> 8;
 }
@@ -169,7 +163,7 @@ function ld_ptrnn_IY(ptrnn) {
  * Clock: 6T
  */
 function ld_SP_HL() {
-    regsSp.SP = r16.get(r16.idx.HL);
+    r16.set(i16.SP, r16.get(i16.HL));
 }
 
 /**
@@ -179,7 +173,7 @@ function ld_SP_HL() {
  * Clock: 10T
  */
 function ld_SP_IX() {
-    regsSp.SP = regsSp.IX;
+    r16.set(i16.SP, r16.get(i16.IX));
 }
 
 /**
@@ -189,7 +183,7 @@ function ld_SP_IX() {
  * Clock: 10T
  */
 function ld_SP_IY() {
-    regsSp.SP = regsSp.IY;
+    r16.set(i16.SP, r16.get(i16.IY));
 }
 
 /**
@@ -205,10 +199,12 @@ function ld_SP_IY() {
  */
 function push_qq(qqIndex) {
     const qq = r16.get(qqIndex);
-    regsSp.SP--;
-    mem[regsSp.SP] = (qq & 0xff00) >> 8;
-    regsSp.SP--;
-    mem[regsSp.SP] = qq & 0xff;
+    let sp = r16.get(i16.SP);
+    sp--;
+    mem[sp] = (qq & 0xff00) >> 8;
+    sp--;
+    mem[sp] = qq & 0xff;
+    r16.set(i16.SP, sp);
 }
 
 /**
@@ -222,11 +218,7 @@ function push_qq(qqIndex) {
  * Clock: 15T
  */
 function push_IX() {
-    const ix = regsSp.IX;
-    regsSp.SP--;
-    mem[regsSp.SP] = (ix & 0xff00) >> 8;
-    regsSp.SP--;
-    mem[regsSp.SP] = ix & 0xff;
+    push_qq(i16.IX);
 }
 
 /**
@@ -240,11 +232,7 @@ function push_IX() {
  * Clock: 15T
  */
 function push_IY() {
-    const iy = regsSp.IY;
-    regsSp.SP--;
-    mem[regsSp.SP] = (iy & 0xff00) >> 8;
-    regsSp.SP--;
-    mem[regsSp.SP] = iy & 0xff;
+    push_qq(i16.IY);
 }
 
 /**
@@ -259,13 +247,15 @@ function push_IY() {
  * DE, HL, or AF.
  * Clock: 10T
  */
- function pop_qq(qqIndex) {
+function pop_qq(qqIndex) {
     let qq = 0;
-    qq = mem[regsSp.SP];
-    regsSp.SP++;
-    qq = qq | (mem[regsSp.SP] << 8);
-    regsSp.SP++;
+    let sp = r16.get(i16.SP);
+    qq = mem[sp];
+    sp++;
+    qq = qq | (mem[sp] << 8);
+    sp++;
     r16.set(qqIndex, qq);
+    r16.set(i16.SP, sp);
 }
 
 /**
@@ -279,13 +269,8 @@ function push_IY() {
  * portion of IX. The SP is incremented again.
  * Clock: 14T
  */
- function pop_IX() {
-    let ix = 0;
-    ix = mem[regsSp.SP];
-    regsSp.SP++;
-    ix = ix | (mem[regsSp.SP] << 8);
-    regsSp.SP++;
-    regsSp.IX = ix;
+function pop_IX() {
+    pop_qq(i16.IX);
 }
 
 /**
@@ -299,13 +284,8 @@ function push_IY() {
  * portion of IY. The SP is incremented again.
  * Clock: 14T
  */
- function pop_IY() {
-    let iy = 0;
-    iy = mem[regsSp.SP];
-    regsSp.SP++;
-    iy = iy | (mem[regsSp.SP] << 8);
-    regsSp.SP++;
-    regsSp.IY = iy;
+function pop_IY() {
+    pop_qq(i16.IY);
 }
 
 module.exports = {

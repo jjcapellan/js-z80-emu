@@ -6,7 +6,7 @@
  */
 
  let CPU = {};
- let r8, i8, r16, i16, flags, fi, regsSp, mem;
+ let r8, i8, r16, i16, flags, fi, mem;
  const setCPU = (cpu) => {
      CPU = cpu;
      mem = CPU.memory;
@@ -14,7 +14,6 @@
      i8 = r8.idx;
      r16 = CPU.registers.regs16;
      i16 = r16.idx;
-     regsSp = CPU.registers.regsSp;
      flags = CPU.registers.flags;
      fi = flags.idx;
  }
@@ -77,7 +76,7 @@ function exx() {
  * Clock: 19T
  */
  function ex_ptrSP_HL() {
-    const sp = regsSp.SP;
+    const sp = r16.get(i16.SP);
     const h = r8.get(i8.H);
     const l = r8.get(i8.L);
     r8.set(i8.H, mem[sp + 1]);
@@ -95,11 +94,11 @@ function exx() {
  * Clock: 23T
  */
 function ex_ptrSP_IX() {
-    const sp = regsSp.SP;
-    const ix = regsSp.IX;
+    const sp = r16.get(i16.SP);
+    const ix = r16.get(i16.IX);
     const ixH = ix >> 8;
     const ixL = ix & 0xff;
-    regsSp.IX = (mem[sp + 1] << 8) | mem[sp];
+    r16.set(i16.IX, (mem[sp + 1] << 8) | mem[sp]);
     mem[sp] = ixL;
     mem[sp + 1] = ixH;
 }
@@ -113,11 +112,11 @@ function ex_ptrSP_IX() {
  * Clock: 23T
  */
 function ex_ptrSP_IY() {
-    const sp = regsSp.SP;
-    const iy = regsSp.IY;
+    const sp = r16.get(i16.SP);
+    const iy = r16.get(i16.IY);
     const iyH = iy >> 8;
     const iyL = iy & 0xff;
-    regsSp.IY = (mem[sp + 1] << 8) | mem[sp];
+    r16.set(i16.IY, (mem[sp + 1] << 8) | mem[sp]) ;
     mem[sp] = iyL;
     mem[sp + 1] = iyH;
 }
@@ -163,12 +162,14 @@ function ldi() {
  */
 function ldir() {
     let bc = r16.get(i16.BC);
+    let pc = r16.get(i16.PC);
 
     ldi();
 
     // Repeat condition
     if((bc - 1) == 0){
-        regsSp.PC -= 2;
+        pc -= 2;
+        r16.set(i16.PC, pc);
     }
 }
 
@@ -213,12 +214,14 @@ function ldd(bucle = false) {
  */
 function lddr() {
     let bc = r16.get(i16.BC);
+    let pc = r16.get(i16.PC);
 
     ldd(true);
 
     // Repeat condition
     if((bc - 1) == 0){
-        regsSp.PC -= 2;
+        pc -= 2;
+        r16.set(i16.PC, pc);
     }
 
 }
@@ -268,11 +271,13 @@ function cpir() {
     const a = r8.get(i8.A);
     const hl = r16.get(i16.HL);    
     const diff = a - mem[hl];
+    let pc = r16.get(i16.PC);
     cpi();
     const bc = r16.get(i16.BC);
 
     if(bc != 0 && diff != 0){
-        regsSp.PC -= 2;
+        pc -= 2;
+        r16.set(i16.PC, pc);
     }
 
 }
@@ -321,11 +326,13 @@ function cpdr() {
     const a = r8.get(i8.A);
     const hl = r16.get(i16.HL);    
     const diff = a - mem[hl];
+    let pc = r16.get(i16.PC);
     cpd();
     const bc = r16.get(i16.BC);
 
     if(bc != 0 && diff != 0){
-        regsSp.PC -= 2;
+        pc -= 2;
+        r16.set(i16.PC, pc);
     }
 
 }

@@ -5,7 +5,6 @@ const instr = require('../src/z80_instructions/ins_8bit_load');
 const cpu = new z80();
 const regs8 = cpu.registers.regs8;
 const regs16 = cpu.registers.regs16;
-const regsSp = cpu.registers.regsSp;
 const flags = cpu.registers.flags;
 
 test('ld_r_r2(rIndex, r2Index)', t => {
@@ -31,8 +30,8 @@ test('ld_r_ptrHL(rIndex)', t => {
 });
 
 test('ld_r_ptrIXd(rIndex, d)', t => {
-    regsSp.IX = 0x2424;
-    const ix = regsSp.IX;
+    regs16.set(regs16.idx.IX, 0x2424);
+    const ix = regs16.get(regs16.idx.IX);
     const d = -0x19;
     cpu.memory[ix+d] = 0xa3;
     instr.ld_r_ptrIXd(regs8.idx.A, d); // LD A, (IX+d)
@@ -41,8 +40,8 @@ test('ld_r_ptrIXd(rIndex, d)', t => {
 });
 
 test('ld_r_ptrIYd(rIndex, d)', t => {
-    regsSp.IY = 0x3434;
-    const iy = regsSp.IY;
+    regs16.set(regs16.idx.IY, 0x3434);
+    const iy = regs16.get(regs16.idx.IY);
     const d = -0x26;
     cpu.memory[iy+d] = 0xa9;
     instr.ld_r_ptrIYd(regs8.idx.E, d); // LD E, (IY+d)
@@ -60,9 +59,9 @@ test('ld_ptrHL_r(rIndex)', t => {
 
 test('ld_ptrIXd_r(rIndex, d)', t => {   
     regs8.set(regs8.idx.C, 0xf4);
-    regsSp.IX = 0xaf21;
+    regs16.set(regs16.idx.IX, 0xaf21);
     const d = -0x5a;
-    const ix = regsSp.IX;
+    const ix = regs16.get(regs16.idx.IX);
     const ptr = ix + d;
     instr.ld_ptrIXd_r(regs8.idx.C, d); // LD (IX+d), C
     const m = cpu.memory[ptr]
@@ -71,9 +70,9 @@ test('ld_ptrIXd_r(rIndex, d)', t => {
 
 test('ld_ptrIYd_r(rIndex, d)', t => {   
     regs8.set(regs8.idx.D, 0xf8);
-    regsSp.IY = 0xef64;
+    regs16.set(regs16.idx.IY, 0xef64);
     const d = 0x5a;
-    const iy = regsSp.IY;
+    const iy = regs16.get(regs16.idx.IY);
     const ptr = iy + d;
     instr.ld_ptrIYd_r(regs8.idx.D, d); // LD (IY+d), D
     const m = cpu.memory[ptr]
@@ -89,10 +88,10 @@ test('ld_ptrHL_n(n)', t => {
 });
 
 test('ld_ptrIXd_n(n, d)', t => {   
-    regsSp.IX = 0x5555;
+    regs16.set(regs16.idx.IX, 0x5555);
     const n = 0xa9;
     const d = 0x34;
-    const ix = regsSp.IX;
+    const ix = regs16.get(regs16.idx.IX);
     const ptr = ix + d;
     instr.ld_ptrIXd_n(n, d); // LD (IX+d), n
     const m = cpu.memory[ptr]
@@ -100,10 +99,10 @@ test('ld_ptrIXd_n(n, d)', t => {
 });
 
 test('ld_ptrIYd_n(n, d)', t => {   
-    regsSp.IX = 0x2323;
+    regs16.set(regs16.idx.IX, 0x2323);
     const n = 0x15;
     const d = 0x2f;
-    const iy = regsSp.IY;
+    const iy = regs16.get(regs16.idx.IY);
     const ptr = iy + d;
     instr.ld_ptrIYd_n(n, d); // LD (IY+d), n
     const m = cpu.memory[ptr]
@@ -157,8 +156,8 @@ test('ld_ptrnn_A(nn)', t => {
 }); 
 
 test('ld_A_I()', t => {   
-    regsSp.I = -0x12; // signed int8
-    const i = regsSp.I;
+    regs8.set(regs8.idx.I, -0x12);
+    const i = regs8.get(regs8.idx.I);
     instr.ld_A_I(); // LD A, I
     const a = regs8.get(regs8.idx.A);
     t.is(a, i & 0xff, `Result: ${a} Expected: ${i}`);
@@ -179,5 +178,6 @@ test('ld_I_A()', t => {
     regs8.set(regs8.idx.A, 0x24);
     instr.ld_I_A(); // LD I, A
     const a = regs8.get(regs8.idx.A, false);
-    t.is(regsSp.I, a);
+    const i = regs8.get(regs8.idx.I);
+    t.is(i, a);
 });

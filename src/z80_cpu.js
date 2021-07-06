@@ -60,8 +60,11 @@ class Z80 {
      * @returns byte from memory address PC
      */
     getByte(){
-        this.registers.regsSp.PC++;
-        return this.memory[this.registers.regsSp.PC - 1];
+        const r16 = this.registers.regs16;
+        let pc = r16.get(r16.idx.PC);
+        pc++;
+        r16.set(r16.idx.PC, pc);
+        return this.memory[pc - 1];
     }
 
     step() {

@@ -5,7 +5,6 @@ const instr = require('../src/z80_instructions/ins_exch_trans_search');
 const cpu = new z80();
 const regs8 = cpu.registers.regs8;
 const regs16 = cpu.registers.regs16;
-const regsSp = cpu.registers.regsSp;
 const flags = cpu.registers.flags;
 const mem = cpu.memory;
 
@@ -53,14 +52,14 @@ test('exx()', t => {
 
 test('ex_ptrSP_HL()', t => {
     regs16.set(regs16.idx.HL, 0x7012);
-    regsSp.SP = 0x8856;
+    regs16.set(regs16.idx.SP, 0x8856);
     mem[0x8856] = 0x11;
     mem[0x8857] = 0x22;
     instr.ex_ptrSP_HL(); // EX (SP), HL
     const hl = regs16.get(regs16.idx.HL);
     const h = regs8.get(regs8.idx.H);
     const l = regs8.get(regs8.idx.L);
-    const sp = regsSp.SP;
+    const sp = regs16.get(regs16.idx.SP);
     t.is(hl, 0x2211);
     t.is(h, 0x22);
     t.is(l, 0x11);
@@ -70,13 +69,13 @@ test('ex_ptrSP_HL()', t => {
 });
 
 test('ex_ptrSP_IX()', t => {
-    regsSp.IX = 0x3988;
-    regsSp.SP = 0x0100;
+    regs16.set(regs16.idx.IX, 0x3988);
+    regs16.set(regs16.idx.SP, 0x0100);
     mem[0x0100] = 0x90;
     mem[0x0101] = 0x48;
     instr.ex_ptrSP_IX(); // EX (SP), IX
-    const ix = regsSp.IX;
-    const sp = regsSp.SP;
+    const ix = regs16.get(regs16.idx.IX);
+    const sp = regs16.get(regs16.idx.SP);
     t.is(ix, 0x4890);
     t.is(mem[0x0100], 0x88);
     t.is(mem[0x0101], 0x39);

@@ -1,8 +1,11 @@
 const test = require('ava');
 const z80 = require('../src/z80_cpu');
-const { regs8, regs16 } = require('../src/z80_registers');
 
 const cpu = new z80();
+const r16 = cpu.registers.regs16;
+const i16 = r16.idx;
+const r8 = cpu.registers.regs8;
+const i8 = r8.idx;
 const mem = cpu.memory;
 
 test('z80.load(src, pos)', t => {
@@ -20,7 +23,7 @@ test('Decoder using Z80.step()', t => {
     src = Uint8Array.of(0x6, 0x12, 0x11, 0x23, 0x1c, 0x12);
     const pos = 0;
     cpu.load(src, pos);
-    regs8.set(regs8.idx.A, 0x32);
+    r8.set(i8.A, 0x32);
     // Loaded in memory
     // LD B, 0x12
     // LD DE, 0x1c23
@@ -31,8 +34,8 @@ test('Decoder using Z80.step()', t => {
     cpu.step();
 
     
-    const b = regs8.get(regs8.idx.B);
-    const de = regs16.get(regs16.idx.DE);
+    const b = r8.get(i8.B);
+    const de = r16.get(i16.DE);
     t.is(b, 0x12);
     t.is(de, 0x1c23);
     t.is(mem[0x1c23], 0x32);

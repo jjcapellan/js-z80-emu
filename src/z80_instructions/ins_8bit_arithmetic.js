@@ -6,7 +6,7 @@
  */
 
 let CPU = {};
-let r8, i8, r16, i16, flags, fi, regsSp, mem;
+let r8, i8, r16, i16, flags, fi, mem;
 const setCPU = (cpu) => {
     CPU = cpu;
     mem = CPU.memory;
@@ -14,7 +14,6 @@ const setCPU = (cpu) => {
     i8 = r8.idx;
     r16 = CPU.registers.regs16;
     i16 = r16.idx;
-    regsSp = CPU.registers.regsSp;
     flags = CPU.registers.flags;
     fi = flags.idx;
 }
@@ -74,7 +73,7 @@ function add_A_ptrHL() {
 */
 function add_A_ptrIXplusd(d) {
     const a = r8.get(i8.A);
-    const ix = regsSp.IX;
+    const ix =r16.get(i16.IX);
     const n = mem[ix + d];
     r8.set(i8.A, a + n);
     let f = CPU.tables.addFlagsTable[(a << 8) | n];
@@ -91,7 +90,7 @@ function add_A_ptrIXplusd(d) {
 */
 function add_A_ptrIYplusd(d) {
     const a = r8.get(i8.A);
-    const iy = regsSp.IY;
+    const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     r8.set(i8.A, a + n);
     let f = CPU.tables.addFlagsTable[(a << 8) | n];
@@ -156,7 +155,7 @@ function adc_A_ptrHL() {
 * Clock: 19T
 */
 function adc_A_ptrIXplusd(d) {
-    const ix = regsSp.IX;
+    const ix =r16.get(i16.IX);
     const c = flags.get(fi.C);
     const a = r8.get(i8.A);
     const n = mem[ix + d] + c;
@@ -173,7 +172,7 @@ function adc_A_ptrIXplusd(d) {
 * Clock: 19T
 */
 function adc_A_ptrIYplusd(d) {
-    const iy = regsSp.IY;
+    const iy = r16.get(i16.IY);
     const c = flags.get(fi.C);
     const a = r8.get(i8.A);
     const n = mem[iy + d] + c;
@@ -237,7 +236,7 @@ function sub_A_ptrHL() {
 */
 function sub_A_ptrIXplusd(d) {
     const a = r8.get(i8.A);
-    const ix = regsSp.IX;
+    const ix =r16.get(i16.IX);
     const n = mem[ix + d];
     r8.set(i8.A, a - n);
     let f = CPU.tables.subFlagsTable[(a << 8) | n];
@@ -254,7 +253,7 @@ function sub_A_ptrIXplusd(d) {
 */
 function sub_A_ptrIYplusd(d) {
     const a = r8.get(i8.A);
-    const iy = regsSp.IY;
+    const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     r8.set(i8.A, a - n);
     let f = CPU.tables.subFlagsTable[(a << 8) | n];
@@ -319,7 +318,7 @@ function sbc_A_ptrHL() {
 * Clock: 19T
 */
 function sbc_A_ptrIXplusd(d) {
-    const ix = regsSp.IX;
+    const ix =r16.get(i16.IX);
     const c = flags.get(fi.C);
     const a = r8.get(i8.A);
     const n = mem[ix + d] + c;
@@ -336,7 +335,7 @@ function sbc_A_ptrIXplusd(d) {
 * Clock: 19T
 */
 function sbc_A_ptrIYplusd(d) {
-    const iy = regsSp.IY;
+    const iy = r16.get(i16.IY);
     const c = flags.get(fi.C);
     const a = r8.get(i8.A);
     const n = mem[iy + d] + c;
@@ -399,7 +398,7 @@ function and_ptrHL() {
 * Clock: 19T
 */
 function and_ptrIXplusd(d) {
-    const ix = regsSp.IX;
+    const ix =r16.get(i16.IX);
     const n = mem[ix + d];
     const a = r8.get(i8.A);
     let f = CPU.tables.andFlagsTable[(a << 8) | n];
@@ -415,7 +414,7 @@ function and_ptrIXplusd(d) {
 * Clock: 19T
 */
 function and_ptrIYplusd(d) {
-    const iy = regsSp.IY;
+    const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     const a = r8.get(i8.A);
     let f = CPU.tables.andFlagsTable[(a << 8) | n];
@@ -477,7 +476,7 @@ function or_ptrHL() {
 * Clock: 19T
 */
 function or_ptrIXplusd(d) {
-    const ix = regsSp.IX;
+    const ix =r16.get(i16.IX);
     const n = mem[ix + d];
     const a = r8.get(i8.A);
     let f = CPU.tables.orFlagsTable[(a << 8) | n];
@@ -493,7 +492,7 @@ function or_ptrIXplusd(d) {
 * Clock: 19T
 */
 function or_ptrIYplusd(d) {
-    const iy = regsSp.IY;
+    const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     const a = r8.get(i8.A);
     let f = CPU.tables.orFlagsTable[(a << 8) | n];
@@ -555,7 +554,7 @@ function xor_ptrHL() {
 * Clock: 19T
 */
 function xor_ptrIXplusd(d) {
-    const ix = regsSp.IX;
+    const ix =r16.get(i16.IX);
     const n = mem[ix + d];
     const a = r8.get(i8.A);
     let f = CPU.tables.xorFlagsTable[(a << 8) | n];
@@ -571,7 +570,7 @@ function xor_ptrIXplusd(d) {
 * Clock: 19T
 */
 function xor_ptrIYplusd(d) {
-    const iy = regsSp.IY;
+    const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     const a = r8.get(i8.A);
     let f = CPU.tables.xorFlagsTable[(a << 8) | n];
@@ -637,7 +636,7 @@ function cp_ptrHL() {
 */
 function cp_ptrIXplusd(d) {
     const a = r8.get(i8.A);
-    const ix = regsSp.IX;
+    const ix =r16.get(i16.IX);
     const n = mem[ix + d];
     let f = CPU.tables.subFlagsTable[(a << 8) | n];
     f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
@@ -654,7 +653,7 @@ function cp_ptrIXplusd(d) {
 */
 function cp_ptrIYplusd(d) {
     const a = r8.get(i8.A);
-    const iy = regsSp.IY;
+    const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     let f = CPU.tables.subFlagsTable[(a << 8) | n];
     f = (f & 0b11010111) | (r & 0b00101000); // Overwrites flags F3 and F5 from operand r
@@ -704,7 +703,7 @@ function inc_ptrHL() {
 * Clock: 23T
 */
 function inc_ptrIXplusd(d) {
-    const ix = regsSp.IX;
+    const ix =r16.get(i16.IX);
     const n = mem[ix + d];
     setFlagsIncDec(n, 0x7f);
     mem[ix + d] = n + 1;
@@ -717,7 +716,7 @@ function inc_ptrIXplusd(d) {
 * Clock: 23T
 */
 function inc_ptrIYplusd(d) {
-    const iy = regsSp.IY;
+    const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     setFlagsIncDec(n, 0x7f);
     mem[iy + d] = n + 1;
@@ -755,7 +754,7 @@ function dec_ptrHL() {
 * Clock: 23T
 */
 function dec_ptrIXplusd(d) {
-    const ix = regsSp.IX;
+    const ix =r16.get(i16.IX);
     const n = mem[ix + d];
     setFlagsIncDec(n, 0x80);
     mem[ix + d] = n - 1;
@@ -768,7 +767,7 @@ function dec_ptrIXplusd(d) {
 * Clock: 23T
 */
 function dec_ptrIYplusd(d) {
-    const iy = regsSp.IY;
+    const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     setFlagsIncDec(n, 0x80);
     mem[iy + d] = n - 1;

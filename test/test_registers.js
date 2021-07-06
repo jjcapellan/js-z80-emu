@@ -16,10 +16,13 @@ test('regs8 get/set', t => {
 test('regs16 get/set', t => {
     regs16.set(regs16.idx.BC, 0xe5a4);
     regs16.set(regs16.idx.BC, 0x19c6, true);
+    regs16.set(regs16.idx.SP, 0x2424);
     const bc = regs16.get(regs16.idx.BC);
     const bc_ = regs16.get(regs16.idx.BC, true);
+    const sp = regs16.get(regs16.idx.SP);
     t.is(bc, 0xe5a4);
     t.is(bc_, 0x19c6);
+    t.is(sp, 0x2424);
 });
 
 test('regs16.get from 2 regs8.set', t => {

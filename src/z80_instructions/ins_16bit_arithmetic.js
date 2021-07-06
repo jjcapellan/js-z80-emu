@@ -6,7 +6,7 @@
  */
 
  let CPU = {};
- let r8, i8, r16, i16, flags, fi, regsSp, mem;
+ let r8, i8, r16, i16, flags, fi, mem;
  const setCPU = (cpu) => {
      CPU = cpu;
      mem = CPU.memory;
@@ -14,7 +14,6 @@
      i8 = r8.idx;
      r16 = CPU.registers.regs16;
      i16 = r16.idx;
-     regsSp = CPU.registers.regsSp;
      flags = CPU.registers.flags;
      fi = flags.idx;
  }
@@ -129,5 +128,5 @@ function add_IX_pp(ppValue) {
     flags.set(fi.F5, ((result >> 8) & (1 << fi.F5)) != 0 );
 
 
-    regsSp.IX = result;
+    r16.set(i16.IX, result);
 }
