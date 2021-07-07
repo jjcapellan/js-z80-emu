@@ -87,6 +87,62 @@ function rlc_ptrHL() {
 }
 
 /**
+* RLC (IX + d)
+* 
+* The contents of the memory address specified by the sum of the contents of Index Register
+* IX and the two’s-complement displacement integer, d, are rotated left 1 bit position. The
+* contents of bit 7 are copied to the Carry flag and also to bit 0. Bit 0 is the least-significant
+* bit.
+* Clock: 23T
+*/
+function rlc_ptrIXd(d) {
+    const ix = r16.get(i16.IX);
+    const n = mem[ix + d];
+    const bit7 = n >> 7;
+    const nRotated = ((n << 1) & 0xff) | bit7;
+    mem[ix + d] = nRotated;
+    const f = createFlags(
+        bit7,
+        false,
+        CPU.tables.parityTable[nRotated],
+        (nRotated & (1 << fi.F3)) != 0,
+        false,
+        (nRotated & (1 << fi.F5)) != 0,
+        nRotated == 0,
+        bit7
+    );
+    r8.set(i8.F, f);
+}
+
+/**
+* RLC (IY + d)
+* 
+* The contents of the memory address specified by the sum of the contents of Index Register
+* IY and the two’s-complement displacement integer, d, are rotated left 1 bit position. The
+* contents of bit 7 are copied to the Carry flag and also to bit 0. Bit 0 is the least-significant
+* bit.
+* Clock: 23T
+*/
+function rlc_ptrIYd(d) {
+    const iy = r16.get(i16.IY);
+    const n = mem[iy + d];
+    const bit7 = n >> 7;
+    const nRotated = ((n << 1) & 0xff) | bit7;
+    mem[iy + d] = nRotated;
+    const f = createFlags(
+        bit7,
+        false,
+        CPU.tables.parityTable[nRotated],
+        (nRotated & (1 << fi.F3)) != 0,
+        false,
+        (nRotated & (1 << fi.F5)) != 0,
+        nRotated == 0,
+        bit7
+    );
+    r8.set(i8.F, f);
+}
+
+/**
 * RLA
 * 
 * The contents of the Accumulator (Register A) are rotated left 1 bit position through the
@@ -150,6 +206,8 @@ module.exports = {
     rlca,
     rlc_r,
     rlc_ptrHL,
+    rlc_ptrIXd,
+    rlc_ptrIYd,
     rla,
     rrca,
     rra,
