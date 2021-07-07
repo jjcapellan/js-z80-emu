@@ -35,6 +35,28 @@ function rlca() {
 }
 
 /**
+ * Helper function for RLC X
+ * @param {number} n Byte
+ * @returns {number} Byte rotated left
+ */
+function get_rotated_rlc(n) {
+    const bit7 = n >> 7;
+    const nRotated = ((n << 1) & 0xff) | bit7;
+    const f = createFlags(
+        bit7,
+        false,
+        CPU.tables.parityTable[nRotated],
+        (nRotated & (1 << fi.F3)) != 0,
+        false,
+        (nRotated & (1 << fi.F5)) != 0,
+        nRotated == 0,
+        bit7
+    );
+    r8.set(i8.F, f);
+    return nRotated;
+}
+
+/**
 * RLC r
 * 
 * The contents of register r are rotated left 1 bit position. The contents of bit 7 are copied to
@@ -43,20 +65,9 @@ function rlca() {
 */
 function rlc_r(rIndex) {
     const r = r8.get(rIndex);
-    const bit7 = r >> 7;
-    const rRotated = ((r << 1) & 0xff) | bit7;
+    rRotated = get_rotated_rlc(r);
     r8.set(rIndex, rRotated);
-    const f = createFlags(
-        bit7,
-        false,
-        CPU.tables.parityTable[rRotated],
-        (rRotated & (1 << fi.F3)) != 0,
-        false,
-        (rRotated & (1 << fi.F5)) != 0,
-        rRotated == 0,
-        bit7
-    );
-    r8.set(i8.F, f);
+
 }
 
 /**
@@ -70,20 +81,8 @@ function rlc_r(rIndex) {
 function rlc_ptrHL() {
     const hl = r16.get(i16.HL);
     const n = mem[hl];
-    const bit7 = n >> 7;
-    const nRotated = ((n << 1) & 0xff) | bit7;
+    const nRotated = get_rotated_rlc(n);
     mem[hl] = nRotated;
-    const f = createFlags(
-        bit7,
-        false,
-        CPU.tables.parityTable[nRotated],
-        (nRotated & (1 << fi.F3)) != 0,
-        false,
-        (nRotated & (1 << fi.F5)) != 0,
-        nRotated == 0,
-        bit7
-    );
-    r8.set(i8.F, f);
 }
 
 /**
@@ -98,20 +97,8 @@ function rlc_ptrHL() {
 function rlc_ptrIXd(d) {
     const ix = r16.get(i16.IX);
     const n = mem[ix + d];
-    const bit7 = n >> 7;
-    const nRotated = ((n << 1) & 0xff) | bit7;
+    const nRotated = get_rotated_rlc(n);
     mem[ix + d] = nRotated;
-    const f = createFlags(
-        bit7,
-        false,
-        CPU.tables.parityTable[nRotated],
-        (nRotated & (1 << fi.F3)) != 0,
-        false,
-        (nRotated & (1 << fi.F5)) != 0,
-        nRotated == 0,
-        bit7
-    );
-    r8.set(i8.F, f);
 }
 
 /**
@@ -126,20 +113,8 @@ function rlc_ptrIXd(d) {
 function rlc_ptrIYd(d) {
     const iy = r16.get(i16.IY);
     const n = mem[iy + d];
-    const bit7 = n >> 7;
-    const nRotated = ((n << 1) & 0xff) | bit7;
+    const nRotated = get_rotated_rlc(n);
     mem[iy + d] = nRotated;
-    const f = createFlags(
-        bit7,
-        false,
-        CPU.tables.parityTable[nRotated],
-        (nRotated & (1 << fi.F3)) != 0,
-        false,
-        (nRotated & (1 << fi.F5)) != 0,
-        nRotated == 0,
-        bit7
-    );
-    r8.set(i8.F, f);
 }
 
 /**
