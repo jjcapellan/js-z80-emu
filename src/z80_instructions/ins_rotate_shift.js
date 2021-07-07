@@ -20,13 +20,32 @@
 function rlca() {
     const a = r8.get(i8.A);
     const bit7 = a >> 7;
-    aRotated = ((a << 1) & 0xff) | bit7;
+    const aRotated = ((a << 1) & 0xff) | bit7;
     r8.set(i8.A, aRotated);
     flags.set(fi.C, bit7);
     flags.set(fi.N, false);
     flags.set(fi.H, false);
     flags.set(fi.F3, (aRotated & (1 << fi.F3)) != 0);
     flags.set(fi.F5, (aRotated & (1 << fi.F5)) != 0);
+}
+
+/**
+* RLC r
+* 
+* The contents of register r are rotated left 1 bit position. The contents of bit 7 are copied to
+* the Carry flag and also to bit 0.
+* Clock: 8T
+*/
+function rlc_r(rIndex) {
+    const r = r8.get(rIndex);
+    const bit7 = r >> 7;
+    const rRotated = ((r << 1) & 0xff) | bit7;
+    r8.set(rIndex, rRotated);
+    flags.set(fi.C, bit7);
+    flags.set(fi.N, false);
+    flags.set(fi.H, false);
+    flags.set(fi.F3, (rRotated & (1 << fi.F3)) != 0);
+    flags.set(fi.F5, (rRotated & (1 << fi.F5)) != 0);
 }
 
 /**
@@ -40,7 +59,7 @@ function rla() {
     const a = r8.get(i8.A);
     const bit7 = a >> 7;
     const cf = flags.get(fi.C);
-    aRotated = ((a << 1) & 0xff) | cf;
+    const aRotated = ((a << 1) & 0xff) | cf;
     r8.set(i8.A, aRotated);
     flags.set(fi.C, bit7);
     flags.set(fi.N, false);
@@ -59,7 +78,7 @@ function rla() {
 function rrca() {
     const a = r8.get(i8.A);
     const bit0 = a & 1;
-    aRotated = (a >> 1) | (bit0 << 7);
+    const aRotated = (a >> 1) | (bit0 << 7);
     r8.set(i8.A, aRotated);
     flags.set(fi.C, bit0);
     flags.set(fi.N, false);
@@ -80,7 +99,7 @@ function rra() {
     const a = r8.get(i8.A);
     const bit0 = a & 1;
     const cf = flags.get(fi.C);
-    aRotated = (a >> 1) | (cf << 7);
+    const aRotated = (a >> 1) | (cf << 7);
     r8.set(i8.A, aRotated);
     flags.set(fi.C, bit0);
     flags.set(fi.N, false);
@@ -91,6 +110,7 @@ function rra() {
 
 module.exports = {
     rlca,
+    rlc_r,
     rla,
     rrca,
     rra,

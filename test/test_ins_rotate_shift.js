@@ -66,3 +66,17 @@ test('rra', t => {
 
     doTest(0x24, 0x92, 0x5d, 0x44);
 });
+
+test('rlc_r(rIndex)', t => {
+    function doTest(rIndex, r0, r1, f0, f1) {
+        r8.set(rIndex, r0);
+        r8.set(i8.F, f0);
+        instr.rlc_r(rIndex); // RLC r
+        let r = r8.get(rIndex);
+        let f = r8.get(i8.F);
+        t.is(r, r1);
+        t.is(f, f1);
+    }
+
+    doTest(i8.B, 0x24, 0x48, 0x5d, 0x4c);
+});
