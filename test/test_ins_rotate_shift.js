@@ -78,5 +78,5 @@ test('rlc_r(rIndex)', t => {
         t.is(f, f1);
     }
 
-    doTest(i8.B, 0x24, 0x48, 0x5d, 0x4c);
+    doTest(i8.B, 0x24, 0x48, 0x0, 0x0c);
 });
