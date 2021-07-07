@@ -60,6 +60,33 @@ function rlc_r(rIndex) {
 }
 
 /**
+* RLC (HL)
+* 
+* The contents of the memory address specified by the contents of register pair HL are
+* rotated left 1 bit position. The contents of bit 7 are copied to the Carry flag and also to bit 0.
+* Bit 0 is the least-significant bit.
+* Clock: 15T
+*/
+function rlc_ptrHL() {
+    const hl = r16.get(i16.HL);
+    const n = mem[hl];
+    const bit7 = n >> 7;
+    const nRotated = ((n << 1) & 0xff) | bit7;
+    mem[hl] = nRotated;
+    const f = createFlags(
+        bit7,
+        false,
+        CPU.tables.parityTable[nRotated],
+        (nRotated & (1 << fi.F3)) != 0,
+        false,
+        (nRotated & (1 << fi.F5)) != 0,
+        nRotated == 0,
+        bit7
+    );
+    r8.set(i8.F, f);
+}
+
+/**
 * RLA
 * 
 * The contents of the Accumulator (Register A) are rotated left 1 bit position through the
@@ -122,6 +149,7 @@ function rra() {
 module.exports = {
     rlca,
     rlc_r,
+    rlc_ptrHL,
     rla,
     rrca,
     rra,
