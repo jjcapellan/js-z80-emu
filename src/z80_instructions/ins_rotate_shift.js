@@ -243,6 +243,88 @@ function rrca() {
 }
 
 /**
+ * Helper function for RRC X
+ * @param {number} n Byte
+ * @returns {number} Byte rotated right
+ */
+ function get_rotated_rrc(n) {
+    const bit0 = n & 1;
+    const nRotated = (n >> 1) | (bit0 << 7);
+    const f = createFlags(
+        bit0,
+        false,
+        CPU.tables.parityTable[nRotated],
+        (nRotated & (1 << fi.F3)) != 0,
+        false,
+        (nRotated & (1 << fi.F5)) != 0,
+        nRotated == 0,
+        n & (1 << 7)
+    );
+    r8.set(i8.F, f);
+    return nRotated;
+}
+
+/**
+* RRC r
+* 
+* The contents of register r are rotated right 1 bit position. The contents of bit 0 are
+* copied to the Carry flag and also to bit 7. Bit 0 is the least-significant bit.
+* Clock: 2T
+*/
+function rrc_r(rIndex) {
+    const r = r8.get(rIndex);
+    rRotated = get_rotated_rc(r);
+    r8.set(rIndex, rRotated);
+}
+
+/**
+* RRC (HL)
+* 
+* The contents of the memory address specified by the contents of register pair HL are
+* rotated right 1 bit position. The contents of bit 0 are copied to the Carry flag and
+* also to bit 7. Bit 0 is the least-significant bit.
+* Clock: 4T
+*/
+function rrc_ptrHL() {
+    const hl = r16.get(i16.HL);
+    const n = mem[hl];
+    const nRotated = get_rotated_rrc(n);
+    mem[hl] = nRotated;
+}
+
+/**
+* RRC (IX + d)
+* 
+* The contents of the memory address specified by the sum of the contents of Index Register
+* IX and the two’s-complement displacement integer, d, are rotated right 1 bit position. 
+* The contents of bit 0 are copied to the Carry flag and also to bit 7. 
+* Bit 0 is the least-significant bit.
+* Clock: 6T
+*/
+function rrc_ptrIXd(d) {
+    const ix = r16.get(i16.IX);
+    const n = mem[ix + d];
+    const nRotated = get_rotated_rrc(n);
+    mem[ix + d] = nRotated;
+}
+
+/**
+* RRC (IY + d)
+* 
+* The contents of the memory address specified by the sum of the contents of Index Register
+* IY and the two’s-complement displacement integer, d, are rotated right 1 bit position.
+* The contents of bit 0 are copied to the Carry flag and also to bit 7.
+* Bit 0 is the least-significant bit.
+* Clock: 6T
+*/
+function rrc_ptrIYd(d) {
+    const iy = r16.get(i16.IY);
+    const n = mem[iy + d];
+    const nRotated = get_rotated_rrc(n);
+    mem[iy + d] = nRotated;
+}
+
+/**
 * RRA
 * 
 * The contents of the Accumulator (Register A) are rotated right 1 bit position through the
