@@ -5,10 +5,15 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
- let CPU, r8, i8, r16, i16, flags, fi, mem;
- function setCPU(data){
-     ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data); 
- }
+let CPU, r8, i8, r16, i16, flags, fi, mem;
+function setCPU(data) {
+    ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data);
+}
+
+function createFlags(C, N, PV, F3, H, F5, Z, S) {
+    return (S << 7) | (Z << 6) | (F5 << 5) | (H << 4) |
+        (F3 << 3) | (PV << 2) | (N << 1) | C;
+}
 
 /**
 * RLCA
@@ -41,11 +46,17 @@ function rlc_r(rIndex) {
     const bit7 = r >> 7;
     const rRotated = ((r << 1) & 0xff) | bit7;
     r8.set(rIndex, rRotated);
-    flags.set(fi.C, bit7);
-    flags.set(fi.N, false);
-    flags.set(fi.H, false);
-    flags.set(fi.F3, (rRotated & (1 << fi.F3)) != 0);
-    flags.set(fi.F5, (rRotated & (1 << fi.F5)) != 0);
+    const f = createFlags(
+        bit7,
+        false,
+        CPU.tables.parityTable[rRotated],
+        (rRotated & (1 << fi.F3)) != 0,
+        false,
+        (rRotated & (1 << fi.F5)) != 0,
+        rRotated == 0,
+        bit7
+    );
+    r8.set(i8.F, f);
 }
 
 /**
