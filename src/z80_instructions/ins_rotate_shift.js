@@ -442,6 +442,14 @@ module.exports = {
     rl_ptrIYd,
     rla,
     rrca,
+    rrc_r,
+    rrc_ptrHL,
+    rrc_ptrIXd,
+    rrc_ptrIYd,
     rra,
+    rr_r,
+    rr_ptrHL,
+    rr_ptrIXd,
+    rr_ptrIYd,
     setCPU
 }
