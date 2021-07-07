@@ -82,15 +82,16 @@ function sbc_HL_ss(ssIndex) {
     const ss = r16.get(ssIndex);
     const hl = r16.get(i16.HL);
     const cf = flags.get(fi.C);
-    const sub = hl - (ss + cf);
+    const n = cf + ss;
+    const sub = hl - n;
     const result = sub & 0xffff;
 
     let f = createFlags(
         (sub & (1 << 16)) != 0,
         true,
-        ((hl & 0x80) ^ ((sl + cf) & 0x80)) && (hl < result),
+        ((hl ^ n) & 0x8000) && (hl < result),
         ((result >> 8) & (1 << fi.F3)) != 0,
-        (((ss ^ hl ^ result) >> 8) & 0x10) != 0,
+        (((n ^ hl ^ result) >> 8) & 0x10) != 0,
         ((result >> 8) & (1 << fi.F5)) != 0,
         result == 0,
         (result & (1 << 15)) != 0
