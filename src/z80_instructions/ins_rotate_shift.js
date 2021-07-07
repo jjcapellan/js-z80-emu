@@ -68,9 +68,31 @@ function rrca() {
     flags.set(fi.F5, (aRotated & (1 << fi.F5)) != 0);
 }
 
+/**
+* RRA
+* 
+* The contents of the Accumulator (Register A) are rotated right 1 bit position through the
+* Carry flag. The previous contents of the Carry flag are copied to bit 7. 
+* Bit 0 is the leastsignificant bit
+* Clock: 4T
+*/
+function rra() {
+    const a = r8.get(i8.A);
+    const bit0 = a & 1;
+    const cf = flags.get(fi.C);
+    aRotated = (a >> 1) | (cf << 7);
+    r8.set(i8.A, aRotated);
+    flags.set(fi.C, bit0);
+    flags.set(fi.N, false);
+    flags.set(fi.H, false);
+    flags.set(fi.F3, (aRotated & (1 << fi.F3)) != 0);
+    flags.set(fi.F5, (aRotated & (1 << fi.F5)) != 0);
+}
+
 module.exports = {
     rlca,
     rla,
     rrca,
+    rra,
     setCPU
 }

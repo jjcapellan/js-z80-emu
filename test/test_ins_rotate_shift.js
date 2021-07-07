@@ -52,3 +52,17 @@ test('rrca', t => {
 
     doTest(0x24, 0x12, 0x5d, 0x44);
 });
+
+test('rra', t => {
+    function doTest(a0, a1, f0, f1) {
+        r8.set(i8.A, a0);
+        r8.set(i8.F, f0);
+        instr.rra(); // RRA
+        let a = r8.get(i8.A);
+        let f = r8.get(i8.F);
+        t.is(a, a1);
+        t.is(f, f1);
+    }
+
+    doTest(0x24, 0x92, 0x5d, 0x44);
+});
