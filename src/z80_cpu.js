@@ -14,6 +14,7 @@ const i_16bit_load = require('./z80_instructions/ins_16bit_load');
 const i_exch_trans_search = require('./z80_instructions/ins_exch_trans_search');
 const i_general_arithm = require('./z80_instructions/ins_general_arithm_cpu');
 const i_rotate_shift = require('./z80_instructions/ins_rotate_shift');
+const i_bitset = require('./z80_instructions/ins_bitset');
 const i_data = require('./cpu.js');
 
 class Z80 {
@@ -48,6 +49,7 @@ class Z80 {
         i_exch_trans_search.setCPU(i_data.z80);
         i_general_arithm.setCPU(i_data.z80);
         i_rotate_shift.setCPU(i_data.z80);
+        i_bitset.setCPU(i_data.z80);
     }
 
     /**
