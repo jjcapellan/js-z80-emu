@@ -762,6 +762,16 @@ function rrd() {
     mem[hl] = n;
 }
 
+const helpers = {
+    get_rotated_rlc: get_rotated_rlc,
+    get_rotated_rl: get_rotated_rl,
+    get_rotated_rrc: get_rotated_rrc,
+    get_rotated_rr: get_rotated_rr,
+    get_shifted_sla: get_shifted_sla,
+    get_shifted_sra: get_shifted_sra,
+    get_shifted_srl: get_shifted_srl
+}
+
 module.exports = {
     rlca,
     rlc_r,
@@ -797,5 +807,6 @@ module.exports = {
     srl_ptrHL,
     srl_ptrIXd,
     srl_ptrIYd,
+    helpers,
     setCPU
 }
