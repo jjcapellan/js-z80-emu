@@ -10,6 +10,11 @@ function setCPU(data) {
     ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data);
 }
 
+function createFlags(C, N, PV, F3, H, F5, Z, S) {
+    return (S << 7) | (Z << 6) | (F5 << 5) | (H << 4) |
+        (F3 << 3) | (PV << 2) | (N << 1) | C;
+}
+
 /**
 * BIT b, r
 * 
