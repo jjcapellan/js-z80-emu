@@ -1,6 +1,7 @@
 const test = require('ava');
 const z80 = require('../src/z80_cpu');
 const instr = require('../src/z80_instructions/ins_rotate_shift');
+const { regs16 } = require('../src/z80_registers');
 const helpers = instr.helpers;
 
 const cpu = new z80();
@@ -176,6 +177,7 @@ test('get_shifted_srl(n)', t => {
 test('rld()', t => {
     function doTest(n0, n1, a0, a1, f0, f1) {
         const hl = 0x5c23;
+        regs16.set(i16.HL, hl);
         mem[hl] = n0;
         r8.set(i8.A, a0);
         r8.set(i8.F, f0);
@@ -184,8 +186,8 @@ test('rld()', t => {
         let a = r8.get(i8.A);
         let f = r8.get(i8.F);
         let n = mem[hl];
-        t.is(a, a1);
-        t.is(f, f1);
+        t.is(a, a1, `Result: ${a.toString(16)} Expected: ${a1.toString(16)}`);
+        t.is(f, f1, `Result: ${f.toString(16)} Expected: ${f1.toString(16)}`);
         t.is(n, n1);
     }
 
@@ -195,6 +197,7 @@ test('rld()', t => {
 test('rrd()', t => {
     function doTest(n0, n1, a0, a1, f0, f1) {
         const hl = 0x5c23;
+        regs16.set(i16.HL, hl);
         mem[hl] = n0;
         r8.set(i8.A, a0);
         r8.set(i8.F, f0);
@@ -203,8 +206,8 @@ test('rrd()', t => {
         let a = r8.get(i8.A);
         let f = r8.get(i8.F);
         let n = mem[hl];
-        t.is(a, a1);
-        t.is(f, f1);
+        t.is(a, a1, `Result: ${a.toString(16)} Expected: ${a1.toString(16)}`);
+        t.is(f, f1, `Result: ${f.toString(16)} Expected: ${f1.toString(16)}`);
         t.is(n, n1);
     }
 
