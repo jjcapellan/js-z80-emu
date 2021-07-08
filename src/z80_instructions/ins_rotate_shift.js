@@ -683,6 +683,45 @@ function srl_ptrIYd(d) {
     mem[iy + d] = nShifted;
 }
 
+/**
+* RLD
+* 
+* The contents of the low-order four bits (bits 3, 2, 1, and 0) of the memory location (HL)
+* are copied to the high-order four bits (7, 6, 5, and 4) of that same memory location (*1); the
+* previous contents of those high-order four bits are copied to the low-order four bits of the
+* Accumulator (Register A) (*2); and the previous contents of the low-order four bits of the
+* Accumulator are copied to the low-order four bits of memory location (HL). The contents
+* of the high-order bits of the Accumulator are unaffected.
+* Clock: 18T
+*/
+function rld() {    
+    const hl = r16.get(i16.HL);
+    let n = mem[hl];
+    const nLow = n & 0xf;
+    const nHigh = n >> 4;
+    n = nLow | (nLow << 4); // (*1)
+
+    let a = r8.get(i8.A);
+    const aLow = a & 0xf;
+    a = (a & 0xf0) | nHigh; // (*2)
+    n = (n & 0xf0) | aLow; // (*3)
+    
+    const f = createFlags(
+        flags.get(fi.C),
+        false,
+        CPU.tables.parityTable[a],
+        (a & (1 << fi.F3)) != 0,
+        false,
+        (a & (1 << fi.F5)) != 0,
+        a == 0,
+        a & (1 << 7)
+    );
+
+    r8.set(i8.F, f);
+    r8.set(i8.A, a);    
+    mem[hl] = n;
+}
+
 module.exports = {
     rlca,
     rlc_r,
@@ -694,6 +733,7 @@ module.exports = {
     rl_ptrIXd,
     rl_ptrIYd,
     rla,
+    rld,
     rrca,
     rrc_r,
     rrc_ptrHL,
