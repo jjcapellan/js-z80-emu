@@ -514,6 +514,91 @@ function sla_ptrIYd(d) {
     mem[iy + d] = nShifted;
 }
 
+/**
+ * Helper function for SRA X
+ * @param {number} n Byte
+ * @returns {number} Byte shifted right
+ */
+ function get_shifted_sra(n) {
+    const bit7 = n >> 7;
+    const bit0 = n & 1;
+    const nShifted = (n >> 1) | (bit7 << 7);
+    const f = createFlags(
+        bit0,
+        false,
+        CPU.tables.parityTable[nShifted],
+        (nShifted & (1 << fi.F3)) != 0,
+        false,
+        (nShifted & (1 << fi.F5)) != 0,
+        nShifted == 0,
+        bit7
+    );
+    r8.set(i8.F, f);
+    return nShifted;
+}
+
+/**
+* SRA r
+* 
+* An arithmetic shift right 1 bit position is performed on the contents of register r.
+* The contents of bit 0 are copied to the Carry flag. Bit 7 remains unchanged.
+* Bit 0 is the least-significant bit.
+* Clock: 2T
+*/
+function sra_r(rIndex) {
+    const r = r8.get(rIndex);
+    const rShifted = get_shifted_sra(r);
+    r8.set(rIndex, rShifted);
+}
+
+/**
+* SRA (HL)
+* 
+* An arithmetic shift right 1 bit position is performed on the the contents of the memory address
+* specified by the contents of register pair HL. 
+* The contents of bit 0 are copied to the Carry flag. Bit 7 remains unchanged.
+* Bit 0 is the least-significant bit.
+* Clock: 4T
+*/
+function sra_ptrHL() {
+    const hl = r16.get(i16.HL);
+    const n = mem[hl];
+    const nShifted = get_shifted_sra(n);
+    mem[hl] = nShifted;
+}
+
+/**
+* SRA (IX + d)
+* 
+* An arithmetic shift right 1 bit position is performed on the the contents of the memory address
+* specified by the contents of index register IX. 
+* The contents of bit 0 are copied to the Carry flag. Bit 7 remains unchanged.
+* Bit 0 is the least-significant bit.
+* Clock: 6T
+*/
+function sra_ptrIXd(d) {
+    const ix = r16.get(i16.IX);
+    const n = mem[ix + d];
+    const nShifted = get_shifted_sra(n);
+    mem[ix + d] = nShifted;
+}
+
+/**
+* SRA (IY + d)
+* 
+* An arithmetic shift right 1 bit position is performed on the the contents of the memory address
+* specified by the contents of index register IY. 
+* The contents of bit 0 are copied to the Carry flag. Bit 7 remains unchanged.
+* Bit 0 is the least-significant bit.
+* Clock: 6T
+*/
+function sra_ptrIYd(d) {
+    const iy = r16.get(i16.IY);
+    const n = mem[iy + d];
+    const nShifted = get_shifted_sra(n);
+    mem[iy + d] = nShifted;
+}
+
 module.exports = {
     rlca,
     rlc_r,
@@ -539,5 +624,9 @@ module.exports = {
     sla_ptrHL,
     sla_ptrIXd,
     sla_ptrIYd,
+    sra_r,
+    sra_ptrHL,
+    sra_ptrIXd,
+    sra_ptrIYd,
     setCPU
 }
