@@ -23,10 +23,22 @@ function createFlags(C, N, PV, F3, H, F5, Z, S) {
 */
 function bit_b_r(b, rIndex) {
     const r = r8.get(rIndex);
-    const bit = r & (1 << b);
-    flags.set(fi.Z, bit);
+    const z = ((r & (1 << b)) == 0) ? true : false;
+    let f = createFlags(
+        flags.get(fi.C),
+        false,
+        z,
+        (r & (1 << fi.F3)) != 0,
+        true,
+        (r & (1 << fi.F5)) != 0,
+        z,
+        (b == 7) && (z == 0)
+    );
+    r8.set(i8.F, f);
+
 }
 
 module.exports = {
+    bit_b_r,
     setCPU
 }
