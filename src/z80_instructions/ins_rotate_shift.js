@@ -599,6 +599,90 @@ function sra_ptrIYd(d) {
     mem[iy + d] = nShifted;
 }
 
+/**
+ * Helper function for SRL X
+ * @param {number} n Byte
+ * @returns {number} Byte shifted right
+ */
+ function get_shifted_srl(n) {
+    const bit0 = n & 1;
+    const nShifted = n >> 1;
+    const f = createFlags(
+        bit0,
+        false,
+        CPU.tables.parityTable[nShifted],
+        (nShifted & (1 << fi.F3)) != 0,
+        false,
+        (nShifted & (1 << fi.F5)) != 0,
+        nShifted == 0,
+        false
+    );
+    r8.set(i8.F, f);
+    return nShifted;
+}
+
+/**
+* SRL r
+* 
+* An arithmetic shift right 1 bit position is performed on the contents of register r.
+* The contents of bit 0 are copied to the Carry flag.
+* Bit 0 is the least-significant bit.
+* Clock: 2T
+*/
+function srl_r(rIndex) {
+    const r = r8.get(rIndex);
+    const rShifted = get_shifted_srl(r);
+    r8.set(rIndex, rShifted);
+}
+
+/**
+* SRL (HL)
+* 
+* An arithmetic shift right 1 bit position is performed on the the contents of the memory address
+* specified by the contents of register pair HL. 
+* The contents of bit 0 are copied to the Carry flag.
+* Bit 0 is the least-significant bit.
+* Clock: 4T
+*/
+function srl_ptrHL() {
+    const hl = r16.get(i16.HL);
+    const n = mem[hl];
+    const nShifted = get_shifted_srl(n);
+    mem[hl] = nShifted;
+}
+
+/**
+* SRL (IX + d)
+* 
+* An arithmetic shift right 1 bit position is performed on the the contents of the memory address
+* specified by the contents of index register IX. 
+* The contents of bit 0 are copied to the Carry flag.
+* Bit 0 is the least-significant bit.
+* Clock: 6T
+*/
+function srl_ptrIXd(d) {
+    const ix = r16.get(i16.IX);
+    const n = mem[ix + d];
+    const nShifted = get_shifted_srl(n);
+    mem[ix + d] = nShifted;
+}
+
+/**
+* SRL (IY + d)
+* 
+* An arithmetic shift right 1 bit position is performed on the the contents of the memory address
+* specified by the contents of index register IY. 
+* The contents of bit 0 are copied to the Carry flag.
+* Bit 0 is the least-significant bit.
+* Clock: 6T
+*/
+function srl_ptrIYd(d) {
+    const iy = r16.get(i16.IY);
+    const n = mem[iy + d];
+    const nShifted = get_shifted_srl(n);
+    mem[iy + d] = nShifted;
+}
+
 module.exports = {
     rlca,
     rlc_r,
@@ -628,5 +712,9 @@ module.exports = {
     sra_ptrHL,
     sra_ptrIXd,
     sra_ptrIYd,
+    srl_r,
+    srl_ptrHL,
+    srl_ptrIXd,
+    srl_ptrIYd,
     setCPU
 }
