@@ -50,7 +50,7 @@ function get_rotated_rlc(n) {
         false,
         (nRotated & (1 << fi.F5)) != 0,
         nRotated == 0,
-        bit7
+        nRotated & (1 << 7)
     );
     r8.set(i8.F, f);
     return nRotated;
@@ -134,7 +134,7 @@ function get_rotated_rl(n) {
         false,
         (nRotated & (1 << fi.F5)) != 0,
         nRotated == 0,
-        bit7
+        nRotated & (1 << 7)
     );
     r8.set(i8.F, f);
     return nRotated;
@@ -258,7 +258,7 @@ function get_rotated_rrc(n) {
         false,
         (nRotated & (1 << fi.F5)) != 0,
         nRotated == 0,
-        n & (1 << 7)
+        nRotated & (1 << 7)
     );
     r8.set(i8.F, f);
     return nRotated;
@@ -362,7 +362,7 @@ function get_rotated_rr(n) {
         false,
         (nRotated & (1 << fi.F5)) != 0,
         nRotated == 0,
-        n & (1 << 7)
+        nRotated & (1 << 7)
     );
     r8.set(i8.F, f);
     return nRotated;
@@ -446,7 +446,7 @@ function rr_ptrIYd(d) {
         false,
         (nShifted & (1 << fi.F5)) != 0,
         nShifted == 0,
-        bit7
+        nShifted & (1 << 7)
     );
     r8.set(i8.F, f);
     return nShifted;
@@ -531,7 +531,7 @@ function sla_ptrIYd(d) {
         false,
         (nShifted & (1 << fi.F5)) != 0,
         nShifted == 0,
-        bit7
+        nShifted & (1 << 7)
     );
     r8.set(i8.F, f);
     return nShifted;
