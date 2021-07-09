@@ -65,6 +65,16 @@ function jp_c_nn(nn) {
     r16.set(i16.PC, nn);
 }
 
+/**
+* JP PO, nn
+* 
+* nn is loaded to register pair Program Counter (PC) if condition PO (PV not set) is true.
+* Clock: 10T
+*/
+function jp_po_nn(nn) {
+    if(!flags.get(fi.PV))
+    r16.set(i16.PC, nn);
+}
 
 module.exports = {
     jp_nn,
