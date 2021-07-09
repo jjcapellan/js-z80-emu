@@ -133,6 +133,12 @@ function set_b_r(b, rIndex) {
     r8.set(rIndex, set_n(b, r8.get(rIndex)));
 }
 
+function set_n_mem(b, rrIndex, d){
+    const rr = r16.get(rrIndex);
+    let n = mem[rr + d];
+    mem[rr + d] = set_n(b, n);
+}
+
 /**
 * SET b, (HL)
 * 
@@ -140,9 +146,7 @@ function set_b_r(b, rIndex) {
 * Clock: 15T
 */
 function set_b_ptrHL(b) {
-    const hl = r16.get(i16.HL);
-    let n = mem[hl];
-    mem[hl] = set_n(b, n);
+    set_n_mem(b, i16.HL, 0);
 }
 
 /**
@@ -153,9 +157,7 @@ function set_b_ptrHL(b) {
 * Clock: 23T
 */
 function set_b_ptrIXplusd(b, d) {
-    const ix = r16.get(i16.IX);
-    let n = mem[ix + d];
-    mem[ix + d] = set_n(b, n);
+    set_n_mem(b, i16.IX, d);
 }
 
 /**
@@ -166,9 +168,7 @@ function set_b_ptrIXplusd(b, d) {
 * Clock: 23T
 */
 function set_b_ptrIYplusd(b, d) {
-    const iy = r16.get(i16.IY);
-    let n = mem[iy + d];
-    mem[iy + d] = set_n(b, n);
+    set_n_mem(b, i16.IY, d);
 }
     
 module.exports = {
