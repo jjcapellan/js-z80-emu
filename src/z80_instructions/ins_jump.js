@@ -87,6 +87,17 @@ function jp_pe_nn(nn) {
     r16.set(i16.PC, nn);
 }
 
+/**
+* JP P, nn
+* 
+* nn is loaded to register pair Program Counter (PC) if condition P (Sign positive: S not set) is true.
+* Clock: 10T
+*/
+function jp_p_nn(nn) {
+    if(flags.get(fi.S))
+    r16.set(i16.PC, nn);
+}
+
 module.exports = {
     jp_nn,
     setCPU
