@@ -122,6 +122,22 @@ function jr_e(e) {
     r16.set(i16.PC, r16.get(i16.PC) + e);
 }
 
+/**
+* JR C, e
+* 
+* This instruction provides for conditional branching to other segments of a program
+* depending on the results of a test on the Carry Flag. If the flag = 1, the value of 
+* displacement e is added to the Program Counter (PC) and the next instruction is fetched from the
+* location designated by the new contents of the PC. The jump is measured from the address
+* of the instruction op code and contains a range of –126 to +129 bytes.
+* The assembler automatically adjusts for the twice incremented PC.
+* Clock: 12T (if condition is met)    7T (if condition is not met)
+*/
+function jr_c_e(e) {
+    if(flags.get(fi.C))
+    r16.set(i16.PC, r16.get(i16.PC) + e);
+}
+
 module.exports = {
     jp_nn,
     setCPU
