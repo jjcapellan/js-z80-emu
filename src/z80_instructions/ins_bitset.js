@@ -119,7 +119,7 @@ function bit_b_ptrIYplusd(b, d) {
  * @param {number} n Byte to set bit
  * @returns Byte
  */
-function set_n(b, n){
+function set_bit(b, n) {
     return n | (1 << b);
 }
 
@@ -130,13 +130,13 @@ function set_n(b, n){
 * Clock: 8T
 */
 function set_b_r(b, rIndex) {
-    r8.set(rIndex, set_n(b, r8.get(rIndex)));
+    r8.set(rIndex, set_bit(b, r8.get(rIndex)));
 }
 
-function set_n_mem(b, rrIndex, d){
+function set_bit_mem(b, rrIndex, d) {
     const rr = r16.get(rrIndex);
     let n = mem[rr + d];
-    mem[rr + d] = set_n(b, n);
+    mem[rr + d] = set_bit(b, n);
 }
 
 /**
@@ -146,7 +146,7 @@ function set_n_mem(b, rrIndex, d){
 * Clock: 15T
 */
 function set_b_ptrHL(b) {
-    set_n_mem(b, i16.HL, 0);
+    set_bit_mem(b, i16.HL, 0);
 }
 
 /**
@@ -157,7 +157,7 @@ function set_b_ptrHL(b) {
 * Clock: 23T
 */
 function set_b_ptrIXplusd(b, d) {
-    set_n_mem(b, i16.IX, d);
+    set_bit_mem(b, i16.IX, d);
 }
 
 /**
@@ -168,9 +168,67 @@ function set_b_ptrIXplusd(b, d) {
 * Clock: 23T
 */
 function set_b_ptrIYplusd(b, d) {
-    set_n_mem(b, i16.IY, d);
+    set_bit_mem(b, i16.IY, d);
 }
-    
+
+/**
+ * Helper function for RES instructions
+ * @param {number} b 
+ * @param {number} n 
+ * @returns 
+ */
+function reset_bit(b, n) {
+    return n & (0xff ^ (1 << b));
+}
+
+/**
+* RES b, r
+* 
+* Bit b in register r (any of registers B, C, D, E, H, L, or A) is reset.
+* Clock: 8T
+*/
+function res_b_r(b, rIndex) {
+    r8.set(rIndex, reset_bit(b, r8.get(rIndex)));
+}
+
+function reset_bit_mem(b, rrIndex, d) {
+    const rr = r16.get(rrIndex);
+    let n = mem[rr + d];
+    mem[rr + d] = reset_bit(b, n);
+}
+
+/**
+* RES b, (HL)
+* 
+* Bit b in the memory location addressed by the contents of register pair HL is reset.
+* Clock: 15T
+*/
+function res_b_ptrHL(b) {
+    reset_bit_mem(b, i16.HL, 0);
+}
+
+/**
+* RES b, (IX + d)
+* 
+* Bit b in the memory location addressed by the sum of the contents of the IX register pair
+* and the two’s complement integer d is reset.
+* Clock: 23T
+*/
+function res_b_ptrIXplusd(b, d) {
+    reset_bit_mem(b, i16.IX, d);
+}
+
+/**
+* RES b, (IY + d)
+* 
+* Bit b in the memory location addressed by the sum of the contents of the IY register pair
+* and the two’s complement integer d is reset.
+* Clock: 23T
+*/
+function res_b_ptrIYplusd(b, d) {
+    reset_bit_mem(b, i16.IY, d);
+}
+
 module.exports = {
     bit_b_r,
     bit_b_ptrHL,
@@ -180,5 +238,9 @@ module.exports = {
     set_b_ptrHL,
     set_b_ptrIXplusd,
     set_b_ptrIYplusd,
+    res_b_r,
+    res_b_ptrHL,
+    res_b_ptrIXplusd,
+    res_b_ptrIYplusd,
     setCPU
 }
