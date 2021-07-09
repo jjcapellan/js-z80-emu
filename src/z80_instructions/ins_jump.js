@@ -94,7 +94,7 @@ function jp_pe_nn(nn) {
 * Clock: 10T
 */
 function jp_p_nn(nn) {
-    if(flags.get(fi.S))
+    if(!flags.get(fi.S))
     r16.set(i16.PC, nn);
 }
 
