@@ -73,3 +73,15 @@ test('set_b_r(b, rIndex)', t => {
 
     doTest(3, 0x42, 0x4a);
 });
+
+test('res_b_r(b, rIndex)', t => {
+    function doTest(b, r0, r1) {
+        const rIndex = i8.B;
+        r8.set(rIndex, r0);
+        instr.res_b_r(b, rIndex); // RES b, r
+        let r = r8.get(rIndex);
+        t.is(r, r1, `Result: ${r.toString(16)} Expected: ${r1.toString(16)}`);
+    }
+
+    doTest(1, 0xff, 0xfd);
+});
