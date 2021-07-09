@@ -18,7 +18,7 @@ function setCPU(data) {
 * Clock: 10T
 */
 function jp_nn(nn) {
-    r16.set(i16.PC, nn);    
+    r16.set(i16.PC, nn);
 }
 
 /**
@@ -28,8 +28,8 @@ function jp_nn(nn) {
 * Clock: 10T
 */
 function jp_nz_nn(nn) {
-    if(!flags.get(fi.Z))
-    r16.set(i16.PC, nn);
+    if (!flags.get(fi.Z))
+        r16.set(i16.PC, nn);
 }
 
 /**
@@ -39,8 +39,8 @@ function jp_nz_nn(nn) {
 * Clock: 10T
 */
 function jp_z_nn(nn) {
-    if(flags.get(fi.Z))
-    r16.set(i16.PC, nn);
+    if (flags.get(fi.Z))
+        r16.set(i16.PC, nn);
 }
 
 /**
@@ -50,8 +50,8 @@ function jp_z_nn(nn) {
 * Clock: 10T
 */
 function jp_nc_nn(nn) {
-    if(!flags.get(fi.C))
-    r16.set(i16.PC, nn);
+    if (!flags.get(fi.C))
+        r16.set(i16.PC, nn);
 }
 
 /**
@@ -61,8 +61,8 @@ function jp_nc_nn(nn) {
 * Clock: 10T
 */
 function jp_c_nn(nn) {
-    if(flags.get(fi.C))
-    r16.set(i16.PC, nn);
+    if (flags.get(fi.C))
+        r16.set(i16.PC, nn);
 }
 
 /**
@@ -72,8 +72,8 @@ function jp_c_nn(nn) {
 * Clock: 10T
 */
 function jp_po_nn(nn) {
-    if(!flags.get(fi.PV))
-    r16.set(i16.PC, nn);
+    if (!flags.get(fi.PV))
+        r16.set(i16.PC, nn);
 }
 
 /**
@@ -83,8 +83,8 @@ function jp_po_nn(nn) {
 * Clock: 10T
 */
 function jp_pe_nn(nn) {
-    if(flags.get(fi.PV))
-    r16.set(i16.PC, nn);
+    if (flags.get(fi.PV))
+        r16.set(i16.PC, nn);
 }
 
 /**
@@ -94,8 +94,8 @@ function jp_pe_nn(nn) {
 * Clock: 10T
 */
 function jp_p_nn(nn) {
-    if(!flags.get(fi.S))
-    r16.set(i16.PC, nn);
+    if (!flags.get(fi.S))
+        r16.set(i16.PC, nn);
 }
 
 /**
@@ -105,8 +105,8 @@ function jp_p_nn(nn) {
 * Clock: 10T
 */
 function jp_z_nn(nn) {
-    if(flags.get(fi.Z))
-    r16.set(i16.PC, nn);
+    if (flags.get(fi.Z))
+        r16.set(i16.PC, nn);
 }
 
 /**
@@ -118,7 +118,7 @@ function jp_z_nn(nn) {
 */
 function jp_ptrHL() {
     const hl = r16.get(i16.HL);
-    r16.set(i16.PC, hl);    
+    r16.set(i16.PC, hl);
 }
 
 /**
@@ -130,7 +130,7 @@ function jp_ptrHL() {
 */
 function jp_ptrIX() {
     const ix = r16.get(i16.IX);
-    r16.set(i16.PC, ix);    
+    r16.set(i16.PC, ix);
 }
 
 /**
@@ -142,7 +142,7 @@ function jp_ptrIX() {
 */
 function jp_ptrIY() {
     const iy = r16.get(i16.IY);
-    r16.set(i16.PC, iy);    
+    r16.set(i16.PC, iy);
 }
 
 /**
@@ -172,8 +172,8 @@ function jr_e(e) {
 * Clock: 12T (if condition is met)    7T (if condition is not met)
 */
 function jr_c_e(e) {
-    if(flags.get(fi.C))
-    r16.set(i16.PC, r16.get(i16.PC) + e);
+    if (flags.get(fi.C))
+        r16.set(i16.PC, r16.get(i16.PC) + e);
 }
 
 /**
@@ -190,8 +190,8 @@ function jr_c_e(e) {
 * Clock: 12T (if condition is met)    7T (if condition is not met)
 */
 function jr_nc_e(e) {
-    if(!flags.get(fi.C))
-    r16.set(i16.PC, r16.get(i16.PC) + e);
+    if (!flags.get(fi.C))
+        r16.set(i16.PC, r16.get(i16.PC) + e);
 }
 
 /**
@@ -208,8 +208,8 @@ function jr_nc_e(e) {
 * Clock: 12T (if condition is met)    7T (if condition is not met)
 */
 function jr_z_e(e) {
-    if(flags.get(fi.Z))
-    r16.set(i16.PC, r16.get(i16.PC) + e);
+    if (flags.get(fi.Z))
+        r16.set(i16.PC, r16.get(i16.PC) + e);
 }
 
 /**
@@ -226,8 +226,28 @@ function jr_z_e(e) {
 * Clock: 12T (if condition is met)    7T (if condition is not met)
 */
 function jr_nz_e(e) {
-    if(!flags.get(fi.Z))
-    r16.set(i16.PC, r16.get(i16.PC) + e);
+    if (!flags.get(fi.Z))
+        r16.set(i16.PC, r16.get(i16.PC) + e);
+}
+
+/**
+* DJNZ e
+* 
+* This instruction is similar to the conditional jump instructions except that a register value
+* is used to determine branching. Register B is decremented, and if a nonzero value remains,
+* the value of displacement e is added to the Program Counter (PC). The next instruction is
+* fetched from the location designated by the new contents of the PC. The jump is measured
+* from the address of the instruction op code and contains a range of –126 to +129 bytes.
+* The assembler automatically adjusts for the twice incremented PC.
+* If the result of decrementing leaves B with a zero value, the next instruction executed is
+* taken from the location following this instruction.
+* Clock: 13T (if B == 0)    8T (if B != 0)
+*/
+function djnz_e(e) {
+    let b = r8.get(i8.B);
+    r8.set(i8.B, b - 1);
+    if ((b - 1) != 0)
+        r16.set(i16.PC, r16.get(i16.PC) + e);
 }
 
 module.exports = {
