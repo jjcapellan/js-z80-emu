@@ -28,7 +28,18 @@ function jp_nn(nn) {
 * Clock: 10T
 */
 function jp_nz_nn(nn) {
-    if(flags.get(fi.Z) == 0)
+    if(!flags.get(fi.Z))
+    r16.set(i16.PC, nn);
+}
+
+/**
+* JP Z, nn
+* 
+* nn is loaded to register pair Program Counter (PC) if condition Z (Z is set) is true.
+* Clock: 10T
+*/
+function jp_z_nn(nn) {
+    if(flags.get(fi.Z))
     r16.set(i16.PC, nn);
 }
 
