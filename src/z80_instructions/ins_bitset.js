@@ -54,9 +54,9 @@ function bit_b_ptrHL(b) {
         flags.get(fi.C),
         false,
         z,
-        (n & (1 << fi.F3)) != 0,
+        ((n & (1 << fi.F3)) != 0) && (b == 3),
         true,
-        (n & (1 << fi.F5)) != 0,
+        ((n & (1 << fi.F5)) != 0) && (b == 5),
         z,
         (b == 7) && (z == 0)
     );
