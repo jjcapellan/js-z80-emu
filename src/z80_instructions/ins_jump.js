@@ -126,11 +126,23 @@ function jp_ptrHL() {
 * 
 * The Program Counter (PC) is loaded with the contents of the IX register pair. The next
 * instruction is fetched from the location designated by the new contents of the PC.
-* Clock: 4T
+* Clock: 8T
 */
 function jp_ptrIX() {
     const ix = r16.get(i16.IX);
     r16.set(i16.PC, ix);    
+}
+
+/**
+* JP (IY)
+* 
+* The Program Counter (PC) is loaded with the contents of the IY register pair. The next
+* instruction is fetched from the location designated by the new contents of the PC.
+* Clock: 8T
+*/
+function jp_ptrIY() {
+    const iy = r16.get(i16.IY);
+    r16.set(i16.PC, iy);    
 }
 
 /**
