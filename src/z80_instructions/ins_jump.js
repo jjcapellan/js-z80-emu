@@ -54,6 +54,17 @@ function jp_nc_nn(nn) {
     r16.set(i16.PC, nn);
 }
 
+/**
+* JP C, nn
+* 
+* nn is loaded to register pair Program Counter (PC) if condition C (C is set) is true.
+* Clock: 10T
+*/
+function jp_z_nn(nn) {
+    if(flags.get(fi.C))
+    r16.set(i16.PC, nn);
+}
+
 
 module.exports = {
     jp_nn,
