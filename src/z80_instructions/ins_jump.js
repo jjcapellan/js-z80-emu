@@ -109,6 +109,19 @@ function jp_z_nn(nn) {
     r16.set(i16.PC, nn);
 }
 
+/**
+* JR e
+* 
+* This instruction provides for unconditional branching to other segments of a program. The
+* value of displacement e is added to the Program Counter (PC) and the next instruction is
+* fetched from the location designated by the new contents of the PC. This jump is measured from the address of the instruction op code and contains a range of –126 to +129
+* bytes. The assembler automatically adjusts for the twice incremented PC.
+* Clock: 12T
+*/
+function jp_e(e) {
+    r16.set(i16.PC, r16.get(i16.PC) + e);
+}
+
 module.exports = {
     jp_nn,
     setCPU
