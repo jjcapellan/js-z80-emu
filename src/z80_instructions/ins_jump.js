@@ -104,8 +104,8 @@ function jp_p_nn(nn) {
 * nn is loaded to register pair Program Counter (PC) if condition M (Sign negative: S is set) is true.
 * Clock: 10T
 */
-function jp_z_nn(nn) {
-    if (flags.get(fi.Z))
+function jp_m_nn(nn) {
+    if (flags.get(fi.S))
         r16.set(i16.PC, nn);
 }
 
@@ -252,5 +252,23 @@ function djnz_e(e) {
 
 module.exports = {
     jp_nn,
+    jp_c_nn,
+    jp_nc_nn,
+    jp_z_nn,
+    jp_nz_nn,
+    jp_po_nn,
+    jp_pe_nn,
+    jp_c_nn,
+    jp_p_nn,
+    jp_m_nn,
+    jp_ptrHL,
+    jp_ptrIX,
+    jp_ptrIY,
+    jr_e,
+    jr_c_e,
+    jr_nc_e,
+    jr_z_e,
+    jr_nz_e,
+    djnz_e,
     setCPU
 }
