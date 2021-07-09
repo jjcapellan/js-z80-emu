@@ -118,7 +118,7 @@ function jp_z_nn(nn) {
 * bytes. The assembler automatically adjusts for the twice incremented PC.
 * Clock: 12T
 */
-function jp_e(e) {
+function jr_e(e) {
     r16.set(i16.PC, r16.get(i16.PC) + e);
 }
 
