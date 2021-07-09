@@ -122,6 +122,18 @@ function jp_ptrHL() {
 }
 
 /**
+* JP (IX)
+* 
+* The Program Counter (PC) is loaded with the contents of the IX register pair. The next
+* instruction is fetched from the location designated by the new contents of the PC.
+* Clock: 4T
+*/
+function jp_ptrIX() {
+    const ix = r16.get(i16.IX);
+    r16.set(i16.PC, ix);    
+}
+
+/**
 * JR e
 * 
 * This instruction provides for unconditional branching to other segments of a program. The
