@@ -110,6 +110,18 @@ function jp_z_nn(nn) {
 }
 
 /**
+* JP (HL)
+* 
+* The Program Counter (PC) is loaded with the contents of the HL register pair. The next
+* instruction is fetched from the location designated by the new contents of the PC.
+* Clock: 4T
+*/
+function jp_ptrHL() {
+    const hl = r16.get(i16.HL);
+    r16.set(i16.PC, hl);    
+}
+
+/**
 * JR e
 * 
 * This instruction provides for unconditional branching to other segments of a program. The
