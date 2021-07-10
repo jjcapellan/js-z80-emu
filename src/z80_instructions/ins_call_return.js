@@ -36,7 +36,6 @@ function call_nn(nn) {
 /**
 * CALL NZ, nn
 * 
-* If NZ true then CALL nn.
 * Clock: 17T (condition true)    10T (condition false)
 */
 function call_nz_nn(nn) {
@@ -47,11 +46,20 @@ function call_nz_nn(nn) {
 /**
 * CALL Z, nn
 * 
-* If NZ true then CALL nn.
 * Clock: 17T (condition true)    10T (condition false)
 */
 function call_z_nn(nn) {
     if (flags.get(fi.Z))
+        call_nn(nn);
+}
+
+/**
+* CALL NC, nn
+* 
+* Clock: 17T (condition true)    10T (condition false)
+*/
+function call_nc_nn(nn) {
+    if (!flags.get(fi.C))
         call_nn(nn);
 }
 
