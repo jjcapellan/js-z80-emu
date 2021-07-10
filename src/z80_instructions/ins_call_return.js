@@ -178,6 +178,16 @@ function ret_po() {
         ret();
 }
 
+/**
+* RET PE
+* 
+* Clock: 11T (condition true)    5T (condition false)
+*/
+function ret_pe() {
+    if (flags.get(fi.PV))
+        ret();
+}
+
 module.exports = {
     setCPU
 }
