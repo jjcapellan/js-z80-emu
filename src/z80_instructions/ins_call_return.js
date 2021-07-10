@@ -138,6 +138,16 @@ function ret_nz() {
         ret();
 }
 
+/**
+* RET Z
+* 
+* Clock: 11T (condition true)    5T (condition false)
+*/
+function ret_z() {
+    if (flags.get(fi.Z))
+        ret();
+}
+
 module.exports = {
     setCPU
 }
