@@ -158,6 +158,16 @@ function ret_nc() {
         ret();
 }
 
+/**
+* RET C
+* 
+* Clock: 11T (condition true)    5T (condition false)
+*/
+function ret_c() {
+    if (flags.get(fi.C))
+        ret();
+}
+
 module.exports = {
     setCPU
 }
