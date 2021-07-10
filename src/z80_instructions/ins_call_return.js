@@ -208,6 +208,23 @@ function ret_m() {
         ret();
 }
 
+/**
+* RETI
+* 
+* Restore the contents of the Program Counter (analogous to the RET instruction) after interrupt subroutine.
+* Signal an I/O device that the interrupt routine is completed. The RETI instruction also
+* facilitates the nesting of interrupts, allowing higher priority devices to temporarily
+* suspend service of lower priority service routines. However, this instruction does not
+* enable interrupts that were disabled when the interrupt routine was entered. Before
+* doing the RETI instruction, the enable interrupt instruction (EI) should be executed to
+* allow recognition of interrupts after completion of the current service routine.
+* Clock: 14T
+*/
+function reti() {
+    ret();
+    /* IEO not emulated */
+}
+
 module.exports = {
     setCPU
 }
