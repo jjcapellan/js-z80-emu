@@ -258,5 +258,26 @@ function rst_p(p) {
 }
 
 module.exports = {
+    call_nn,
+    call_c_nn,
+    call_nc_nn,
+    call_z_nn,
+    call_nz_nn,
+    call_pe_nn,
+    call_po_nn,
+    call_m_nn,
+    call_p_nn,
+    ret,
+    ret_c,
+    ret_nc,
+    ret_z,
+    ret_nz,
+    ret_pe,
+    ret_po,
+    ret_m,
+    ret_p,
+    rst_p,
+    reti,
+    retn,
     setCPU
 }
