@@ -239,6 +239,24 @@ function retn() {
     ret();
 }
 
+/**
+* RST p
+* 
+* The current Program Counter (PC) contents are pushed onto the external memory stack,
+* and the Page 0 memory location assigned by operand p is loaded to the PC. Program execution
+* then begins with the op code in the address now pointed to by PC. The push is performed by
+* first decrementing the contents of the Stack Pointer (SP), loading the high-order
+* byte of PC to the memory address now pointed to by SP, decrementing SP again, and loading
+* the low-order byte of PC to the address now pointed to by SP. The Restart instruction
+* allows for a jump to one of eight addresses indicated by p (8bit length). The operand p
+* is assembled to the object code using the corresponding T state. 
+* Clock: 11T
+*/
+function rst_p(p) {
+    push_qq(i16.PC);
+    r16.set(i16.PC, p);
+}
+
 module.exports = {
     setCPU
 }
