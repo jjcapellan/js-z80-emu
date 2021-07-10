@@ -7,9 +7,9 @@
 
 const { push_qq, pop_qq } = require('./ins_16bit_load');
 
-let CPU, r8, i8, r16, i16, flags, fi, mem;
+let CPU, r16, i16, flags, fi;
 function setCPU(data) {
-    ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data);
+    ({ CPU, r16, i16, flags, fi } = data);
 }
 
 /**
