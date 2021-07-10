@@ -168,6 +168,16 @@ function ret_c() {
         ret();
 }
 
+/**
+* RET PO
+* 
+* Clock: 11T (condition true)    5T (condition false)
+*/
+function ret_po() {
+    if (!flags.get(fi.PV))
+        ret();
+}
+
 module.exports = {
     setCPU
 }
