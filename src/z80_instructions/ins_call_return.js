@@ -225,6 +225,20 @@ function reti() {
     /* IEO not emulated */
 }
 
+/**
+* RETN
+* 
+* This instruction is used at the end of a nonmaskable interrupts service routine to restore
+* the contents of the Program Counter (analogous to the RET instruction). The state of IFF2
+* is copied back to IFF1 so that maskable interrupts are enabled immediately following the
+* RETN if they were enabled before the nonmaskable interrupt.
+* Clock: 14T
+*/
+function retn() {
+    CPU.registers.iff.IFF1 = CPU.registers.iff.IFF1;
+    ret();
+}
+
 module.exports = {
     setCPU
 }
