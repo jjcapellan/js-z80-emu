@@ -5,7 +5,7 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-const {push_qq} = require('./ins_16bit_load');
+const { push_qq } = require('./ins_16bit_load');
 
 let CPU, r8, i8, r16, i16, flags, fi, mem;
 function setCPU(data) {
@@ -31,6 +31,17 @@ function call_nn(nn) {
     r16.set(i16.PC, r16.get(i16.PC) + 3);
     push_qq(i16.PC);
     r16.set(i16.PC, nn);
+}
+
+/**
+* CALL NZ, nn
+* 
+* If NZ true then CALL nn.
+* Clock: 17T (condition true)    10T (condition false)
+*/
+function call_nz_nn(nn) {
+    if (!flags.get(fi.Z))
+        call_nn(nn);
 }
 
 module.exports = {
