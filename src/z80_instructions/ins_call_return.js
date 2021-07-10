@@ -63,6 +63,16 @@ function call_nc_nn(nn) {
         call_nn(nn);
 }
 
+/**
+* CALL C, nn
+* 
+* Clock: 17T (condition true)    10T (condition false)
+*/
+function call_c_nn(nn) {
+    if (flags.get(fi.C))
+        call_nn(nn);
+}
+
 module.exports = {
     setCPU
 }
