@@ -5,7 +5,7 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-const { push_qq } = require('./ins_16bit_load');
+const { push_qq, pop_qq } = require('./ins_16bit_load');
 
 let CPU, r8, i8, r16, i16, flags, fi, mem;
 function setCPU(data) {
@@ -111,6 +111,21 @@ function call_p_nn(nn) {
 function call_m_nn(nn) {
     if (flags.get(fi.S))
         call_nn(nn);
+}
+
+/**
+* RET
+* 
+* The byte at the memory location specified by the contents of the Stack Pointer (SP)
+* Register pair is moved to the low-order eight bits of the Program Counter (PC). The SP is now
+* incremented and the byte at the memory location specified by the new contents of this
+* instruction is fetched from the memory location specified by the PC. This instruction is
+* normally used to return to the main line program at the completion of a routine entered by
+* a CALL instruction
+* Clock: 10T
+*/
+function ret() {
+    pop_qq(i16.PC);
 }
 
 module.exports = {
