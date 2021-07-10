@@ -128,6 +128,16 @@ function ret() {
     pop_qq(i16.PC);
 }
 
+/**
+* RET NZ
+* 
+* Clock: 11T (condition true)    5T (condition false)
+*/
+function ret_nz() {
+    if (!flags.get(fi.Z))
+        ret();
+}
+
 module.exports = {
     setCPU
 }
