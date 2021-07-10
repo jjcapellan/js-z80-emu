@@ -44,6 +44,17 @@ function call_nz_nn(nn) {
         call_nn(nn);
 }
 
+/**
+* CALL Z, nn
+* 
+* If NZ true then CALL nn.
+* Clock: 17T (condition true)    10T (condition false)
+*/
+function call_z_nn(nn) {
+    if (flags.get(fi.Z))
+        call_nn(nn);
+}
+
 module.exports = {
     setCPU
 }
