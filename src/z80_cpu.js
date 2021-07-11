@@ -5,6 +5,7 @@
 
 const registers = require('./z80_registers');
 const memory = require('./z80_memory');
+const ports = require('./z80_ports');
 const decode = require('./z80_decoder');
 const flagTables = require('./z80_flag_tables');
 const i_8bit_arithm = require('./z80_instructions/ins_8bit_arithmetic');
@@ -21,6 +22,7 @@ const i_data = require('./cpu.js');
 class Z80 {
     constructor() {
         this.memory = memory;
+        this.ports = ports;
         this.registers = registers;
         this.isHalt = false;
         this.interruptMode = 0;

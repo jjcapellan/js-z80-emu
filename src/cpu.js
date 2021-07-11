@@ -7,6 +7,7 @@
  const setData = (cpu) => {
      z80.CPU = cpu;
      z80.mem = cpu.memory;
+     z80.ports = cpu.ports;
      z80.r8 = cpu.registers.regs8;
      z80.i8 = cpu.registers.regs8.idx;
      z80.r16 = cpu.registers.regs16;
