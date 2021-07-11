@@ -59,3 +59,41 @@ function in_r_C(rIndex) {
     );
     r8.set(fi.F, f);
 }
+
+/**
+* INI
+* 
+* The contents of Register C are placed on the bottom half (A0 through A7) of the address
+* bus to select the I/O device at one of 256 (*1) possible ports. Register B can be used as a byte
+* counter, and its contents are placed on the top half (A8 through A15) of the address bus at
+* this time. Then one byte from the selected port is placed on the data bus and written to the
+* CPU. The contents of the HL register pair are then placed on the address bus and the input
+* byte is written to the corresponding location of memory. Finally, the byte counter is 
+* decremented and register pair HL is incremented.
+* 1*) In fact 16bit port address is used (BC)
+* Clock: 16T
+*/
+function ini() {
+    let hl = r16.get(i16.hl);
+    const bc = r16.get(i16.BC);
+    const b = r8.get(i8.B);
+    const c = r8.get(i8.C);
+    const value = ports[bc];
+
+    mem[hl] = value;
+    r8.set(i8.B, b - 1);
+    r16.set(i16.HL, hl + 1);
+
+    const n = b - 1;
+    const f = createFlags(
+        value + ((c + 1) & 0xff) > 0xff, // undocumented effect
+        true,
+        CPU.tables.parityTable[(((value + ((c + 1) & 0xff)) & 7) ^ b)], // undocumented effect
+        (n & (1 << fi.F3)) != 0,
+        value + ((c + 1) & 0xff) > 0xff, // undocumented effect
+        (n & (1 << fi.F5)) != 0,
+        n == 0,
+        (n & 0x80) != 0
+    );
+    r8.set(fi.F, f);
+}
