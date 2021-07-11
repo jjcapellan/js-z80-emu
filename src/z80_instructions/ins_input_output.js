@@ -10,6 +10,11 @@ function setCPU(data) {
     ({ CPU, r8, i8, r16, i16, flags, fi, mem, ports } = data);
 }
 
+function createFlags(C, N, PV, F3, H, F5, Z, S) {
+    return (S << 7) | (Z << 6) | (F5 << 5) | (H << 4) |
+        (F3 << 3) | (PV << 2) | (N << 1) | C;
+}
+
 /**
 * IN A, n
 * 
@@ -39,5 +44,18 @@ function in_A_n(n) {
 */
 function in_r_C(rIndex) {
     const bc = r16.get(i16.BC);
-    r8.set(rIndex, ports[bc]);
+    const n = ports[bc];
+    r8.set(rIndex, n);
+
+    const f = createFlags(
+        flags.get(fi.C),
+        false,
+        CPU.tables.parityTable[n],
+        (n & (1 << fi.F3)) != 0,
+        false,
+        (n & (1 << fi.F5)) != 0,
+        n == 0,
+        (n & 0x80) != 0
+    );
+    r8.set(fi.F, f);
 }
