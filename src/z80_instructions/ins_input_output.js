@@ -97,3 +97,10 @@ function ini() {
     );
     r8.set(fi.F, f);
 }
+
+module.exports ={
+    in_A_n,
+    in_r_C,
+    ini,
+    setCPU
+}
