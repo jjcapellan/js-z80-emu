@@ -17,6 +17,7 @@ const i_general_arithm = require('./z80_instructions/ins_general_arithm_cpu');
 const i_rotate_shift = require('./z80_instructions/ins_rotate_shift');
 const i_bitset = require('./z80_instructions/ins_bitset');
 const i_jump = require('./z80_instructions/ins_jump');
+const i_input_output = require('./z80_instructions/ins_input_output');
 const i_data = require('./cpu.js');
 
 class Z80 {
@@ -54,6 +55,7 @@ class Z80 {
         i_rotate_shift.setCPU(i_data.z80);
         i_bitset.setCPU(i_data.z80);
         i_jump.setCPU(i_data.z80);
+        i_input_output.setCPU(i_data.z80);
     }
 
     /**
