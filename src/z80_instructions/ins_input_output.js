@@ -64,7 +64,7 @@ function in_r_C(rIndex) {
  * Helper function for ini() and ind()
  * @param {boolean} _isDec Is ind function?
  */
-function in_id(_isDec){
+function in_id(_isDec) {
     const isDec = -_isDec;
     let hl = r16.get(i16.hl);
     const b = r8.get(i8.B);
@@ -73,16 +73,16 @@ function in_id(_isDec){
     const bc = r16.get(i16.BC);
     const value = ports[bc];
 
-    mem[hl] = value;    
-    r16.set(i16.HL, hl + 1*isDec);
+    mem[hl] = value;
+    r16.set(i16.HL, hl + 1 * isDec);
 
     const n = b - 1;
     const f = createFlags(
-        value + ((c + 1*isDec) & 0xff) > 0xff, // undocumented effect
+        value + ((c + 1 * isDec) & 0xff) > 0xff, // undocumented effect
         true,
-        CPU.tables.parityTable[(((value + ((c + 1*isDec) & 0xff)) & 7) ^ b)], // undocumented effect
+        CPU.tables.parityTable[(((value + ((c + 1 * isDec) & 0xff)) & 7) ^ b)], // undocumented effect
         (n & (1 << fi.F3)) != 0,
-        value + ((c + 1*isDec) & 0xff) > 0xff, // undocumented effect
+        value + ((c + 1 * isDec) & 0xff) > 0xff, // undocumented effect
         (n & (1 << fi.F5)) != 0,
         n == 0,
         (n & 0x80) != 0
@@ -119,7 +119,7 @@ function inir() {
 
     ini();
 
-    if ( (b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
+    if ((b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
 }
 
 /**
@@ -145,7 +145,7 @@ function indr() {
 
     ind();
 
-    if ( (b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
+    if ((b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
 }
 
 /**
@@ -154,7 +154,7 @@ function indr() {
 */
 function out_n_A(n) {
     const a = r8.get(i8.A);
-    const port = a*256 + n;
+    const port = a * 256 + n;
     ports[port] = a;
 }
 
@@ -166,6 +166,37 @@ function out_C_r(rIndex) {
     const bc = r16.get(i16.BC);
     const value = r8.get(rIndex);
     ports[bc] = value;
+}
+
+/**
+ * Helper for outi(), outd()
+ * @param {boolean} _isDec Is outd()
+ */
+function out_id(_isDec) {
+    const isDec = -_isDec;
+    let hl = r16.get(i16.hl);
+    const b = r8.get(i8.B);
+    const c = r8.get(i8.C);
+    r8.set(i8.B, b - 1);
+    const bc = r16.get(i16.BC);
+    const value = mem[hl];
+
+    ports[bc] = value;
+    r16.set(i16.HL, hl + 1 * isDec);
+    const l = r8.get(i8.L);
+
+    const n = b - 1;
+    const f = createFlags(
+        (value + l) > 0xff, // undocumented effect
+        true,
+        CPU.tables.parityTable[(((value + l) & 7) ^ b)], // undocumented effect
+        (n & (1 << fi.F3)) != 0,
+        (value + l) > 0xff, // undocumented effect
+        (n & (1 << fi.F5)) != 0,
+        n == 0,
+        (n & 0x80) != 0
+    );
+    r8.set(fi.F, f);
 }
 
 /**
@@ -183,29 +214,7 @@ function out_C_r(rIndex) {
 * Clock: 16T
 */
 function outi() {
-    let hl = r16.get(i16.hl);    
-    const b = r8.get(i8.B);
-    const c = r8.get(i8.C);
-    r8.set(i8.B, b - 1);
-    const bc = r16.get(i16.BC);
-    const value = mem[hl];
-
-    ports[bc] = value;    
-    r16.set(i16.HL, hl + 1);
-    const l = r8.get(i8.L);
-
-    const n = b - 1;
-    const f = createFlags(
-        (value + l) > 0xff, // undocumented effect
-        true,
-        CPU.tables.parityTable[(((value + l) & 7) ^ b)], // undocumented effect
-        (n & (1 << fi.F3)) != 0,
-        (value + l) > 0xff, // undocumented effect
-        (n & (1 << fi.F5)) != 0,
-        n == 0,
-        (n & 0x80) != 0
-    );
-    r8.set(fi.F, f);
+    out_id(false);
 }
 
 /**
@@ -220,7 +229,7 @@ function otir() {
 
     outi();
 
-    if ( (b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
+    if ((b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
 }
 
 /**
@@ -230,28 +239,7 @@ function otir() {
 * Clock: 16T
 */
 function outd() {
-    let hl = r16.get(i16.hl);    
-    const b = r8.get(i8.B);
-    r8.set(i8.B, b - 1);
-    const bc = r16.get(i16.BC);
-    const value = mem[hl];
-
-    ports[bc] = value;    
-    r16.set(i16.HL, hl - 1);
-    const l = r8.get(i8.L);
-
-    const n = b - 1;
-    const f = createFlags(
-        (value + l) > 0xff, // undocumented effect
-        true,
-        CPU.tables.parityTable[(((value + l) & 7) ^ b)], // undocumented effect
-        (n & (1 << fi.F3)) != 0,
-        (value + l) > 0xff, // undocumented effect
-        (n & (1 << fi.F5)) != 0,
-        n == 0,
-        (n & 0x80) != 0
-    );
-    r8.set(fi.F, f);
+    out_id(true);
 }
 
 /**
@@ -266,7 +254,7 @@ function outdr() {
 
     outd();
 
-    if ( (b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
+    if ((b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
 }
 
 module.exports = {
