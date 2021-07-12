@@ -160,6 +160,16 @@ function inidr() {
     if ( (b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
 }
 
+/**
+* OUT (n), A
+* Clock: 11T
+*/
+function out_n_A(n) {
+    const a = r8.get(i8.A);
+    const port = a*256 + n;
+    ports[port] = a;
+}
+
 module.exports = {
     in_A_n,
     in_r_C,
@@ -167,5 +177,6 @@ module.exports = {
     inir,
     inid,
     inidr,
+    out_n_A,
     setCPU
 }
