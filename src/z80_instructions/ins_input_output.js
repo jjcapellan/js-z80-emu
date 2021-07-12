@@ -235,6 +235,37 @@ function otir() {
     if ( (b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
 }
 
+/**
+* OUTD
+* 
+* Works like OUTI, but instead increment HL, HL is decremented.
+* Clock: 16T
+*/
+function outd() {
+    let hl = r16.get(i16.hl);    
+    const b = r8.get(i8.B);
+    r8.set(i8.B, b - 1);
+    const bc = r16.get(i16.BC);
+    const value = mem[hl];
+
+    ports[bc] = value;    
+    r16.set(i16.HL, hl - 1);
+    const l = r8.get(i8.L);
+
+    const n = b - 1;
+    const f = createFlags(
+        (value + l) > 0xff, // undocumented effect
+        true,
+        CPU.tables.parityTable[(((value + l) & 7) ^ b)], // undocumented effect
+        (n & (1 << fi.F3)) != 0,
+        (value + l) > 0xff, // undocumented effect
+        (n & (1 << fi.F5)) != 0,
+        n == 0,
+        (n & 0x80) != 0
+    );
+    r8.set(fi.F, f);
+}
+
 module.exports = {
     in_A_n,
     in_r_C,
@@ -245,6 +276,7 @@ module.exports = {
     out_n_A,
     out_C_r,
     outi,
-    outir,
+    otir,
+    outd,
     setCPU
 }
