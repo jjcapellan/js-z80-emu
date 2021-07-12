@@ -170,6 +170,16 @@ function out_n_A(n) {
     ports[port] = a;
 }
 
+/**
+* OUT (C), r
+* Clock: 12T
+*/
+function out_C_r(rIndex) {
+    const bc = r16.get(i16.BC);
+    const value = r8.get(rIndex);
+    ports[bc] = value;
+}
+
 module.exports = {
     in_A_n,
     in_r_C,
@@ -178,5 +188,6 @@ module.exports = {
     inid,
     inidr,
     out_n_A,
+    out_C_r,
     setCPU
 }
