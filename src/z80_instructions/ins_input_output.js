@@ -61,6 +61,36 @@ function in_r_C(rIndex) {
 }
 
 /**
+ * Helper function for ini() and ind()
+ * @param {boolean} _isDec Is ind function?
+ */
+function in_id(_isDec){
+    const isDec = -_isDec;
+    let hl = r16.get(i16.hl);
+    const b = r8.get(i8.B);
+    const c = r8.get(i8.C);
+    r8.set(i8.B, b - 1);
+    const bc = r16.get(i16.BC);
+    const value = ports[bc];
+
+    mem[hl] = value;    
+    r16.set(i16.HL, hl + 1*isDec);
+
+    const n = b - 1;
+    const f = createFlags(
+        value + ((c + 1*isDec) & 0xff) > 0xff, // undocumented effect
+        true,
+        CPU.tables.parityTable[(((value + ((c + 1*isDec) & 0xff)) & 7) ^ b)], // undocumented effect
+        (n & (1 << fi.F3)) != 0,
+        value + ((c + 1*isDec) & 0xff) > 0xff, // undocumented effect
+        (n & (1 << fi.F5)) != 0,
+        n == 0,
+        (n & 0x80) != 0
+    );
+    r8.set(fi.F, f);
+}
+
+/**
 * INI
 * 
 * The contents of Register C are placed on the bottom half (A0 through A7) of the address
@@ -74,28 +104,7 @@ function in_r_C(rIndex) {
 * Clock: 16T
 */
 function ini() {
-    let hl = r16.get(i16.hl);
-    const b = r8.get(i8.B);
-    const c = r8.get(i8.C);
-    r8.set(i8.B, b - 1);
-    const bc = r16.get(i16.BC);
-    const value = ports[bc];
-
-    mem[hl] = value;    
-    r16.set(i16.HL, hl + 1);
-
-    const n = b - 1;
-    const f = createFlags(
-        value + ((c + 1) & 0xff) > 0xff, // undocumented effect
-        true,
-        CPU.tables.parityTable[(((value + ((c + 1) & 0xff)) & 7) ^ b)], // undocumented effect
-        (n & (1 << fi.F3)) != 0,
-        value + ((c + 1) & 0xff) > 0xff, // undocumented effect
-        (n & (1 << fi.F5)) != 0,
-        n == 0,
-        (n & 0x80) != 0
-    );
-    r8.set(fi.F, f);
+    in_id(false);
 }
 
 /**
@@ -121,28 +130,7 @@ function inir() {
 * Clock: 16T
 */
 function inid() {
-    let hl = r16.get(i16.hl);
-    const b = r8.get(i8.B);
-    r8.set(i8.B, b - 1);
-    const c = r8.get(i8.C);
-    const bc = r16.get(i16.BC);
-    const value = ports[bc];
-
-    mem[hl] = value;
-    r16.set(i16.HL, hl - 1);
-
-    const n = b - 1;
-    const f = createFlags(
-        value + ((c - 1) & 0xff) > 0xff, // undocumented effect
-        true,
-        CPU.tables.parityTable[(((value + ((c - 1) & 0xff)) & 7) ^ b)], // undocumented effect
-        (n & (1 << fi.F3)) != 0,
-        value + ((c - 1) & 0xff) > 0xff, // undocumented effect
-        (n & (1 << fi.F5)) != 0,
-        n == 0,
-        (n & 0x80) != 0
-    );
-    r8.set(fi.F, f);
+    in_id(true);
 }
 
 /**
