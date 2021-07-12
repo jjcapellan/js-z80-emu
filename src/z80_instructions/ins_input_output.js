@@ -180,6 +180,46 @@ function out_C_r(rIndex) {
     ports[bc] = value;
 }
 
+/**
+* OUTI
+* 
+* The contents of the HL register pair are placed on the address bus to select a location in
+* memory. The byte contained in this memory location is temporarily stored in the CPU.
+* Then, after the byte counter (B) is decremented, the contents of Register C are placed on
+* the bottom half (A0 through A7) of the address bus to select the I/O device at one of 256 (*1)
+* possible ports. Register B can be used as a byte counter, and its decremented value is
+* placed on the top half (A8 through A15) of the address bus. The byte to be output is placed
+* on the data bus and written to a selected peripheral device. Finally, the register pair HL is
+* incremented.
+* 1*) In fact 16bit port address is used (BC)
+* Clock: 16T
+*/
+function outi() {
+    let hl = r16.get(i16.hl);    
+    const b = r8.get(i8.B);
+    const c = r8.get(i8.C);
+    r8.set(i8.B, b - 1);
+    const bc = r16.get(i16.BC);
+    const value = mem[hl];
+
+    ports[bc] = value;    
+    r16.set(i16.HL, hl + 1);
+    const l = r8.get(i8.L);
+
+    const n = b - 1;
+    const f = createFlags(
+        (value + l) > 0xff, // undocumented effect
+        true,
+        CPU.tables.parityTable[(((value + l) & 7) ^ b)], // undocumented effect
+        (n & (1 << fi.F3)) != 0,
+        (value + l) > 0xff, // undocumented effect
+        (n & (1 << fi.F5)) != 0,
+        n == 0,
+        (n & 0x80) != 0
+    );
+    r8.set(fi.F, f);
+}
+
 module.exports = {
     in_A_n,
     in_r_C,
@@ -189,5 +229,6 @@ module.exports = {
     inidr,
     out_n_A,
     out_C_r,
+    outi,
     setCPU
 }
