@@ -75,13 +75,13 @@ function in_r_C(rIndex) {
 */
 function ini() {
     let hl = r16.get(i16.hl);
-    const bc = r16.get(i16.BC);
     const b = r8.get(i8.B);
     const c = r8.get(i8.C);
+    r8.set(i8.B, b - 1);
+    const bc = r16.get(i16.BC);
     const value = ports[bc];
 
-    mem[hl] = value;
-    r8.set(i8.B, b - 1);
+    mem[hl] = value;    
     r16.set(i16.HL, hl + 1);
 
     const n = b - 1;
