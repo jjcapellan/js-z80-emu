@@ -145,11 +145,27 @@ function inid() {
     r8.set(fi.F, f);
 }
 
+/**
+* INIDR
+* 
+* Works like INID with one repeat condition.
+* The instruction is repeated while (B != 0)
+* Clock: 21T(B != 0)    16T(B == 0)
+*/
+function inidr() {
+    const b = r8.get(i8.B);
+
+    inid();
+
+    if ( (b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
+}
+
 module.exports = {
     in_A_n,
     in_r_C,
     ini,
     inir,
     inid,
+    inidr,
     setCPU
 }
