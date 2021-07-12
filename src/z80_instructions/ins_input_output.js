@@ -220,6 +220,21 @@ function outi() {
     r8.set(fi.F, f);
 }
 
+/**
+* OUTIR
+* 
+* Works like OUTI with one repeat condition.
+* The instruction is repeated while (B != 0)
+* Clock: 21T(B != 0)    16T(B == 0)
+*/
+function outir() {
+    const b = r8.get(i8.B);
+
+    outi();
+
+    if ( (b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
+}
+
 module.exports = {
     in_A_n,
     in_r_C,
@@ -230,5 +245,6 @@ module.exports = {
     out_n_A,
     out_C_r,
     outi,
+    outir,
     setCPU
 }
