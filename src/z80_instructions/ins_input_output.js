@@ -266,6 +266,21 @@ function outd() {
     r8.set(fi.F, f);
 }
 
+/**
+* OUTDR
+* 
+* Works like OUTD with one repeat condition.
+* The instruction is repeated while (B != 0)
+* Clock: 21T(B != 0)    16T(B == 0)
+*/
+function outdr() {
+    const b = r8.get(i8.B);
+
+    outd();
+
+    if ( (b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
+}
+
 module.exports = {
     in_A_n,
     in_r_C,
@@ -278,5 +293,6 @@ module.exports = {
     outi,
     otir,
     outd,
+    outdr,
     setCPU
 }
