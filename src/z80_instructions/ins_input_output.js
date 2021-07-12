@@ -113,10 +113,43 @@ function inir() {
     if ( (b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
 }
 
+/**
+* INID
+* 
+* Works like INI, but instead of increment HL, HL is decremented.
+* Flag effects are different.
+* Clock: 16T
+*/
+function inid() {
+    let hl = r16.get(i16.hl);
+    const bc = r16.get(i16.BC);
+    const b = r8.get(i8.B);
+    const c = r8.get(i8.C);
+    const value = ports[bc];
+
+    mem[hl] = value;
+    r8.set(i8.B, b - 1);
+    r16.set(i16.HL, hl - 1);
+
+    const n = b - 1;
+    const f = createFlags(
+        value + ((c - 1) & 0xff) > 0xff, // undocumented effect
+        true,
+        CPU.tables.parityTable[(((value + ((c - 1) & 0xff)) & 7) ^ b)], // undocumented effect
+        (n & (1 << fi.F3)) != 0,
+        value + ((c - 1) & 0xff) > 0xff, // undocumented effect
+        (n & (1 << fi.F5)) != 0,
+        n == 0,
+        (n & 0x80) != 0
+    );
+    r8.set(fi.F, f);
+}
+
 module.exports = {
     in_A_n,
     in_r_C,
     ini,
     inir,
+    inid,
     setCPU
 }
