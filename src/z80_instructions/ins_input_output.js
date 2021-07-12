@@ -122,13 +122,13 @@ function inir() {
 */
 function inid() {
     let hl = r16.get(i16.hl);
-    const bc = r16.get(i16.BC);
     const b = r8.get(i8.B);
+    r8.set(i8.B, b - 1);
     const c = r8.get(i8.C);
+    const bc = r16.get(i16.BC);
     const value = ports[bc];
 
     mem[hl] = value;
-    r8.set(i8.B, b - 1);
     r16.set(i16.HL, hl - 1);
 
     const n = b - 1;
