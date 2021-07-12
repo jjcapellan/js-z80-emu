@@ -123,27 +123,27 @@ function inir() {
 }
 
 /**
-* INID
+* IND
 * 
 * Works like INI, but instead of increment HL, HL is decremented.
 * Flag effects are different.
 * Clock: 16T
 */
-function inid() {
+function ind() {
     in_id(true);
 }
 
 /**
-* INIDR
+* INDR
 * 
-* Works like INID with one repeat condition.
+* Works like IND with one repeat condition.
 * The instruction is repeated while (B != 0)
 * Clock: 21T(B != 0)    16T(B == 0)
 */
-function inidr() {
+function indr() {
     const b = r8.get(i8.B);
 
-    inid();
+    ind();
 
     if ( (b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
 }
@@ -274,8 +274,8 @@ module.exports = {
     in_r_C,
     ini,
     inir,
-    inid,
-    inidr,
+    ind,
+    indr,
     out_n_A,
     out_C_r,
     outi,
