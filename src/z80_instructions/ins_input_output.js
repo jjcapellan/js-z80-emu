@@ -221,13 +221,13 @@ function outi() {
 }
 
 /**
-* OUTIR
+* OTIR
 * 
 * Works like OUTI with one repeat condition.
 * The instruction is repeated while (B != 0)
 * Clock: 21T(B != 0)    16T(B == 0)
 */
-function outir() {
+function otir() {
     const b = r8.get(i8.B);
 
     outi();
