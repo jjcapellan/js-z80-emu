@@ -1,3 +1,10 @@
+## v2.1.0-Alpha
+* Added: Implementation of jump instructions.
+* Added: Implementation of call, return instructions
+* Added: Implementation of in, out instructions.
+* Added: **Z80.ports**. Is an array of bytes which is representing the address space of the ports.
+* Completed milestone: **Implementation of all documented instructions**.
+
 ## v2.0.0-Alpha
 * Added: **Z80.isHalt**. True when is on halt state.
 * Added: **Z80.interrupMode**. 
