@@ -499,27 +499,19 @@ function decode0x5X(byte) {
 function decode0x6X(byte) {
     switch(byte) {
         case 0x60: // LD H, B
-            rIndex = i8.H;
-            r2Index = i8.B;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.H, i8.B);
             break;
 
         case 0x61: // LD H, C
-            rIndex = i8.H;
-            r2Index = i8.C;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.H, i8.C);
             break;
 
         case 0x62: // LD H, D
-            rIndex = i8.H;
-            r2Index = i8.D;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.H, i8.D);
             break;
 
         case 0x63: // LD H, E
-            rIndex = i8.H;
-            r2Index = i8.E;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.H, i8.E);
             break;
 
         case 0x64: // LD H, H
@@ -527,50 +519,35 @@ function decode0x6X(byte) {
             break;
 
         case 0x65: // LD H, B
-            rIndex = i8.H;
-            r2Index = i8.B;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.H, i8.B);
             break;
 
         case 0x66: // LD H, (HL)
-            rIndex = i8.H;
-            ins_8b_load.ld_r_ptrHL(rIndex);
+            ins_8b_load.ld_r_ptrHL(i8.H);
             break;
 
         case 0x67: // LD H, A
-            rIndex = i8.H;
-            r2Index = i8.A;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.H, i8.A);
             break;
 
         case 0x68: // LD L, B
-            rIndex = i8.L;
-            r2Index = i8.B;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.L, i8.B);
             break;
 
         case 0x69: // LD L, C
-            rIndex = i8.L;
-            r2Index = i8.C;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.L, i8.C);
             break;
 
         case 0x6a: // LD L, D
-            rIndex = i8.L;
-            r2Index = i8.D;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.L, i8.B);
             break;
 
-        case 0x6b: // LD L,E
-            rIndex = i8.L;
-            r2Index = i8.E;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+        case 0x6b: // LD L, E
+            ins_8b_load.ld_r_r2(i8.L, i8.E);
             break;
 
         case 0x6c: // LD L, H
-            rIndex = i8.L;
-            r2Index = i8.H;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.L, i8.H);
             break;
 
         case 0x6d: // LD L, L
@@ -578,14 +555,11 @@ function decode0x6X(byte) {
             break;
 
         case 0x6e: // LD L, (HL)
-            rIndex = i8.L;
-            ins_8b_load.ld_r_ptrHL(rIndex);
+            ins_8b_load.ld_r_ptrHL(i8.L);
             break;
 
         case 0x6f: // LD L, A
-            rIndex = i8.L;
-            r2Index = i8.A;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.L, i8.A);
             break;
 
         default:
