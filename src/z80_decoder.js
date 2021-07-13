@@ -901,6 +901,7 @@ function decode(byte) {
             break;
 
         case 0xa:
+            decode0xaX(byte);
             break;
 
         case 0xb:
