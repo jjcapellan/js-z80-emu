@@ -13,6 +13,7 @@ const ins_rot_shift = require('./z80_instructions/ins_rotate_shift');
 const ins_jump = require('./z80_instructions/ins_jump');
 const ins_arithmetic_cpu = require('./z80_instructions/ins_general_arithm_cpu');
 const ins_call_return = require('./z80_instructions/ins_call_return');
+const ins_in_out = require('./z80_instructions/ins_input_output');
 
 let CPU, r8, i8, r16, i16, flags, fi, mem;
 function setCPU(data) {
@@ -1036,7 +1037,9 @@ function decode0xdX(byte) {
             ins_jump.jp_nc_nn(nn);
             break;
 
-        case 0xd3:
+        case 0xd3: // OUT (n), a
+            n = CPU.getByte();
+            ins_in_out.out_n_A(n);
             break;
 
         case 0xd4:
