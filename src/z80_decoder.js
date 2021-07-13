@@ -1077,7 +1077,9 @@ function decode0xdX(byte) {
             ins_jump.jp_c_nn(nn);
             break;
 
-        case 0xdb:
+        case 0xdb: // IN A, (n)
+            n = CPU.getByte();
+            ins_in_out.in_A_n(n);
             break;
 
         case 0xdc:
