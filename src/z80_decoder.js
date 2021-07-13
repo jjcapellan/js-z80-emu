@@ -649,7 +649,8 @@ function decode0x7X(byte) {
             ins_8b_load.ld_r_ptrHL(rIndex);
             break;
 
-        case 0x7f: // LD A, A ?
+        case 0x7f: // LD A, A
+            ins_8b_load.ld_r_r2(i8.A, i8.A);
             break;
 
         default:
