@@ -7,6 +7,7 @@
 const ins_16b_load = require('./z80_instructions/ins_16bit_load');
 const ins_8b_load = require('./z80_instructions/ins_8bit_load');
 const ins_exch_trans = require('./z80_instructions/ins_exch_trans_search');
+const ins_16bit_arithmetic = require('./z80_instructions/ins_16bit_arithmetic');
 
 let CPU, r8, i8, r16, i16, flags, fi, mem;
 function setCPU(data){
@@ -32,7 +33,8 @@ function decode0x0X(byte) {
             ins_8b_load.ld_ptrBC_A();
             break;
 
-        case 0x03:
+        case 0x03: //INC BC
+            ins_16bit_arithmetic.inc_ss(i16.BC);            
             break;
 
         case 0x04:
