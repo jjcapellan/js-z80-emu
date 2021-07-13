@@ -963,7 +963,9 @@ function decode0xcX(byte) {
             ins_16b_load.push_qq(i16.BC);
             break;
 
-        case 0xc6:
+        case 0xc6: // ADD A, n
+            n = CPU.getByte();
+            ins_8bit_arithmetic.add_A_n(n);
             break;
 
         case 0xc7:
