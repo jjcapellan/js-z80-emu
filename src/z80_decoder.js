@@ -296,7 +296,8 @@ function decode0x3X(byte) {
             ins_8bit_arithmetic.inc_ptrHL();
             break;
 
-        case 0x35:
+        case 0x35: // DEC (HL)
+            ins_8bit_arithmetic.dec_ptrHL();
             break;
 
         case 0x36: // LD (HL), n
