@@ -1070,7 +1070,11 @@ function decode0xdX(byte) {
             ins_exch_trans.exx();
             break;
 
-        case 0xda:
+        case 0xda: // JP C, nn
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
+            nn = (hsb << 8) | lsb;
+            ins_jump.jp_c_nn(nn);
             break;
 
         case 0xdb:
