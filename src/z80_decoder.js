@@ -42,7 +42,8 @@ function decode0x0X(byte) {
             ins_8bit_arithmetic.inc_r(i8.B);
             break;
 
-        case 0x05:
+        case 0x05: // DEC B
+            ins_8bit_arithmetic.dec_r(i8.B);            
             break;
 
         case 0x06: // LD r, n
