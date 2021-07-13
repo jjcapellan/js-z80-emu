@@ -11,6 +11,7 @@ const ins_16bit_arithmetic = require('./z80_instructions/ins_16bit_arithmetic');
 const ins_8bit_arithmetic = require('./z80_instructions/ins_8bit_arithmetic');
 const ins_rot_shift = require('./z80_instructions/ins_rotate_shift');
 const ins_jump = require('./z80_instructions/ins_jump');
+const ins_arithmetic_cpu = require('./z80_instructions/ins_general_arithm_cpu');
 
 let CPU, r8, i8, r16, i16, flags, fi, mem;
 function setCPU(data){
@@ -219,7 +220,8 @@ function decode0x2X(byte) {
             ins_8b_load.ld_r_n(rIndex, n);
             break;
 
-        case 0x27:
+        case 0x27: // DAA
+            ins_arithmetic_cpu.daa();
             break;
 
         case 0x28:
