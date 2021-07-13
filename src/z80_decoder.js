@@ -358,89 +358,64 @@ function decode0x4X(byte) {
             ins_8b_load.ld_r_r2(i8.B, i8.B);
             break;
 
-        case 0x41: // ld r,r2
-            rIndex = i8.B;
-            r2Index = i8.C;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+        case 0x41: // LD B, C
+            ins_8b_load.ld_r_r2(i8.B, i8.C);
             break;
 
-        case 0x42: // ld r,r2
-            rIndex = i8.B;
-            r2Index = i8.D;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+        case 0x42: // LD B, D
+            ins_8b_load.ld_r_r2(i8.B, i8.D);
             break;
 
-        case 0x43: // ld r,r2
-            rIndex = i8.B;
-            r2Index = i8.E;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+        case 0x43: // LD B, E
+            ins_8b_load.ld_r_r2(i8.B, i8.E);
             break;
 
-        case 0x44: // ld r,r2
-            rIndex = i8.B;
-            r2Index = i8.H;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+        case 0x44: // LD B, H
+            ins_8b_load.ld_r_r2(i8.B, i8.H);
             break;
 
-        case 0x45: // ld r,r2
-            rIndex = i8.B;
-            r2Index = i8.L;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+        case 0x45: // LD B, L
+            ins_8b_load.ld_r_r2(i8.B, i8.L);
             break;
 
-        case 0x46: // LD r, (HL)
-            rIndex = i8.B;
-            ins_8b_load.ld_r_ptrHL(rIndex);
+        case 0x46: // LD B, (HL)
+            ins_8b_load.ld_r_ptrHL(i8.B);
             break;
 
-        case 0x47: // LD r, r'
-            rIndex = i8.B;
-            r2Index = i8.A;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+        case 0x47: // LD B, A
+            ins_8b_load.ld_r_r2(i8.B, i8.A);
             break;
 
         case 0x48: // LD C, B
-            rIndex = i8.C;
-            r2Index = i8.B;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.C, i8.A);
             break;
 
-        case 0x49: // LD C, C ?
+        case 0x49: // LD C, C
+            ins_8b_load.ld_r_r2(i8.C, i8.C);
             break;
 
         case 0x4a: // LD C, D
-            rIndex = i8.C;
-            r2Index = i8.D;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.C, i8.D);
             break;
 
         case 0x4b: // LD C, E
-            rIndex = i8.C;
-            r2Index = i8.E;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.C, i8.E);
             break;
 
         case 0x4c: // LD C, H
-            rIndex = i8.C;
-            r2Index = i8.H;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.C, i8.H);
             break;
 
         case 0x4d: // LD C, L
-            rIndex = i8.C;
-            r2Index = i8.L;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.C, i8.L);
             break;
 
         case 0x4e: // LD C, (HL)
-            rIndex = i8.C;   
-            ins_8b_load.ld_r_ptrHL(rIndex);
+            ins_8b_load.ld_r_ptrHL(i8.C);
             break;
 
         case 0x4f: // LD C, A
-            rIndex = i8.C;
-            r2Index = i8.A;
-            ins_8b_load.ld_r_r2(rIndex, r2Index);
+            ins_8b_load.ld_r_r2(i8.C, i8.A);
             break;
 
         default:
