@@ -801,7 +801,8 @@ function decode0xaX(byte) {
             ins_8bit_arithmetic.and_r(i8.E);
             break;
 
-        case 0xa4:
+        case 0xa4: // AND H
+            ins_8bit_arithmetic.and_r(i8.H);
             break;
 
         case 0xa5:
