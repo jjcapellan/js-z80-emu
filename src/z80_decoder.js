@@ -201,7 +201,8 @@ function decode0x2X(byte) {
             ins_16b_load.ld_ptrnn_HL(ptrnn);
             break;
 
-        case 0x23:
+        case 0x23: // INC HL
+            ins_16bit_arithmetic.inc_ss(i16.HL);
             break;
 
         case 0x24:
