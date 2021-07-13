@@ -69,7 +69,8 @@ function decode0x0X(byte) {
             ins_8b_load.ld_A_ptrBC();
             break;
 
-        case 0x0b:
+        case 0x0b: // DEC BC
+            ins_16bit_arithmetic.dec_ss(i16.BC);
             break;
 
         case 0x0c:
