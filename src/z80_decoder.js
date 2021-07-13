@@ -1009,7 +1009,8 @@ function decode0xcX(byte) {
             ins_8bit_arithmetic.adc_A_n(n);
             break;
 
-        case 0xcf:
+        case 0xcf: // RST 0x08
+            ins_call_return.rst_p(0x08);
             break;
 
         default:
