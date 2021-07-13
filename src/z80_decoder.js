@@ -980,7 +980,11 @@ function decode0xcX(byte) {
             ins_call_return.ret();
             break;
 
-        case 0xca:
+        case 0xca: // JP Z, nn
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
+            nn = (hsb << 8) | lsb;
+            ins_jump.jp_z_nn(nn);
             break;
 
         case 0xcb:
