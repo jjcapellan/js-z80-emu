@@ -258,7 +258,8 @@ function decode0x2X(byte) {
             ins_8b_load.ld_r_n(rIndex, n);
             break;
 
-        case 0x2f:
+        case 0x2f: // CPL
+            ins_arithmetic_cpu.cpl();
             break;
 
         default:
