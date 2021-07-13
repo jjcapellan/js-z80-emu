@@ -354,7 +354,8 @@ function decode0x3X(byte) {
 
 function decode0x4X(byte) {
     switch(byte) {
-        case 0x40: // LD B, B ?
+        case 0x40: // LD B, B
+            ins_8b_load.ld_r_r2(i8.B, i8.B);
             break;
 
         case 0x41: // ld r,r2
