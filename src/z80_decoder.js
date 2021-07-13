@@ -244,7 +244,8 @@ function decode0x2X(byte) {
             ins_16bit_arithmetic.dec_ss(i16.HL);
             break;
 
-        case 0x2c:
+        case 0x2c: // INC L
+            ins_8bit_arithmetic.inc_r(i8.L);
             break;
 
         case 0x2d:
