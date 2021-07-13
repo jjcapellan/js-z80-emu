@@ -749,7 +749,8 @@ function decode0x9X(byte) {
             ins_8bit_arithmetic.sbc_A_r(i8.B);
             break;
 
-        case 0x99:
+        case 0x99: // SBC A, C
+            ins_8bit_arithmetic.sbc_A_r(i8.C);
             break;
 
         case 0x9a:
