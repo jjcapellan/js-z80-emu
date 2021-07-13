@@ -314,7 +314,8 @@ function decode0x3X(byte) {
             ins_jump.jr_c_e(arg);
             break;
 
-        case 0x39:
+        case 0x39: // ADD HL, SP
+            ins_16bit_arithmetic.add_HL_ss(i16.SP);
             break;
 
         case 0x3a: // LD A, (nn)
