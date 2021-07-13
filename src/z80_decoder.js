@@ -1089,10 +1089,12 @@ function decode0xdX(byte) {
             ins_call_return.call_c_nn(nn);
             break;
 
-        case 0xdd:
+        case 0xdd: // IX prefix <--------- TODO
             break;
 
-        case 0xde:
+        case 0xde: // SBC A, n
+            n = CPU.getByte();
+            ins_8bit_arithmetic.sbc_A_n(n);
             break;
 
         case 0xdf:
