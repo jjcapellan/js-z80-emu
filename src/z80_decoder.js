@@ -1066,7 +1066,8 @@ function decode0xdX(byte) {
             ins_call_return.ret_c();
             break;
 
-        case 0xd9:
+        case 0xd9: // EXX
+            ins_exch_trans.exx();
             break;
 
         case 0xda:
