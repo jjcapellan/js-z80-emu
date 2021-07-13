@@ -15,16 +15,16 @@ function setCPU(data){
 
 let n = 0, nn = 0, rIndex = 0, r2Index = 0, ddIndex = 0, lsb = 0, hsb = 0, ptrnn = 0;
 
-function decode0x0X(cpu, byte) {
+function decode0x0X(byte) {
     switch (byte) {
         case 0x00: //NOOP
             break;
 
         case 0x01: // LD dd, nn
-            lsb = cpu.getByte();
-            hsb = cpu.getByte();
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
             nn = (hsb << 8) | lsb;
-            ddIndex = cpu.registers.regs16.idx.BC;
+            ddIndex = i16.BC;
             instr_16b_load.ld_dd_nn(ddIndex, nn);
             break;
 
@@ -42,8 +42,8 @@ function decode0x0X(cpu, byte) {
             break;
 
         case 0x06: // LD r, n
-            n_ = cpu.getByte();
-            rIndex = cpu.registers.regs8.idx.B;
+            n_ = CPU.getByte();
+            rIndex = i8.B;
             instr_8b_load.ld_r_n(rIndex, n_);
             break;
 
@@ -71,8 +71,8 @@ function decode0x0X(cpu, byte) {
             break;
 
         case 0x0e: // LD r, n
-            n = cpu.getByte();
-            rIndex = cpu.registers.regs8.idx.C;
+            n = CPU.getByte();
+            rIndex = i8.C;
             instr_8b_load.ld_r_n(rIndex, n);
             break;
 
@@ -85,16 +85,16 @@ function decode0x0X(cpu, byte) {
 
 }
 
-function decode0x1X(cpu, byte) {
+function decode0x1X(byte) {
     switch (byte) {
         case 0x10:
             break;
 
         case 0x11: // LD dd, nn
-            lsb = cpu.getByte();
-            hsb = cpu.getByte();
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
             nn = (hsb << 8) | lsb;
-            ddIndex = cpu.registers.regs16.idx.DE;
+            ddIndex = i16.DE;
             instr_16b_load.ld_dd_nn(ddIndex, nn);
             break;
 
@@ -112,8 +112,8 @@ function decode0x1X(cpu, byte) {
             break;
 
         case 0x16: // LD r, n
-            n = cpu.getByte();
-            rIndex = cpu.registers.regs8.idx.D;
+            n = CPU.getByte();
+            rIndex = i8.D;
             instr_8b_load.ld_r_n(rIndex, n);
             break;
 
@@ -140,8 +140,8 @@ function decode0x1X(cpu, byte) {
             break;
 
         case 0x1e: // LD r, n
-            n = cpu.getByte();
-            rIndex = cpu.registers.regs8.idx.E;
+            n = CPU.getByte();
+            rIndex = i8.E;
             instr_8b_load.ld_r_n(rIndex, n);
             break;
 
@@ -153,22 +153,22 @@ function decode0x1X(cpu, byte) {
     }
 }
 
-function decode0x2X(cpu, byte) {
+function decode0x2X(byte) {
     switch (byte) {
         case 0x20:
             break;
 
         case 0x21: // LD dd, nn
-            lsb = cpu.getByte();
-            hsb = cpu.getByte();
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
             nn = (hsb << 8) | lsb;
-            ddIndex = cpu.registers.regs16.idx.HL;
+            ddIndex = i16.HL;
             instr_16b_load.ld_dd_nn(ddIndex, nn);
             break;
 
         case 0x22: // LD (nn), HL
-            lsb = cpu.getByte();
-            hsb = cpu.getByte();
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
             ptrnn = (hsb << 8) | lsb;
             instr_16b_load.ld_ptrnn_HL(ptrnn);
             break;
@@ -183,8 +183,8 @@ function decode0x2X(cpu, byte) {
             break;
 
         case 0x26:// LD H, n
-            n = cpu.getByte();
-            rIndex = cpu.registers.regs8.idx.H;
+            n = CPU.getByte();
+            rIndex = i8.H;
             instr_8b_load.ld_r_n(rIndex, n);
             break;
 
@@ -198,8 +198,8 @@ function decode0x2X(cpu, byte) {
             break;
 
         case 0x2a: // LD HL, (nn)
-            lsb = cpu.getByte();
-            hsb = cpu.getByte();
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
             ptrnn = (hsb << 8) | lsb;
             instr_16b_load.ld_HL_ptrnn(ptrnn);
             break;
@@ -214,8 +214,8 @@ function decode0x2X(cpu, byte) {
             break;
 
         case 0x2e: // LD r, n
-            n = cpu.getByte();
-            rIndex = cpu.registers.regs8.idx.L;
+            n = CPU.getByte();
+            rIndex = i8.L;
             instr_8b_load.ld_r_n(rIndex, n);
             break;
 
@@ -227,7 +227,7 @@ function decode0x2X(cpu, byte) {
     }
 }
 
-function decode0x3X(cpu, byte) {
+function decode0x3X(byte) {
     switch (byte) {
         case 0x30:
             break;
@@ -236,8 +236,8 @@ function decode0x3X(cpu, byte) {
             break;
 
         case 0x32:// LD (nn), A
-            lsb = cpu.getByte();
-            hsb = cpu.getByte();
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
             ptrnn = (hsb << 8) | lsb;
             instr_8b_load.ld_ptrnn_A(ptrnn);
             break;
@@ -252,7 +252,7 @@ function decode0x3X(cpu, byte) {
             break;
 
         case 0x36: // LD (HL), n
-            n = cpu.getByte();
+            n = CPU.getByte();
             instr_8b_load.ld_ptrHL_n(n);
             break;
 
@@ -266,8 +266,8 @@ function decode0x3X(cpu, byte) {
             break;
 
         case 0x3a: // LD A, (nn)
-            lsb = cpu.getByte();
-            hsb = cpu.getByte();
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
             ptrnn = (hsb << 8) | lsb;
             instr_8b_load.ld_A_ptrnn(ptrnn);
             break;
@@ -282,8 +282,8 @@ function decode0x3X(cpu, byte) {
             break;
 
         case 0x3e: //LD r, n
-            n = cpu.getByte();
-            rIndex = cpu.registers.regs8.idx.A;
+            n = CPU.getByte();
+            rIndex = i8.A;
             instr_8b_load.ld_r_n(rIndex, n);
             break;
 
@@ -295,55 +295,55 @@ function decode0x3X(cpu, byte) {
     }
 }
 
-function decode0x4X(cpu, byte) {
+function decode0x4X(byte) {
     switch(byte) {
         case 0x40: // LD B, B ?
             break;
 
         case 0x41: // ld r,r2
-            rIndex = cpu.registers.regs8.idx.B;
-            r2Index = cpu.registers.regs8.idx.C;
+            rIndex = i8.B;
+            r2Index = i8.C;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x42: // ld r,r2
-            rIndex = cpu.registers.regs8.idx.B;
-            r2Index = cpu.registers.regs8.idx.D;
+            rIndex = i8.B;
+            r2Index = i8.D;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x43: // ld r,r2
-            rIndex = cpu.registers.regs8.idx.B;
-            r2Index = cpu.registers.regs8.idx.E;
+            rIndex = i8.B;
+            r2Index = i8.E;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x44: // ld r,r2
-            rIndex = cpu.registers.regs8.idx.B;
-            r2Index = cpu.registers.regs8.idx.H;
+            rIndex = i8.B;
+            r2Index = i8.H;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x45: // ld r,r2
-            rIndex = cpu.registers.regs8.idx.B;
-            r2Index = cpu.registers.regs8.idx.L;
+            rIndex = i8.B;
+            r2Index = i8.L;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x46: // LD r, (HL)
-            rIndex = cpu.registers.regs8.idx.B;
+            rIndex = i8.B;
             instr_8b_load.ld_r_ptrHL(rIndex);
             break;
 
         case 0x47: // LD r, r'
-            rIndex = cpu.registers.regs8.idx.B;
-            r2Index = cpu.registers.regs8.idx.A;
+            rIndex = i8.B;
+            r2Index = i8.A;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x48: // LD C, B
-            rIndex = cpu.registers.regs8.idx.C;
-            r2Index = cpu.registers.regs8.idx.B;
+            rIndex = i8.C;
+            r2Index = i8.B;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
@@ -351,37 +351,37 @@ function decode0x4X(cpu, byte) {
             break;
 
         case 0x4a: // LD C, D
-            rIndex = cpu.registers.regs8.idx.C;
-            r2Index = cpu.registers.regs8.idx.D;
+            rIndex = i8.C;
+            r2Index = i8.D;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x4b: // LD C, E
-            rIndex = cpu.registers.regs8.idx.C;
-            r2Index = cpu.registers.regs8.idx.E;
+            rIndex = i8.C;
+            r2Index = i8.E;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x4c: // LD C, H
-            rIndex = cpu.registers.regs8.idx.C;
-            r2Index = cpu.registers.regs8.idx.H;
+            rIndex = i8.C;
+            r2Index = i8.H;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x4d: // LD C, L
-            rIndex = cpu.registers.regs8.idx.C;
-            r2Index = cpu.registers.regs8.idx.L;
+            rIndex = i8.C;
+            r2Index = i8.L;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x4e: // LD C, (HL)
-            rIndex = cpu.registers.regs8.idx.C;   
+            rIndex = i8.C;   
             instr_8b_load.ld_r_ptrHL(rIndex);
             break;
 
         case 0x4f: // LD C, A
-            rIndex = cpu.registers.regs8.idx.C;
-            r2Index = cpu.registers.regs8.idx.A;
+            rIndex = i8.C;
+            r2Index = i8.A;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
@@ -391,17 +391,17 @@ function decode0x4X(cpu, byte) {
 
 }
 
-function decode0x5X(cpu, byte) {
+function decode0x5X(byte) {
     switch(byte) {
         case 0x50: // LD D, B
-            rIndex = cpu.registers.regs8.idx.D;
-            r2Index = cpu.registers.regs8.idx.B;
+            rIndex = i8.D;
+            r2Index = i8.B;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x51: // LD D, C
-            rIndex = cpu.registers.regs8.idx.D;
-            r2Index = cpu.registers.regs8.idx.C;
+            rIndex = i8.D;
+            r2Index = i8.C;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
@@ -409,49 +409,49 @@ function decode0x5X(cpu, byte) {
             break;
 
         case 0x53: // LD D, E
-            rIndex = cpu.registers.regs8.idx.D;
-            r2Index = cpu.registers.regs8.idx.E;
+            rIndex = i8.D;
+            r2Index = i8.E;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x54: // LD D, H
-            rIndex = cpu.registers.regs8.idx.D;
-            r2Index = cpu.registers.regs8.idx.H;
+            rIndex = i8.D;
+            r2Index = i8.H;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x55: // LD D, B
-            rIndex = cpu.registers.regs8.idx.D;
-            r2Index = cpu.registers.regs8.idx.B;
+            rIndex = i8.D;
+            r2Index = i8.B;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x56: // LD D, (HL)
-            rIndex = cpu.registers.regs8.idx.D;
+            rIndex = i8.D;
             instr_8b_load.ld_r_ptrHL(rIndex);
             break;
 
         case 0x57: // LD D, A
-            rIndex = cpu.registers.regs8.idx.D;
-            r2Index = cpu.registers.regs8.idx.A;
+            rIndex = i8.D;
+            r2Index = i8.A;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x58: // LD E, B
-            rIndex = cpu.registers.regs8.idx.E;
-            r2Index = cpu.registers.regs8.idx.B;
+            rIndex = i8.E;
+            r2Index = i8.B;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x59: // LD E, C
-            rIndex = cpu.registers.regs8.idx.E;
-            r2Index = cpu.registers.regs8.idx.C;
+            rIndex = i8.E;
+            r2Index = i8.C;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x5a: // LD E, D
-            rIndex = cpu.registers.regs8.idx.E;
-            r2Index = cpu.registers.regs8.idx.D;
+            rIndex = i8.E;
+            r2Index = i8.D;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
@@ -459,25 +459,25 @@ function decode0x5X(cpu, byte) {
             break;
 
         case 0x5c: // LD E, H
-            rIndex = cpu.registers.regs8.idx.E;
-            r2Index = cpu.registers.regs8.idx.H;
+            rIndex = i8.E;
+            r2Index = i8.H;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x5d: // LD E, L
-            rIndex = cpu.registers.regs8.idx.E;
-            r2Index = cpu.registers.regs8.idx.L;
+            rIndex = i8.E;
+            r2Index = i8.L;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x5e: // LD E, (HL)
-            rIndex = cpu.registers.regs8.idx.E;
+            rIndex = i8.E;
             instr_8b_load.ld_r_ptrHL(rIndex);
             break;
 
         case 0x5f: // LD E, A
-            rIndex = cpu.registers.regs8.idx.E;
-            r2Index = cpu.registers.regs8.idx.A;
+            rIndex = i8.E;
+            r2Index = i8.A;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
@@ -487,29 +487,29 @@ function decode0x5X(cpu, byte) {
 
 }
 
-function decode0x6X(cpu, byte) {
+function decode0x6X(byte) {
     switch(byte) {
         case 0x60: // LD H, B
-            rIndex = cpu.registers.regs8.idx.H;
-            r2Index = cpu.registers.regs8.idx.B;
+            rIndex = i8.H;
+            r2Index = i8.B;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x61: // LD H, C
-            rIndex = cpu.registers.regs8.idx.H;
-            r2Index = cpu.registers.regs8.idx.C;
+            rIndex = i8.H;
+            r2Index = i8.C;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x62: // LD H, D
-            rIndex = cpu.registers.regs8.idx.H;
-            r2Index = cpu.registers.regs8.idx.D;
+            rIndex = i8.H;
+            r2Index = i8.D;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x63: // LD H, E
-            rIndex = cpu.registers.regs8.idx.H;
-            r2Index = cpu.registers.regs8.idx.E;
+            rIndex = i8.H;
+            r2Index = i8.E;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
@@ -517,49 +517,49 @@ function decode0x6X(cpu, byte) {
             break;
 
         case 0x65: // LD H, B
-            rIndex = cpu.registers.regs8.idx.H;
-            r2Index = cpu.registers.regs8.idx.B;
+            rIndex = i8.H;
+            r2Index = i8.B;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x66: // LD H, (HL)
-            rIndex = cpu.registers.regs8.idx.H;
+            rIndex = i8.H;
             instr_8b_load.ld_r_ptrHL(rIndex);
             break;
 
         case 0x67: // LD H, A
-            rIndex = cpu.registers.regs8.idx.H;
-            r2Index = cpu.registers.regs8.idx.A;
+            rIndex = i8.H;
+            r2Index = i8.A;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x68: // LD L, B
-            rIndex = cpu.registers.regs8.idx.L;
-            r2Index = cpu.registers.regs8.idx.B;
+            rIndex = i8.L;
+            r2Index = i8.B;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x69: // LD L, C
-            rIndex = cpu.registers.regs8.idx.L;
-            r2Index = cpu.registers.regs8.idx.C;
+            rIndex = i8.L;
+            r2Index = i8.C;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x6a: // LD L, D
-            rIndex = cpu.registers.regs8.idx.L;
-            r2Index = cpu.registers.regs8.idx.D;
+            rIndex = i8.L;
+            r2Index = i8.D;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x6b: // LD L,E
-            rIndex = cpu.registers.regs8.idx.L;
-            r2Index = cpu.registers.regs8.idx.E;
+            rIndex = i8.L;
+            r2Index = i8.E;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x6c: // LD L, H
-            rIndex = cpu.registers.regs8.idx.L;
-            r2Index = cpu.registers.regs8.idx.H;
+            rIndex = i8.L;
+            r2Index = i8.H;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
@@ -567,13 +567,13 @@ function decode0x6X(cpu, byte) {
             break;
 
         case 0x6e: // LD L, (HL)
-            rIndex = cpu.registers.regs8.idx.L;
+            rIndex = i8.L;
             instr_8b_load.ld_r_ptrHL(rIndex);
             break;
 
         case 0x6f: // LD L, A
-            rIndex = cpu.registers.regs8.idx.L;
-            r2Index = cpu.registers.regs8.idx.A;
+            rIndex = i8.L;
+            r2Index = i8.A;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
@@ -583,35 +583,35 @@ function decode0x6X(cpu, byte) {
 
 }
 
-function decode0x7X(cpu, byte) {
+function decode0x7X(byte) {
     switch(byte) {
         case 0x70: // LD (HL), B
-            rIndex = cpu.registers.regs8.idx.B;
+            rIndex = i8.B;
             instr_8b_load.ld_ptrHL_r(rIndex);
             break;
 
         case 0x71: // LD (HL), C
-            rIndex = cpu.registers.regs8.idx.C;
+            rIndex = i8.C;
             instr_8b_load.ld_ptrHL_r(rIndex);
             break;
 
         case 0x72: // LD (HL), D
-            rIndex = cpu.registers.regs8.idx.D;
+            rIndex = i8.D;
             instr_8b_load.ld_ptrHL_r(rIndex);
             break;
 
         case 0x73: // LD (HL), E
-            rIndex = cpu.registers.regs8.idx.E;
+            rIndex = i8.E;
             instr_8b_load.ld_ptrHL_r(rIndex);
             break;
 
         case 0x74: // LD (HL), H
-            rIndex = cpu.registers.regs8.idx.H;
+            rIndex = i8.H;
             instr_8b_load.ld_ptrHL_r(rIndex);
             break;
 
         case 0x75: // LD (HL), L
-            rIndex = cpu.registers.regs8.idx.L;
+            rIndex = i8.L;
             instr_8b_load.ld_ptrHL_r(rIndex);
             break;
 
@@ -619,48 +619,48 @@ function decode0x7X(cpu, byte) {
             break;
 
         case 0x77: // LD (HL), A
-            rIndex = cpu.registers.regs8.idx.A;
+            rIndex = i8.A;
             instr_8b_load.ld_ptrHL_r(rIndex);
             break;
 
         case 0x78: // LD A, B
-            rIndex = cpu.registers.regs8.idx.A;
-            r2Index = cpu.registers.regs8.idx.B;
+            rIndex = i8.A;
+            r2Index = i8.B;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x79: // LD A, C
-            rIndex = cpu.registers.regs8.idx.A;
-            r2Index = cpu.registers.regs8.idx.C;
+            rIndex = i8.A;
+            r2Index = i8.C;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x7a: // LD A, D
-            rIndex = cpu.registers.regs8.idx.A;
-            r2Index = cpu.registers.regs8.idx.D;
+            rIndex = i8.A;
+            r2Index = i8.D;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x7b: // LD A, E
-            rIndex = cpu.registers.regs8.idx.A;
-            r2Index = cpu.registers.regs8.idx.E;
+            rIndex = i8.A;
+            r2Index = i8.E;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x7c: // LD A, H
-            rIndex = cpu.registers.regs8.idx.A;
-            r2Index = cpu.registers.regs8.idx.H;
+            rIndex = i8.A;
+            r2Index = i8.H;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x7d: // LD A, L
-            rIndex = cpu.registers.regs8.idx.A;
-            r2Index = cpu.registers.regs8.idx.L;
+            rIndex = i8.A;
+            r2Index = i8.L;
             instr_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
         case 0x7e: // LD A, (HL)
-            rIndex =  cpu.registers.regs8.idx.A;  
+            rIndex =  i8.A;  
             instr_8b_load.ld_r_ptrHL(rIndex);
             break;
 
@@ -673,37 +673,37 @@ function decode0x7X(cpu, byte) {
 
 }
 
-function decode(cpu, byte) {
+function decode(byte) {
     const hn = byte >> 4;
     const ln = byte & 0xf;
 
     switch (hn) {
         case 0x0:
-            decode0x0X(cpu, byte);
+            decode0x0X(byte);
             break;
 
         case 0x1:
-            decode0x1X(cpu, byte);
+            decode0x1X(byte);
             break;
 
         case 0x2:
-            decode0x2X(cpu, byte);
+            decode0x2X(byte);
             break;
 
         case 0x3:
-            decode0x3X(cpu, byte);
+            decode0x3X(byte);
             break;
 
         case 0x4:
-            decode0x4X(cpu, byte);
+            decode0x4X(byte);
             break;
 
         case 0x5:
-            decode0x5X(cpu, byte);
+            decode0x5X(byte);
             break;
 
         case 0x6:
-            decode0x6X(cpu, byte);
+            decode0x6X(byte);
             break;
 
         case 0x7:
@@ -744,7 +744,7 @@ module.exports = {
 };
 
 /*
-function d(cpu, byte) {
+function d(byte) {
     switch(byte) {
         case 0x0:
             break;
