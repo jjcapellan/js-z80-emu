@@ -968,7 +968,8 @@ function decode0xcX(byte) {
             ins_8bit_arithmetic.add_A_n(n);
             break;
 
-        case 0xc7:
+        case 0xc7: // RST 0x00
+            ins_call_return.rst_p(0x00);
             break;
 
         case 0xc8:
