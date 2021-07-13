@@ -1025,7 +1025,8 @@ function decode0xdX(byte) {
             ins_call_return.ret_nc();
             break;
 
-        case 0xd1:
+        case 0xd1: // POP DE
+            ins_16b_load.pop_qq(i16.DE);
             break;
 
         case 0xd2:
