@@ -677,7 +677,8 @@ function decode0x8X(byte) {
             ins_8bit_arithmetic.adc_A_r(i8.B);
             break;
 
-        case 0x89:
+        case 0x89: // ADC A, C
+            ins_8bit_arithmetic.add_A_r(i8.C);
             break;
 
         case 0x8a:
