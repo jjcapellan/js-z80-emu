@@ -288,7 +288,8 @@ function decode0x3X(byte) {
             ins_8b_load.ld_ptrnn_A(ptrnn);
             break;
 
-        case 0x33:
+        case 0x33: // INC SP
+            ins_16bit_arithmetic.inc_ss(i16.SP);
             break;
 
         case 0x34:
