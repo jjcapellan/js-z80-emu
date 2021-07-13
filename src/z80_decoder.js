@@ -741,7 +741,8 @@ function decode0x9X(byte) {
             ins_8bit_arithmetic.sub_A_ptrHL();
             break;
 
-        case 0x97:
+        case 0x97: // SUB A
+            ins_8bit_arithmetic.sub_A_r(i8.A);
             break;
 
         case 0x98:
