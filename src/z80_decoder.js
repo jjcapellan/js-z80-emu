@@ -160,7 +160,8 @@ function decode0x1X(byte) {
             ins_8bit_arithmetic.inc_r(i8.E);
             break;
 
-        case 0x1d:
+        case 0x1d: // DEC E
+            ins_8bit_arithmetic.dec_r(i8.E);
             break;
 
         case 0x1e: // LD r, n
