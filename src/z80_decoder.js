@@ -170,7 +170,8 @@ function decode0x1X(byte) {
             ins_8b_load.ld_r_n(rIndex, n);
             break;
 
-        case 0x1f:
+        case 0x1f: // RRA
+            ins_rot_shift.rra();
             break;
 
         default:
