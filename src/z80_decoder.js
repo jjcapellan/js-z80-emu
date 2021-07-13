@@ -1062,7 +1062,8 @@ function decode0xdX(byte) {
             ins_call_return.rst_p(0x10);
             break;
 
-        case 0xd8:
+        case 0xd8: // RET C
+            ins_call_return.ret_c();
             break;
 
         case 0xd9:
