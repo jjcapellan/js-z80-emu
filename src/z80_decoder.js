@@ -646,7 +646,7 @@ function decode0x8X(byte) {
             break;
 
         case 0x81: // ADD A, C
-            ins_8bit_arithmetic.add_A_r(i8.C);            
+            ins_8bit_arithmetic.add_A_r(i8.C);
             break;
 
         case 0x82: // ADD A, D
@@ -662,7 +662,7 @@ function decode0x8X(byte) {
             break;
 
         case 0x85: // ADD A, L
-            ins_8bit_arithmetic.add_A_r(i8.L);            
+            ins_8bit_arithmetic.add_A_r(i8.L);
             break;
 
         case 0x86: // ADD A, (HL)
@@ -712,7 +712,7 @@ function decode0x8X(byte) {
 }
 
 function decode0x9X(byte) {
-    switch(byte) {
+    switch (byte) {
         case 0x90: // SUB B
             ins_8bit_arithmetic.sub_A_r(i8.B);
             break;
@@ -775,6 +775,63 @@ function decode0x9X(byte) {
 
         case 0x9f: // SBC A, A
             ins_8bit_arithmetic.sbc_A_r(i8.A);
+            break;
+
+        default:
+            break;
+    }
+
+}
+
+function decode0xaX(byte) {
+    switch (byte) {
+        case 0xa0: // AND B
+            ins_8bit_arithmetic.and_r(i8.A);
+            break;
+
+        case 0xa1:
+            break;
+
+        case 0xa2:
+            break;
+
+        case 0xa3:
+            break;
+
+        case 0xa4:
+            break;
+
+        case 0xa5:
+            break;
+
+        case 0xa6:
+            break;
+
+        case 0xa7:
+            break;
+
+        case 0xa8:
+            break;
+
+        case 0xa9:
+            break;
+
+        case 0xaa:
+            break;
+
+        case 0xab:
+            break;
+
+        case 0xac:
+            break;
+
+        case 0xad:
+            break;
+
+        case 0xae:
+            break;
+
+        case 0xaf:
             break;
 
         default:
