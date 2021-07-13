@@ -269,7 +269,9 @@ function decode0x2X(byte) {
 
 function decode0x3X(byte) {
     switch (byte) {
-        case 0x30:
+        case 0x30: // JR NC, e
+            arg = CPU.getByte();
+            ins_jump.jr_nc_e(arg);
             break;
 
         case 0x31:
