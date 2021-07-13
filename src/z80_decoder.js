@@ -1004,7 +1004,9 @@ function decode0xcX(byte) {
             ins_call_return.call_nn(nn);
             break;
 
-        case 0xce:
+        case 0xce: // ADC A, n
+            n = CPU.getByte();
+            ins_8bit_arithmetic.adc_A_n(n);
             break;
 
         case 0xcf:
