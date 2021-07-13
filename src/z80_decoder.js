@@ -938,7 +938,11 @@ function decode0xcX(byte) {
             ins_16b_load.pop_qq(i16.BC);
             break;
 
-        case 0xc2:
+        case 0xc2: // JP NZ, nn
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
+            nn = (hsb << 8) | lsb;
+            ins_jump.jp_nz_nn(nn);
             break;
 
         case 0xc3:
