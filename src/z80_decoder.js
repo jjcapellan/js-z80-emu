@@ -1029,7 +1029,11 @@ function decode0xdX(byte) {
             ins_16b_load.pop_qq(i16.DE);
             break;
 
-        case 0xd2:
+        case 0xd2: // JP NC, nn
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
+            nn = (hsb << 8) | lsb;
+            ins_jump.jp_nc_nn(nn);
             break;
 
         case 0xd3:
