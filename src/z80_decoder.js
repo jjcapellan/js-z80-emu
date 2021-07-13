@@ -343,7 +343,8 @@ function decode0x3X(byte) {
             ins_8b_load.ld_r_n(rIndex, n);
             break;
 
-        case 0x3f:
+        case 0x3f: // CCF
+            ins_arithmetic_cpu.ccf();
             break;
 
         default:
