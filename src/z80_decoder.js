@@ -678,15 +678,15 @@ function decode0x8X(byte) {
             break;
 
         case 0x89: // ADC A, C
-            ins_8bit_arithmetic.add_A_r(i8.C);
+            ins_8bit_arithmetic.adc_A_r(i8.C);
             break;
 
         case 0x8a: // ADC A, D
-            ins_8bit_arithmetic.add_A_r(i8.D);
+            ins_8bit_arithmetic.adc_A_r(i8.D);
             break;
 
         case 0x8b: // ADC A, E
-            ins_8bit_arithmetic.add_A_r(i8.E);
+            ins_8bit_arithmetic.adc_A_r(i8.E);
             break;
 
         case 0x8c: // ADC A, H
