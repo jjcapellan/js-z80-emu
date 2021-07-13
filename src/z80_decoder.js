@@ -733,7 +733,8 @@ function decode0x9X(byte) {
             ins_8bit_arithmetic.sub_A_r(i8.H);
             break;
 
-        case 0x95:
+        case 0x95: // SUB L
+            ins_8bit_arithmetic.sub_A_r(i8.L);
             break;
 
         case 0x96:
