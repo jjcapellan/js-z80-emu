@@ -305,7 +305,8 @@ function decode0x3X(byte) {
             ins_8b_load.ld_ptrHL_n(n);
             break;
 
-        case 0x37:
+        case 0x37: // SCF
+            ins_arithmetic_cpu.scf();
             break;
 
         case 0x38:
