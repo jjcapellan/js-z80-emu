@@ -139,7 +139,9 @@ function decode0x1X(byte) {
             ins_rot_shift.rla();
             break;
 
-        case 0x18:
+        case 0x18: // JR e
+            arg = CPU.getByte();
+            ins_jump.jr_e(arg);
             break;
 
         case 0x19:
