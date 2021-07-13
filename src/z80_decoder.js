@@ -152,7 +152,8 @@ function decode0x1X(byte) {
             ins_8b_load.ld_A_ptrDE();
             break;
 
-        case 0x1b:
+        case 0x1b: // DEC DE
+            ins_16bit_arithmetic.dec_ss(i16.DE);
             break;
 
         case 0x1c:
