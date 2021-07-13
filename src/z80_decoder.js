@@ -1053,7 +1053,9 @@ function decode0xdX(byte) {
             ins_16b_load.push_qq(i16.DE);
             break;
 
-        case 0xd6:
+        case 0xd6: // SUB n
+            n = CPU.getByte();
+            ins_8bit_arithmetic.sub_A_n(n);
             break;
 
         case 0xd7:
