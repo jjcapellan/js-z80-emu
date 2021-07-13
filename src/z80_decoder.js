@@ -121,7 +121,8 @@ function decode0x1X(byte) {
             ins_16bit_arithmetic.inc_ss(i16.DE);
             break;
 
-        case 0x14:
+        case 0x14: // INC D
+            ins_8bit_arithmetic.inc_r(i8.D);
             break;
 
         case 0x15:
