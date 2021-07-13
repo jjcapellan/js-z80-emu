@@ -135,7 +135,8 @@ function decode0x1X(byte) {
             ins_8b_load.ld_r_n(rIndex, n);
             break;
 
-        case 0x17:
+        case 0x17: // RLA
+            ins_rot_shift.rla();
             break;
 
         case 0x18:
