@@ -573,7 +573,8 @@ function decode0x6X(byte) {
             ins_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
-        case 0x6d: // LD L, L ?
+        case 0x6d: // LD L, L
+            ins_8b_load.ld_r_r2(i8.L, i8.L);
             break;
 
         case 0x6e: // LD L, (HL)
