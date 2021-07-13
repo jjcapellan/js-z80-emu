@@ -144,7 +144,8 @@ function decode0x1X(byte) {
             ins_jump.jr_e(arg);
             break;
 
-        case 0x19:
+        case 0x19: // ADD HL, DE
+            ins_16bit_arithmetic.add_HL_ss(i16.DE);
             break;
 
         case 0x1a: // LD A, (DE)
