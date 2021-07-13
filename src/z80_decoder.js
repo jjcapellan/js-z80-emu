@@ -87,7 +87,8 @@ function decode0x0X(byte) {
             ins_8b_load.ld_r_n(rIndex, n);
             break;
 
-        case 0x0f:
+        case 0x0f: // RRCA
+            ins_rot_shift.rrca();
             break;
 
         default:
