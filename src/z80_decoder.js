@@ -1049,7 +1049,8 @@ function decode0xdX(byte) {
             ins_call_return.call_nc_nn(nn);
             break;
 
-        case 0xd5:
+        case 0xd5: // PUSH DE
+            ins_16b_load.push_qq(i16.DE);
             break;
 
         case 0xd6:
