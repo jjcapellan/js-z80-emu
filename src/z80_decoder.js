@@ -73,7 +73,8 @@ function decode0x0X(byte) {
             ins_16bit_arithmetic.dec_ss(i16.BC);
             break;
 
-        case 0x0c:
+        case 0x0c: // INC C
+            ins_8bit_arithmetic.inc_r(i8.C);
             break;
 
         case 0x0d:
