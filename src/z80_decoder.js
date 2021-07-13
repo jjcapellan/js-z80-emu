@@ -12,6 +12,7 @@ const ins_8bit_arithmetic = require('./z80_instructions/ins_8bit_arithmetic');
 const ins_rot_shift = require('./z80_instructions/ins_rotate_shift');
 const ins_jump = require('./z80_instructions/ins_jump');
 const ins_arithmetic_cpu = require('./z80_instructions/ins_general_arithm_cpu');
+const ins_call_return = require('./z80_instructions/ins_call_return');
 
 let CPU, r8, i8, r16, i16, flags, fi, mem;
 function setCPU(data) {
@@ -919,6 +920,63 @@ function decode0xbX(byte) {
 
         case 0xbf: // CP A
             ins_8bit_arithmetic.cp_r(i8.A);
+            break;
+
+        default:
+            break;
+    }
+
+}
+
+function decode0xcX(byte) {
+    switch (byte) {
+        case 0xc0: // RET NZ
+            ins_call_return.ret_nz();            
+            break;
+
+        case 0xc1:
+            break;
+
+        case 0xc2:
+            break;
+
+        case 0xc3:
+            break;
+
+        case 0xc4:
+            break;
+
+        case 0xc5:
+            break;
+
+        case 0xc6:
+            break;
+
+        case 0xc7:
+            break;
+
+        case 0xc8:
+            break;
+
+        case 0xc9:
+            break;
+
+        case 0xca:
+            break;
+
+        case 0xcb:
+            break;
+
+        case 0xcc:
+            break;
+
+        case 0xcd:
+            break;
+
+        case 0xce:
+            break;
+
+        case 0xcf:
             break;
 
         default:
