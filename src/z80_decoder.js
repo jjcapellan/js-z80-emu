@@ -1042,7 +1042,11 @@ function decode0xdX(byte) {
             ins_in_out.out_n_A(n);
             break;
 
-        case 0xd4:
+        case 0xd4: // CALL NC, nn
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
+            nn = (hsb << 8) | lsb;
+            ins_call_return.call_nc_nn(nn);
             break;
 
         case 0xd5:
