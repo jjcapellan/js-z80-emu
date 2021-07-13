@@ -881,11 +881,12 @@ function decode0xbX(byte) {
             ins_8bit_arithmetic.or_r(i8.L);
             break;
 
-        case 0xb6:// OR (HL)
+        case 0xb6: // OR (HL)
             ins_8bit_arithmetic.or_ptrHL();
             break;
 
-        case 0xb7:
+        case 0xb7: // OR A
+            ins_8bit_arithmetic.or_r(i8.A);
             break;
 
         case 0xb8:
