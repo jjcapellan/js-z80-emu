@@ -240,7 +240,8 @@ function decode0x2X(byte) {
             ins_16b_load.ld_HL_ptrnn(ptrnn);
             break;
 
-        case 0x2b:
+        case 0x2b: // DEC HL
+            ins_16bit_arithmetic.dec_ss(i16.HL);
             break;
 
         case 0x2c:
