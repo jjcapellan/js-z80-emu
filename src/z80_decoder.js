@@ -711,6 +711,63 @@ function decode0x8X(byte) {
 
 }
 
+function decode0x9X(byte) {
+    switch(byte) {
+        case 0x90: // SUB B
+            ins_8bit_arithmetic.sub_A_r(i8.B);
+            break;
+
+        case 0x91:
+            break;
+
+        case 0x92:
+            break;
+
+        case 0x93:
+            break;
+
+        case 0x94:
+            break;
+
+        case 0x95:
+            break;
+
+        case 0x96:
+            break;
+
+        case 0x97:
+            break;
+
+        case 0x98:
+            break;
+
+        case 0x99:
+            break;
+
+        case 0x9a:
+            break;
+
+        case 0x9b:
+            break;
+
+        case 0x9c:
+            break;
+
+        case 0x9d:
+            break;
+
+        case 0x9e:
+            break;
+
+        case 0x9f:
+            break;
+
+        default:
+            break;
+    }
+
+}
+
 function decode(byte) {
     const hn = byte >> 4;
     const ln = byte & 0xf;
