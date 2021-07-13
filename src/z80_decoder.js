@@ -825,7 +825,8 @@ function decode0xaX(byte) {
             ins_8bit_arithmetic.xor_r(i8.C);
             break;
 
-        case 0xaa:
+        case 0xaa: // XOR D
+            ins_8bit_arithmetic.xor_r(i8.D);
             break;
 
         case 0xab:
