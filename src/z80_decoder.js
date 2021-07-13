@@ -8,6 +8,11 @@ const instr_16b_load = require('./z80_instructions/ins_16bit_load');
 const instr_8b_load = require('./z80_instructions/ins_8bit_load');
 const instr_exch_trans = require('./z80_instructions/ins_exch_trans_search');
 
+let CPU, r8, i8, r16, i16, flags, fi, mem;
+function setCPU(data){
+    ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data); 
+}
+
 let n = 0, nn = 0, rIndex = 0, r2Index = 0, ddIndex = 0, lsb = 0, hsb = 0, ptrnn = 0;
 
 function decode0x0X(cpu, byte) {
@@ -27,7 +32,7 @@ function decode0x0X(cpu, byte) {
             instr_8b_load.ld_ptrBC_A();
             break;
 
-        case 0x03:
+        case 0x03:          
             break;
 
         case 0x04:
@@ -733,7 +738,10 @@ function decode(cpu, byte) {
     }
 }
 
-module.exports = decode;
+module.exports = {
+    decode,
+    setCPU
+};
 
 /*
 function d(cpu, byte) {

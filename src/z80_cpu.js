@@ -6,7 +6,7 @@
 const registers = require('./z80_registers');
 const memory = require('./z80_memory');
 const ports = require('./z80_ports');
-const decode = require('./z80_decoder');
+const decoder = require('./z80_decoder');
 const flagTables = require('./z80_flag_tables');
 const i_8bit_arithm = require('./z80_instructions/ins_8bit_arithmetic');
 const i_8bit_load = require('./z80_instructions/ins_8bit_load');
@@ -44,8 +44,11 @@ class Z80 {
             daaTable: daaArray,
             parityTable: parityArray
         };
-
+        
         i_data.setData(this);
+
+        decoder.setCPU(i_data.z80);
+        
         i_8bit_arithm.setCPU(i_data.z80);
         i_16bit_arithm.setCPU(i_data.z80);
         i_8bit_load.setCPU(i_data.z80);
@@ -83,7 +86,7 @@ class Z80 {
 
     step() {
         const byte = this.getByte();
-        decode(this, byte);        
+        decoder.decode(this, byte);        
     }
 
     getPC() {
