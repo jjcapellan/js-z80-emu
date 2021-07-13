@@ -14,8 +14,8 @@ const ins_jump = require('./z80_instructions/ins_jump');
 const ins_arithmetic_cpu = require('./z80_instructions/ins_general_arithm_cpu');
 
 let CPU, r8, i8, r16, i16, flags, fi, mem;
-function setCPU(data){
-    ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data); 
+function setCPU(data) {
+    ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data);
 }
 
 let n = 0, nn = 0, rIndex = 0, r2Index = 0, ddIndex = 0, lsb = 0, hsb = 0, ptrnn = 0, arg = 0;
@@ -38,7 +38,7 @@ function decode0x0X(byte) {
             break;
 
         case 0x03: //INC BC
-            ins_16bit_arithmetic.inc_ss(i16.BC);            
+            ins_16bit_arithmetic.inc_ss(i16.BC);
             break;
 
         case 0x04: // INC B
@@ -46,7 +46,7 @@ function decode0x0X(byte) {
             break;
 
         case 0x05: // DEC B
-            ins_8bit_arithmetic.dec_r(i8.B);            
+            ins_8bit_arithmetic.dec_r(i8.B);
             break;
 
         case 0x06: // LD r, n
@@ -102,8 +102,8 @@ function decode0x0X(byte) {
 function decode0x1X(byte) {
     switch (byte) {
         case 0x10: // DJNZ e
-            arg = CPU.getByte();   
-            ins_jump.djnz_e(arg);            
+            arg = CPU.getByte();
+            ins_jump.djnz_e(arg);
             break;
 
         case 0x11: // LD dd, nn
@@ -353,7 +353,7 @@ function decode0x3X(byte) {
 }
 
 function decode0x4X(byte) {
-    switch(byte) {
+    switch (byte) {
         case 0x40: // LD B, B
             ins_8b_load.ld_r_r2(i8.B, i8.B);
             break;
@@ -425,7 +425,7 @@ function decode0x4X(byte) {
 }
 
 function decode0x5X(byte) {
-    switch(byte) {
+    switch (byte) {
         case 0x50: // LD D, B
             ins_8b_load.ld_r_r2(i8.D, i8.B);
             break;
@@ -435,7 +435,7 @@ function decode0x5X(byte) {
             break;
 
         case 0x52: // LD D, D
-            ins_8b_load.ld_r_r2(i8.D, i8.D);          
+            ins_8b_load.ld_r_r2(i8.D, i8.D);
             break;
 
         case 0x53: // LD D, E
@@ -497,7 +497,7 @@ function decode0x5X(byte) {
 }
 
 function decode0x6X(byte) {
-    switch(byte) {
+    switch (byte) {
         case 0x60: // LD H, B
             ins_8b_load.ld_r_r2(i8.H, i8.B);
             break;
@@ -569,7 +569,7 @@ function decode0x6X(byte) {
 }
 
 function decode0x7X(byte) {
-    switch(byte) {
+    switch (byte) {
         case 0x70: // LD (HL), B
             ins_8b_load.ld_ptrHL_r(i8.B);
             break;
@@ -631,6 +631,63 @@ function decode0x7X(byte) {
 
         case 0x7f: // LD A, A
             ins_8b_load.ld_r_r2(i8.A, i8.A);
+            break;
+
+        default:
+            break;
+    }
+
+}
+
+function decode0x8X(byte) {
+    switch (byte) {
+        case 0x80: // ADD A, B
+            ins_8bit_arithmetic.add_A_r(i8.A, i8.B);
+            break;
+
+        case 0x81:
+            break;
+
+        case 0x82:
+            break;
+
+        case 0x83:
+            break;
+
+        case 0x84:
+            break;
+
+        case 0x85:
+            break;
+
+        case 0x86:
+            break;
+
+        case 0x87:
+            break;
+
+        case 0x88:
+            break;
+
+        case 0x89:
+            break;
+
+        case 0x8a:
+            break;
+
+        case 0x8b:
+            break;
+
+        case 0x8c:
+            break;
+
+        case 0x8d:
+            break;
+
+        case 0x8e:
+            break;
+
+        case 0x8f:
             break;
 
         default:
