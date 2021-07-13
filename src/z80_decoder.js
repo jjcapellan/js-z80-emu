@@ -224,7 +224,9 @@ function decode0x2X(byte) {
             ins_arithmetic_cpu.daa();
             break;
 
-        case 0x28:
+        case 0x28: // JR Z, e
+            arg = CPU.getByte();
+            ins_jump.jr_z_e(arg);
             break;
 
         case 0x29:
