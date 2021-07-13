@@ -987,10 +987,14 @@ function decode0xcX(byte) {
             ins_jump.jp_z_nn(nn);
             break;
 
-        case 0xcb:
+        case 0xcb: // BITS prefix <---------- TODO
             break;
 
-        case 0xcc:
+        case 0xcc: // CALL Z, nn
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
+            nn = (hsb << 8) | lsb;
+            ins_call_return.call_z_nn(nn);
             break;
 
         case 0xcd:
