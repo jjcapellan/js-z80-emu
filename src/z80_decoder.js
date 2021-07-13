@@ -248,7 +248,8 @@ function decode0x2X(byte) {
             ins_8bit_arithmetic.inc_r(i8.L);
             break;
 
-        case 0x2d:
+        case 0x2d: // DEC L
+            ins_8bit_arithmetic.dec_r(i8.L);
             break;
 
         case 0x2e: // LD r, n
