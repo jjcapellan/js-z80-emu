@@ -825,6 +825,7 @@ function decode(byte) {
             break;
 
         case 0x9:
+            decode0x9X(byte);
             break;
 
         case 0xa:
