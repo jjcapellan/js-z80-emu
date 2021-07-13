@@ -209,7 +209,8 @@ function decode0x2X(byte) {
             ins_8bit_arithmetic.inc_r(i8.H);
             break;
 
-        case 0x25:
+        case 0x25: // DEC H
+            ins_8bit_arithmetic.dec_r(i8.H);
             break;
 
         case 0x26:// LD H, n
