@@ -181,7 +181,9 @@ function decode0x1X(byte) {
 
 function decode0x2X(byte) {
     switch (byte) {
-        case 0x20:
+        case 0x20: // JR NZ, e
+            arg = CPU.getByte();
+            ins_jump.jr_nc_e(arg);
             break;
 
         case 0x21: // LD dd, nn
