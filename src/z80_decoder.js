@@ -909,7 +909,8 @@ function decode0xbX(byte) {
             ins_8bit_arithmetic.cp_r(i8.H);
             break;
 
-        case 0xbd:
+        case 0xbd: // CP L
+            ins_8bit_arithmetic.cp_r(i8.L);
             break;
 
         case 0xbe:
