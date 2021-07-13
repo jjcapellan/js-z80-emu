@@ -325,7 +325,8 @@ function decode0x3X(byte) {
             ins_8b_load.ld_A_ptrnn(ptrnn);
             break;
 
-        case 0x3b:
+        case 0x3b: // DEC SP
+            ins_16bit_arithmetic.dec_ss(i16.SP);
             break;
 
         case 0x3c:
