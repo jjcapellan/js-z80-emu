@@ -972,7 +972,8 @@ function decode0xcX(byte) {
             ins_call_return.rst_p(0x00);
             break;
 
-        case 0xc8:
+        case 0xc8: // RET Z
+            ins_call_return.ret_z();
             break;
 
         case 0xc9:
