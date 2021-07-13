@@ -490,6 +490,7 @@ function decode0x5X(byte) {
             break;
 
         case 0x5b: // LD E,E
+            ins_8b_load.ld_r_r2(i8.E, i8.E);
             break;
 
         case 0x5c: // LD E, H
