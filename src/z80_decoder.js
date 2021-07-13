@@ -229,7 +229,8 @@ function decode0x2X(byte) {
             ins_jump.jr_z_e(arg);
             break;
 
-        case 0x29:
+        case 0x29: // ADD HL, HL
+            ins_16bit_arithmetic.add_HL_ss(i16.HL);
             break;
 
         case 0x2a: // LD HL, (nn)
