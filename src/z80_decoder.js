@@ -997,7 +997,11 @@ function decode0xcX(byte) {
             ins_call_return.call_z_nn(nn);
             break;
 
-        case 0xcd:
+        case 0xcd: // CALL nn
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
+            nn = (hsb << 8) | lsb;
+            ins_call_return.call_nn(nn);
             break;
 
         case 0xce:
