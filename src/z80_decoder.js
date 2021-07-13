@@ -309,7 +309,9 @@ function decode0x3X(byte) {
             ins_arithmetic_cpu.scf();
             break;
 
-        case 0x38:
+        case 0x38: // JR C, e
+            arg = CPU.getByte();
+            ins_jump.jr_c_e(arg);
             break;
 
         case 0x39:
