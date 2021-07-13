@@ -274,7 +274,11 @@ function decode0x3X(byte) {
             ins_jump.jr_nc_e(arg);
             break;
 
-        case 0x31:
+        case 0x31: // LD SP, nn
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
+            nn = (hsb << 8) | lsb;
+            ins_16b_load.ld_dd_nn(i16.SP, nn);
             break;
 
         case 0x32:// LD (nn), A
