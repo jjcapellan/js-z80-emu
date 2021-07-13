@@ -945,7 +945,11 @@ function decode0xcX(byte) {
             ins_jump.jp_nz_nn(nn);
             break;
 
-        case 0xc3:
+        case 0xc3: // JP nn
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
+            nn = (hsb << 8) | lsb;
+            ins_jump.jp_nn(nn);
             break;
 
         case 0xc4:
