@@ -931,7 +931,7 @@ function decode0xbX(byte) {
 function decode0xcX(byte) {
     switch (byte) {
         case 0xc0: // RET NZ
-            ins_call_return.ret_nz();            
+            ins_call_return.ret_nz();
             break;
 
         case 0xc1: // POP BC
@@ -1011,6 +1011,63 @@ function decode0xcX(byte) {
 
         case 0xcf: // RST 0x08
             ins_call_return.rst_p(0x08);
+            break;
+
+        default:
+            break;
+    }
+
+}
+
+function decode0xdX(byte) {
+    switch (byte) {
+        case 0xd0: // RET NC
+            ins_call_return.ret_nc();
+            break;
+
+        case 0xd1:
+            break;
+
+        case 0xd2:
+            break;
+
+        case 0xd3:
+            break;
+
+        case 0xd4:
+            break;
+
+        case 0xd5:
+            break;
+
+        case 0xd6:
+            break;
+
+        case 0xd7:
+            break;
+
+        case 0xd8:
+            break;
+
+        case 0xd9:
+            break;
+
+        case 0xda:
+            break;
+
+        case 0xdb:
+            break;
+
+        case 0xdc:
+            break;
+
+        case 0xdd:
+            break;
+
+        case 0xde:
+            break;
+
+        case 0xdf:
             break;
 
         default:
