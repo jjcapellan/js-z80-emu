@@ -642,27 +642,27 @@ function decode0x7X(byte) {
 function decode0x8X(byte) {
     switch (byte) {
         case 0x80: // ADD A, B
-            ins_8bit_arithmetic.add_A_r(i8.A, i8.B);
+            ins_8bit_arithmetic.add_A_r(i8.B);
             break;
 
         case 0x81: // ADD A, C
-            ins_8bit_arithmetic.add_A_r(i8.A, i8.C);            
+            ins_8bit_arithmetic.add_A_r(i8.C);            
             break;
 
         case 0x82: // ADD A, D
-            ins_8bit_arithmetic.add_A_r(i8.A, i8.D);
+            ins_8bit_arithmetic.add_A_r(i8.D);
             break;
 
         case 0x83: // ADD A, E
-            ins_8bit_arithmetic.add_A_r(i8.A, i8.E);
+            ins_8bit_arithmetic.add_A_r(i8.E);
             break;
 
         case 0x84: // ADD A, H
-            ins_8bit_arithmetic.add_A_r(i8.A, i8.H);
+            ins_8bit_arithmetic.add_A_r(i8.H);
             break;
 
         case 0x85: // ADD A, L
-            ins_8bit_arithmetic.add_A_r(i8.A, i8.L);            
+            ins_8bit_arithmetic.add_A_r(i8.L);            
             break;
 
         case 0x86: // ADD A, (HL)
