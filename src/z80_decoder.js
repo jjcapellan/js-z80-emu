@@ -438,7 +438,8 @@ function decode0x5X(byte) {
             ins_8b_load.ld_r_r2(rIndex, r2Index);
             break;
 
-        case 0x52: // LD D, D ?            
+        case 0x52: // LD D, D
+            ins_8b_load.ld_r_r2(i8.D, i8.D);          
             break;
 
         case 0x53: // LD D, E
