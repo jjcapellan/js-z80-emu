@@ -61,7 +61,8 @@ function decode0x0X(byte) {
             ins_exch_trans.ex_AF_AF2();
             break;
 
-        case 0x09:
+        case 0x09: // ADD HL, BC
+            ins_16bit_arithmetic.add_HL_ss(i16.BC);
             break;
 
         case 0x0a: // LD A, (BC)
