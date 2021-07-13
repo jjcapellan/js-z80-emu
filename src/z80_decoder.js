@@ -10,13 +10,14 @@ const ins_exch_trans = require('./z80_instructions/ins_exch_trans_search');
 const ins_16bit_arithmetic = require('./z80_instructions/ins_16bit_arithmetic');
 const ins_8bit_arithmetic = require('./z80_instructions/ins_8bit_arithmetic');
 const ins_rot_shift = require('./z80_instructions/ins_rotate_shift');
+const ins_jump = require('./z80_instructions/ins_jump');
 
 let CPU, r8, i8, r16, i16, flags, fi, mem;
 function setCPU(data){
     ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data); 
 }
 
-let n = 0, nn = 0, rIndex = 0, r2Index = 0, ddIndex = 0, lsb = 0, hsb = 0, ptrnn = 0;
+let n = 0, nn = 0, rIndex = 0, r2Index = 0, ddIndex = 0, lsb = 0, hsb = 0, ptrnn = 0, arg = 0;
 
 function decode0x0X(byte) {
     switch (byte) {
@@ -99,7 +100,9 @@ function decode0x0X(byte) {
 
 function decode0x1X(byte) {
     switch (byte) {
-        case 0x10:
+        case 0x10: // DJNZ e
+            arg = CPU.getByte();   
+            ins_jump.djnz_e(arg);            
             break;
 
         case 0x11: // LD dd, nn
