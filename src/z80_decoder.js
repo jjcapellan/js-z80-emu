@@ -333,7 +333,8 @@ function decode0x3X(byte) {
             ins_8bit_arithmetic.inc_r(i8.A);
             break;
 
-        case 0x3d:
+        case 0x3d: // DEC A
+            ins_8bit_arithmetic.dec_r(i8.A);
             break;
 
         case 0x3e: //LD r, n
