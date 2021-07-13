@@ -1073,6 +1073,7 @@ function decode(byte) {
             break;
 
         case 0xc:
+            decode0xcX(byte);
             break;
 
         case 0xd:
