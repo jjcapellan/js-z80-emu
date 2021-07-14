@@ -1152,7 +1152,8 @@ function decode0xeX(byte) {
             ins_call_return.ret_pe();
             break;
 
-        case 0xe9:
+        case 0xe9: // JP (HL)
+            ins_jump.jp_ptrHL();
             break;
 
         case 0xea:
