@@ -1192,6 +1192,63 @@ function decode0xeX(byte) {
 
 }
 
+function decode0xfX(byte) {
+    switch (byte) {
+        case 0xf0: // RET P
+            ins_call_return.ret_p();
+            break;
+
+        case 0xf1:
+            break;
+
+        case 0xf2:
+            break;
+
+        case 0xf3:
+            break;
+
+        case 0xf4:
+            break;
+
+        case 0xf5:
+            break;
+
+        case 0xf6:
+            break;
+
+        case 0xf7:
+            break;
+
+        case 0xf8:
+            break;
+
+        case 0xf9:
+            break;
+
+        case 0xfa:
+            break;
+
+        case 0xfb:
+            break;
+
+        case 0xfc:
+            break;
+
+        case 0xfd:
+            break;
+
+        case 0xfe:
+            break;
+
+        case 0xff:
+            break;
+
+        default:
+            break;
+    }
+
+}
+
 function decode(byte) {
     const hn = byte >> 4;
     const ln = byte & 0xf;
