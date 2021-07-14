@@ -1267,7 +1267,8 @@ function decode0xfX(byte) {
             ins_8bit_arithmetic.cp_n(n);
             break;
 
-        case 0xff:
+        case 0xff: // RST 0x38
+            ins_call_return.rst_p(0x38);
             break;
 
         default:
