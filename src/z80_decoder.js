@@ -1343,6 +1343,7 @@ function decode(byte) {
             break;
 
         case 0xf:
+            decode0xfX(byte);
             break;
 
         default:
