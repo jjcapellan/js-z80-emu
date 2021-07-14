@@ -1113,7 +1113,8 @@ function decode0xeX(byte) {
             ins_call_return.ret_po();
             break;
 
-        case 0xe1:
+        case 0xe1: // POP HL
+            ins_16b_load.pop_qq(i16.HL);
             break;
 
         case 0xe2:
