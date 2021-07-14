@@ -1237,7 +1237,8 @@ function decode0xfX(byte) {
             ins_call_return.ret_m();
             break;
 
-        case 0xf9:
+        case 0xf9: // LD SP, HL
+            ins_16b_load.ld_SP_HL();
             break;
 
         case 0xfa:
