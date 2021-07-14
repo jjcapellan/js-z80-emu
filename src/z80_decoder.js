@@ -1144,7 +1144,8 @@ function decode0xeX(byte) {
             ins_8bit_arithmetic.and_n(n);
             break;
 
-        case 0xe7:
+        case 0xe7: // RST 0x20
+            ins_arithmetic_cpu.rst_p(0x20);
             break;
 
         case 0xe8:
