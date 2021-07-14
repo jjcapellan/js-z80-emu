@@ -1135,7 +1135,8 @@ function decode0xeX(byte) {
             ins_call_return.call_po_nn(nn);
             break;
 
-        case 0xe5:
+        case 0xe5: // PUSH HL
+            ins_16b_load.push_qq(i16.HL);
             break;
 
         case 0xe6:
