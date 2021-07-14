@@ -1117,7 +1117,11 @@ function decode0xeX(byte) {
             ins_16b_load.pop_qq(i16.HL);
             break;
 
-        case 0xe2:
+        case 0xe2: // JP PO, nn
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
+            nn = (hsb << 8) | lsb;
+            ins_jump.jp_po_nn(nn);
             break;
 
         case 0xe3:
