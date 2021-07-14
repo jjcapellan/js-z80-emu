@@ -1224,7 +1224,9 @@ function decode0xfX(byte) {
             ins_16b_load.push_qq(i16.AF);
             break;
 
-        case 0xf6:
+        case 0xf6: // OR n
+            n = CPU.getByte();
+            ins_8bit_arithmetic.or_n(n);
             break;
 
         case 0xf7:
