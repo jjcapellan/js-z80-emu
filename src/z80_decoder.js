@@ -1259,10 +1259,12 @@ function decode0xfX(byte) {
             ins_call_return.call_m_nn(nn);
             break;
 
-        case 0xfd:
+        case 0xfd: // IY prefix <------------------- TODO
             break;
 
-        case 0xfe:
+        case 0xfe: // CP n
+            n = CPU.getByte();
+            ins_8bit_arithmetic.cp_n(n);
             break;
 
         case 0xff:
