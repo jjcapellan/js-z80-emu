@@ -1229,7 +1229,8 @@ function decode0xfX(byte) {
             ins_8bit_arithmetic.or_n(n);
             break;
 
-        case 0xf7:
+        case 0xf7: // RST 0x30
+            ins_call_return.rst_p(0x30);
             break;
 
         case 0xf8:
