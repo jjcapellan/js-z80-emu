@@ -1107,6 +1107,63 @@ function decode0xdX(byte) {
 
 }
 
+function decode0xeX(byte) {
+    switch (byte) {
+        case 0xe0: // RET PO
+            ins_call_return.ret_po();
+            break;
+
+        case 0xe1:
+            break;
+
+        case 0xe2:
+            break;
+
+        case 0xe3:
+            break;
+
+        case 0xe4:
+            break;
+
+        case 0xe5:
+            break;
+
+        case 0xe6:
+            break;
+
+        case 0xe7:
+            break;
+
+        case 0xe8:
+            break;
+
+        case 0xe9:
+            break;
+
+        case 0xea:
+            break;
+
+        case 0xeb:
+            break;
+
+        case 0xec:
+            break;
+
+        case 0xed:
+            break;
+
+        case 0xee:
+            break;
+
+        case 0xef:
+            break;
+
+        default:
+            break;
+    }
+
+}
+
 function decode(byte) {
     const hn = byte >> 4;
     const ln = byte & 0xf;
