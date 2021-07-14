@@ -1198,7 +1198,8 @@ function decode0xfX(byte) {
             ins_call_return.ret_p();
             break;
 
-        case 0xf1:
+        case 0xf1: // POP AF
+            ins_16b_load.pop_qq(i16.AF);
             break;
 
         case 0xf2:
