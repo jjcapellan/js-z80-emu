@@ -1220,7 +1220,8 @@ function decode0xfX(byte) {
             ins_call_return.call_p_nn(nn);
             break;
 
-        case 0xf5:
+        case 0xf5: // PUSH AF
+            ins_16b_load.push_qq(i16.AF);
             break;
 
         case 0xf6:
