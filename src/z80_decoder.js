@@ -1148,7 +1148,8 @@ function decode0xeX(byte) {
             ins_arithmetic_cpu.rst_p(0x20);
             break;
 
-        case 0xe8:
+        case 0xe8: // RET PE
+            ins_call_return.ret_pe();
             break;
 
         case 0xe9:
