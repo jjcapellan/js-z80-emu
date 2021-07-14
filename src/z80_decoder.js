@@ -1128,7 +1128,11 @@ function decode0xeX(byte) {
             ins_exch_trans.ex_ptrSP_HL();
             break;
 
-        case 0xe4:
+        case 0xe4: // CALL PO, nn
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
+            nn = (hsb << 8) | lsb;
+            ins_call_return.call_po_nn(nn);
             break;
 
         case 0xe5:
