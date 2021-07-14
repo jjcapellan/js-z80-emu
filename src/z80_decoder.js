@@ -1213,7 +1213,11 @@ function decode0xfX(byte) {
             ins_arithmetic_cpu.di();
             break;
 
-        case 0xf4:
+        case 0xf4: // CALL P, nn
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
+            nn = (hsb << 8) | lsb;
+            ins_call_return.call_p_nn(nn);
             break;
 
         case 0xf5:
