@@ -1182,7 +1182,8 @@ function decode0xeX(byte) {
             ins_8bit_arithmetic.xor_n(n);
             break;
 
-        case 0xef:
+        case 0xef: // RST 0x28
+            ins_arithmetic_cpu.rst_p(0x28);
             break;
 
         default:
