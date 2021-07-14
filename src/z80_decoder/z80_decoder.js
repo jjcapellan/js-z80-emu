@@ -4,16 +4,16 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-const ins_16b_load = require('./z80_instructions/ins_16bit_load');
-const ins_8b_load = require('./z80_instructions/ins_8bit_load');
-const ins_exch_trans = require('./z80_instructions/ins_exch_trans_search');
-const ins_16bit_arithmetic = require('./z80_instructions/ins_16bit_arithmetic');
-const ins_8bit_arithmetic = require('./z80_instructions/ins_8bit_arithmetic');
-const ins_rot_shift = require('./z80_instructions/ins_rotate_shift');
-const ins_jump = require('./z80_instructions/ins_jump');
-const ins_arithmetic_cpu = require('./z80_instructions/ins_general_arithm_cpu');
-const ins_call_return = require('./z80_instructions/ins_call_return');
-const ins_in_out = require('./z80_instructions/ins_input_output');
+const ins_16b_load = require('../z80_instructions/ins_16bit_load');
+const ins_8b_load = require('../z80_instructions/ins_8bit_load');
+const ins_exch_trans = require('../z80_instructions/ins_exch_trans_search');
+const ins_16bit_arithmetic = require('../z80_instructions/ins_16bit_arithmetic');
+const ins_8bit_arithmetic = require('../z80_instructions/ins_8bit_arithmetic');
+const ins_rot_shift = require('../z80_instructions/ins_rotate_shift');
+const ins_jump = require('../z80_instructions/ins_jump');
+const ins_arithmetic_cpu = require('../z80_instructions/ins_general_arithm_cpu');
+const ins_call_return = require('../z80_instructions/ins_call_return');
+const ins_in_out = require('../z80_instructions/ins_input_output');
 
 let CPU, r8, i8, r16, i16, flags, fi, mem;
 function setCPU(data) {
