@@ -1163,7 +1163,8 @@ function decode0xeX(byte) {
             ins_jump.jp_pe_nn(nn);
             break;
 
-        case 0xeb:
+        case 0xeb: // EX DE, HL
+            ins_exch_trans.ex_DE_HL();
             break;
 
         case 0xec:
