@@ -1252,7 +1252,11 @@ function decode0xfX(byte) {
             ins_arithmetic_cpu.ei();
             break;
 
-        case 0xfc:
+        case 0xfc: // CALL M, nn
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
+            nn = (hsb << 8) | lsb;
+            ins_call_return.call_m_nn(nn);
             break;
 
         case 0xfd:
