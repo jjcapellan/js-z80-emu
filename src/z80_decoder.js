@@ -1254,6 +1254,7 @@ function decode(byte) {
             break;
 
         case 0xe:
+            decode0xeX(byte);
             break;
 
         case 0xf:
