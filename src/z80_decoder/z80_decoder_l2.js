@@ -16,12 +16,12 @@
  const ins_call_return = require('../z80_instructions/ins_call_return');
  const ins_in_out = require('../z80_instructions/ins_input_output');
  
- let CPU, r8, i8, r16, i16, flags, fi, mem;
+ let CPU, i8, i16;
  function setDecoderL2CPU(data) {
-     ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data);
+     ({ CPU, i8, i16 } = data);
  }
  
- let n = 0, nn = 0, rIndex = 0, r2Index = 0, ddIndex = 0, lsb = 0, hsb = 0, ptrnn = 0, arg = 0;
+ let n = 0, nn = 0, rIndex = 0, ddIndex = 0, lsb = 0, hsb = 0, ptrnn = 0, arg = 0;
  
  function decode0x0X(byte) {
      switch (byte) {
