@@ -1209,7 +1209,8 @@ function decode0xfX(byte) {
             ins_jump.jp_p_nn(nn);
             break;
 
-        case 0xf3:
+        case 0xf3: // DI
+            ins_arithmetic_cpu.di();
             break;
 
         case 0xf4:
