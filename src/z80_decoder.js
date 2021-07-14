@@ -1174,10 +1174,12 @@ function decode0xeX(byte) {
             ins_call_return.call_pe_nn(nn);
             break;
 
-        case 0xed:
+        case 0xed: // EXTD prefix <-------------- TODO
             break;
 
-        case 0xee:
+        case 0xee: // XOR n
+            n = CPU.getByte();
+            ins_8bit_arithmetic.xor_n(n);
             break;
 
         case 0xef:
