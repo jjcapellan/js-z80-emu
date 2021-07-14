@@ -1241,7 +1241,11 @@ function decode0xfX(byte) {
             ins_16b_load.ld_SP_HL();
             break;
 
-        case 0xfa:
+        case 0xfa: // JP M, nn
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
+            nn = (hsb << 8) | lsb;
+            ins_jump.jp_m_nn(nn);
             break;
 
         case 0xfb:
