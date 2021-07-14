@@ -1156,7 +1156,11 @@ function decode0xeX(byte) {
             ins_jump.jp_ptrHL();
             break;
 
-        case 0xea:
+        case 0xea: // JP PE, nn
+            lsb = CPU.getByte();
+            hsb = CPU.getByte();
+            nn = (hsb << 8) | lsb;
+            ins_jump.jp_pe_nn(nn);
             break;
 
         case 0xeb:
