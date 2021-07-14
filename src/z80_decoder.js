@@ -1139,7 +1139,9 @@ function decode0xeX(byte) {
             ins_16b_load.push_qq(i16.HL);
             break;
 
-        case 0xe6:
+        case 0xe6: // AND n
+            n = CPU.getByte();
+            ins_8bit_arithmetic.and_n(n);
             break;
 
         case 0xe7:
