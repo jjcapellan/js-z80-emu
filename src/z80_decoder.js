@@ -1248,7 +1248,8 @@ function decode0xfX(byte) {
             ins_jump.jp_m_nn(nn);
             break;
 
-        case 0xfb:
+        case 0xfb: // EI
+            ins_arithmetic_cpu.ei();
             break;
 
         case 0xfc:
