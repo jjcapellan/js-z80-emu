@@ -16,8 +16,16 @@ const ins_arithmetic_cpu = require('../z80_instructions/ins_general_arithm_cpu')
 const ins_call_return = require('../z80_instructions/ins_call_return');
 const ins_in_out = require('../z80_instructions/ins_input_output');
 
+const {
+    decodeCBXX,
+    setDecoderL3CPU
+} = require('./z80_decoder_l3');
+
+
+
 let CPU, i8, i16;
 function setDecoderL2CPU(data) {
+    setDecoderL3CPU(data);
     ({ CPU, i8, i16 } = data);
 }
 
@@ -932,7 +940,8 @@ function decode0xcX(byte) {
             ins_jump.jp_z_nn(get_nn());
             break;
 
-        case 0xcb: // BITS prefix <---------- TODO
+        case 0xcb: // BITS prefix (CB)
+            decodeCBXX(CPU.getByte());
             break;
 
         case 0xcc: // CALL Z, nn
