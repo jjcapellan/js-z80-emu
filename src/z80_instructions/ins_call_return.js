@@ -28,8 +28,9 @@ function setCPU(data) {
 * Clock: 17T
 */
 function call_nn(nn) {
+    CPU.tCycles += 5;
     r16.set(i16.PC, r16.get(i16.PC) + 3);
-    push_qq(i16.PC);
+    push_qq(i16.PC); // 11 tCycles
     r16.set(i16.PC, nn);
 }
 
@@ -39,6 +40,7 @@ function call_nn(nn) {
 * Clock: 17T (condition true)    10T (condition false)
 */
 function call_nz_nn(nn) {
+    CPU.tCycles += 10;
     if (!flags.get(fi.Z))
         call_nn(nn);
 }
@@ -49,6 +51,7 @@ function call_nz_nn(nn) {
 * Clock: 17T (condition true)    10T (condition false)
 */
 function call_z_nn(nn) {
+    CPU.tCycles += 10;
     if (flags.get(fi.Z))
         call_nn(nn);
 }
@@ -59,6 +62,7 @@ function call_z_nn(nn) {
 * Clock: 17T (condition true)    10T (condition false)
 */
 function call_nc_nn(nn) {
+    CPU.tCycles += 10;
     if (!flags.get(fi.C))
         call_nn(nn);
 }
@@ -69,6 +73,7 @@ function call_nc_nn(nn) {
 * Clock: 17T (condition true)    10T (condition false)
 */
 function call_c_nn(nn) {
+    CPU.tCycles += 10;
     if (flags.get(fi.C))
         call_nn(nn);
 }
@@ -79,6 +84,7 @@ function call_c_nn(nn) {
 * Clock: 17T (condition true)    10T (condition false)
 */
 function call_po_nn(nn) {
+    CPU.tCycles += 10;
     if (!flags.get(fi.PV))
         call_nn(nn);
 }
@@ -89,6 +95,7 @@ function call_po_nn(nn) {
 * Clock: 17T (condition true)    10T (condition false)
 */
 function call_pe_nn(nn) {
+    CPU.tCycles += 10;
     if (flags.get(fi.PV))
         call_nn(nn);
 }
@@ -99,6 +106,7 @@ function call_pe_nn(nn) {
 * Clock: 17T (condition true)    10T (condition false)
 */
 function call_p_nn(nn) {
+    CPU.tCycles += 10;
     if (!flags.get(fi.S))
         call_nn(nn);
 }
@@ -109,6 +117,7 @@ function call_p_nn(nn) {
 * Clock: 17T (condition true)    10T (condition false)
 */
 function call_m_nn(nn) {
+    CPU.tCycles += 10;
     if (flags.get(fi.S))
         call_nn(nn);
 }
@@ -125,7 +134,7 @@ function call_m_nn(nn) {
 * Clock: 10T
 */
 function ret() {
-    pop_qq(i16.PC);
+    pop_qq(i16.PC); // 10 tCycles
 }
 
 /**
@@ -134,8 +143,11 @@ function ret() {
 * Clock: 11T (condition true)    5T (condition false)
 */
 function ret_nz() {
-    if (!flags.get(fi.Z))
-        ret();
+    CPU.tCycles += 5;
+    if (!flags.get(fi.Z)) {
+        CPU.tCycles =+ 1;
+        ret(); // 10 tCycles
+    }
 }
 
 /**
@@ -144,8 +156,11 @@ function ret_nz() {
 * Clock: 11T (condition true)    5T (condition false)
 */
 function ret_z() {
-    if (flags.get(fi.Z))
-        ret();
+    CPU.tCycles += 5;
+    if (flags.get(fi.Z)) {
+        CPU.tCycles += 1;
+        ret(); // 10 tCycles
+    }
 }
 
 /**
@@ -154,8 +169,11 @@ function ret_z() {
 * Clock: 11T (condition true)    5T (condition false)
 */
 function ret_nc() {
-    if (!flags.get(fi.C))
-        ret();
+    CPU.tCycles += 5;
+    if (!flags.get(fi.C)) {
+        CPU.tCycles += 1;
+        ret(); // 10 tCycles
+    }
 }
 
 /**
@@ -164,8 +182,11 @@ function ret_nc() {
 * Clock: 11T (condition true)    5T (condition false)
 */
 function ret_c() {
-    if (flags.get(fi.C))
-        ret();
+    CPU.tCycles += 5;
+    if (flags.get(fi.C)) {
+        CPU.tCycles += 1;
+        ret(); // 10 tCycles
+    }
 }
 
 /**
@@ -174,8 +195,11 @@ function ret_c() {
 * Clock: 11T (condition true)    5T (condition false)
 */
 function ret_po() {
-    if (!flags.get(fi.PV))
-        ret();
+    CPU.tCycles += 5;
+    if (!flags.get(fi.PV)) {
+        CPU.tCycles += 1;
+        ret(); // 10 tCycles
+    }
 }
 
 /**
@@ -184,8 +208,11 @@ function ret_po() {
 * Clock: 11T (condition true)    5T (condition false)
 */
 function ret_pe() {
-    if (flags.get(fi.PV))
-        ret();
+    CPU.tCycles += 5;
+    if (flags.get(fi.PV)) {
+        CPU.tCycles += 1;
+        ret(); // 10 tCycles
+    }
 }
 
 /**
@@ -194,8 +221,11 @@ function ret_pe() {
 * Clock: 11T (condition true)    5T (condition false)
 */
 function ret_p() {
-    if (!flags.get(fi.S))
-        ret();
+    CPU.tCycles += 5;
+    if (!flags.get(fi.S)) {
+        CPU.tCycles += 1;
+        ret(); // 10 tCycles
+    }
 }
 
 /**
@@ -204,8 +234,11 @@ function ret_p() {
 * Clock: 11T (condition true)    5T (condition false)
 */
 function ret_m() {
-    if (flags.get(fi.S))
-        ret();
+    CPU.tCycles += 5;
+    if (flags.get(fi.S)) {
+        CPU.tCycles += 1;
+        ret(); // 10 tCycles
+    }
 }
 
 /**
@@ -221,7 +254,8 @@ function ret_m() {
 * Clock: 14T
 */
 function reti() {
-    ret();
+    CPU.tCycles += 4;
+    ret(); // 10 tCycles
     /* IEO not emulated */
 }
 
@@ -235,8 +269,9 @@ function reti() {
 * Clock: 14T
 */
 function retn() {
+    CPU.tCycles += 4;
     CPU.registers.iff.IFF1 = CPU.registers.iff.IFF1;
-    ret();
+    ret(); // 10 tCycles
 }
 
 /**
@@ -253,7 +288,7 @@ function retn() {
 * Clock: 11T
 */
 function rst_p(p) {
-    push_qq(i16.PC);
+    push_qq(i16.PC); // 11 tCycles
     r16.set(i16.PC, p);
 }
 

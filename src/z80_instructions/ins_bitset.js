@@ -21,7 +21,6 @@ function createFlags(C, N, PV, F3, H, F5, Z, S) {
 * BIT b, r
 * 
 * This instruction tests bit b in register r and sets the Z flag accordingly.
-* Clock: 8T
 */
 function bit_b_r(b, rIndex) {
     CPU.tCyles = 8;
@@ -45,7 +44,6 @@ function bit_b_r(b, rIndex) {
 * 
 * This instruction tests bit b in the memory location specified by the contents
 * of the HL register pair and sets the Z flag accordingly.
-* Clock: 12T
 */
 function bit_b_ptrHL(b) {
     CPU.tCyles = 12;
@@ -70,7 +68,6 @@ function bit_b_ptrHL(b) {
 * 
 * This instruction tests bit b in the memory location specified by the contents of register pair
 * IX combined with the two’s complement displacement d and sets the Z flag accordingly.
-* Clock: 20T
 */
 function bit_b_ptrIXplusd(b, d) {
     CPU.tCyles = 20;
@@ -96,7 +93,6 @@ function bit_b_ptrIXplusd(b, d) {
 * 
 * This instruction tests bit b in the memory location specified by the contents of register pair
 * IY combined with the two’s complement displacement d and sets the Z flag accordingly.
-* Clock: 20T
 */
 function bit_b_ptrIYplusd(b, d) {
     CPU.tCyles = 20;
@@ -131,7 +127,6 @@ function set_bit(b, n) {
 * SET b, r
 * 
 * Bit b in register r (any of registers B, C, D, E, H, L, or A) is set.
-* Clock: 8T
 */
 function set_b_r(b, rIndex) {
     CPU.tCyles = 8;
@@ -148,7 +143,6 @@ function set_bit_mem(b, rrIndex, d) {
 * SET b, (HL)
 * 
 * Bit b in the memory location addressed by the contents of register pair HL is set.
-* Clock: 15T
 */
 function set_b_ptrHL(b) {
     CPU.tCyles = 15;
@@ -160,7 +154,6 @@ function set_b_ptrHL(b) {
 * 
 * Bit b in the memory location addressed by the sum of the contents of the IX register pair
 * and the two’s complement integer d is set.
-* Clock: 23T
 */
 function set_b_ptrIXplusd(b, d) {
     CPU.tCyles = 23;
@@ -172,7 +165,6 @@ function set_b_ptrIXplusd(b, d) {
 * 
 * Bit b in the memory location addressed by the sum of the contents of the IY register pair
 * and the two’s complement integer d is set.
-* Clock: 23T
 */
 function set_b_ptrIYplusd(b, d) {
     CPU.tCyles = 23;
@@ -193,7 +185,6 @@ function reset_bit(b, n) {
 * RES b, r
 * 
 * Bit b in register r (any of registers B, C, D, E, H, L, or A) is reset.
-* Clock: 8T
 */
 function res_b_r(b, rIndex) {
     CPU.tCyles = 8;
@@ -210,7 +201,6 @@ function reset_bit_mem(b, rrIndex, d) {
 * RES b, (HL)
 * 
 * Bit b in the memory location addressed by the contents of register pair HL is reset.
-* Clock: 15T
 */
 function res_b_ptrHL(b) {
     CPU.tCyles = 15;
@@ -222,7 +212,6 @@ function res_b_ptrHL(b) {
 * 
 * Bit b in the memory location addressed by the sum of the contents of the IX register pair
 * and the two’s complement integer d is reset.
-* Clock: 23T
 */
 function res_b_ptrIXplusd(b, d) {
     CPU.tCyles = 23;
@@ -234,7 +223,6 @@ function res_b_ptrIXplusd(b, d) {
 * 
 * Bit b in the memory location addressed by the sum of the contents of the IY register pair
 * and the two’s complement integer d is reset.
-* Clock: 23T
 */
 function res_b_ptrIYplusd(b, d) {
     CPU.tCyles = 23;
