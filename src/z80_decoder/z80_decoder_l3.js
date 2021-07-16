@@ -8,19 +8,19 @@
 const ins_rot_shift = require('../z80_instructions/ins_rotate_shift');
 const ins_bit_set = require('../z80_instructions/ins_bitset');
 
-let CPU, i8, i16;
+let CPU, i8, i16, regsTable;
 function setDecoderL3CPU(data) {
-    ({ CPU, i8, i16 } = data);
-}
 
-const regsTable = {
-    0: i8.B,
-    1: i8.C,
-    2: i8.D,
-    3: i8.E,
-    4: i8.H,
-    5: i8.L,
-    7: i8.A
+    ({ CPU, i8, i16 } = data);
+    regsTable = {
+        0: i8.B,
+        1: i8.C,
+        2: i8.D,
+        3: i8.E,
+        4: i8.H,
+        5: i8.L,
+        7: i8.A
+    }
 }
 
 function decodeCBXX(byte) {
