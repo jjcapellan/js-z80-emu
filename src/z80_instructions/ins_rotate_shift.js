@@ -23,6 +23,7 @@ function createFlags(C, N, PV, F3, H, F5, Z, S) {
 * Clock: 4T
 */
 function rlca() {
+    CPU.tCycles += 4;
     const a = r8.get(i8.A);
     const bit7 = a >> 7;
     const aRotated = ((a << 1) & 0xff) | bit7;
@@ -64,6 +65,7 @@ function get_rotated_rlc(n) {
 * Clock: 8T
 */
 function rlc_r(rIndex) {
+    CPU.tCycles += 8;
     const r = r8.get(rIndex);
     rRotated = get_rotated_rlc(r);
     r8.set(rIndex, rRotated);
@@ -79,6 +81,7 @@ function rlc_r(rIndex) {
 * Clock: 15T
 */
 function rlc_ptrHL() {
+    CPU.tCycles += 15;
     const hl = r16.get(i16.HL);
     const n = mem[hl];
     const nRotated = get_rotated_rlc(n);
@@ -95,6 +98,7 @@ function rlc_ptrHL() {
 * Clock: 23T
 */
 function rlc_ptrIXd(d) {
+    CPU.tCycles += 23;
     const ix = r16.get(i16.IX);
     const n = mem[ix + d];
     const nRotated = get_rotated_rlc(n);
@@ -111,6 +115,7 @@ function rlc_ptrIXd(d) {
 * Clock: 23T
 */
 function rlc_ptrIYd(d) {
+    CPU.tCycles += 23;
     const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     const nRotated = get_rotated_rlc(n);
@@ -148,6 +153,7 @@ function get_rotated_rl(n) {
 * Clock: 2T
 */
 function rl_r(rIndex) {
+    CPU.tCycles += 2;
     const r = r8.get(rIndex);
     rRotated = get_rotated_rl(r);
     r8.set(rIndex, rRotated);
@@ -163,6 +169,7 @@ function rl_r(rIndex) {
 * Clock: 4T
 */
 function rl_ptrHL() {
+    CPU.tCycles += 4;
     const hl = r16.get(i16.HL);
     const n = mem[hl];
     const nRotated = get_rotated_rl(n);
@@ -180,6 +187,7 @@ function rl_ptrHL() {
 * Clock: 6T
 */
 function rl_ptrIXd(d) {
+    CPU.tCycles += 6;
     const ix = r16.get(i16.IX);
     const n = mem[ix + d];
     const nRotated = get_rotated_rl(n);
@@ -197,6 +205,7 @@ function rl_ptrIXd(d) {
 * Clock: 6T
 */
 function rl_ptrIYd(d) {
+    CPU.tCycles += 6;
     const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     const nRotated = get_rotated_rl(n);
@@ -211,6 +220,7 @@ function rl_ptrIYd(d) {
 * Clock: 4T
 */
 function rla() {
+    CPU.tCycles += 4;
     const a = r8.get(i8.A);
     const bit7 = a >> 7;
     const cf = flags.get(fi.C);
@@ -231,6 +241,7 @@ function rla() {
 * Clock: 4T
 */
 function rrca() {
+    CPU.tCycles += 4;
     const a = r8.get(i8.A);
     const bit0 = a & 1;
     const aRotated = (a >> 1) | (bit0 << 7);
@@ -272,6 +283,7 @@ function get_rotated_rrc(n) {
 * Clock: 2T
 */
 function rrc_r(rIndex) {
+    CPU.tCycles += 2;
     const r = r8.get(rIndex);
     rRotated = get_rotated_rrc(r);
     r8.set(rIndex, rRotated);
@@ -286,6 +298,7 @@ function rrc_r(rIndex) {
 * Clock: 4T
 */
 function rrc_ptrHL() {
+    CPU.tCycles += 4;
     const hl = r16.get(i16.HL);
     const n = mem[hl];
     const nRotated = get_rotated_rrc(n);
@@ -302,6 +315,7 @@ function rrc_ptrHL() {
 * Clock: 6T
 */
 function rrc_ptrIXd(d) {
+    CPU.tCycles += 6;
     const ix = r16.get(i16.IX);
     const n = mem[ix + d];
     const nRotated = get_rotated_rrc(n);
@@ -318,6 +332,7 @@ function rrc_ptrIXd(d) {
 * Clock: 6T
 */
 function rrc_ptrIYd(d) {
+    CPU.tCycles += 6;
     const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     const nRotated = get_rotated_rrc(n);
@@ -333,6 +348,7 @@ function rrc_ptrIYd(d) {
 * Clock: 4T
 */
 function rra() {
+    CPU.tCycles += 4;
     const a = r8.get(i8.A);
     const bit0 = a & 1;
     const cf = flags.get(fi.C);
@@ -377,6 +393,7 @@ function get_rotated_rr(n) {
 * Clock: 2T
 */
 function rr_r(rIndex) {
+    CPU.tCycles += 2;
     const r = r8.get(rIndex);
     rRotated = get_rotated_rr(r);
     r8.set(rIndex, rRotated);
@@ -392,6 +409,7 @@ function rr_r(rIndex) {
 * Clock: 4T
 */
 function rr_ptrHL() {
+    CPU.tCycles += 4;
     const hl = r16.get(i16.HL);
     const n = mem[hl];
     const nRotated = get_rotated_rr(n);
@@ -408,6 +426,7 @@ function rr_ptrHL() {
 * Clock: 6T
 */
 function rr_ptrIXd(d) {
+    CPU.tCycles += 6;
     const ix = r16.get(i16.IX);
     const n = mem[ix + d];
     const nRotated = get_rotated_rr(n);
@@ -424,6 +443,7 @@ function rr_ptrIXd(d) {
 * Clock: 6T
 */
 function rr_ptrIYd(d) {
+    CPU.tCycles += 6;
     const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     const nRotated = get_rotated_rr(n);
@@ -435,7 +455,7 @@ function rr_ptrIYd(d) {
  * @param {number} n Byte
  * @returns {number} Byte rotated left
  */
- function get_shifted_sla(n) {
+function get_shifted_sla(n) {
     const bit7 = n >> 7;
     const nShifted = ((n << 1) & 0xff);
     const f = createFlags(
@@ -461,6 +481,7 @@ function rr_ptrIYd(d) {
 * Clock: 2T
 */
 function sla_r(rIndex) {
+    CPU.tCycles += 2;
     const r = r8.get(rIndex);
     const rShifted = get_shifted_sla(r);
     r8.set(rIndex, rShifted);
@@ -476,6 +497,7 @@ function sla_r(rIndex) {
 * Clock: 4T
 */
 function sla_ptrHL() {
+    CPU.tCycles += 4;
     const hl = r16.get(i16.HL);
     const n = mem[hl];
     const nShifted = get_shifted_sla(n);
@@ -492,6 +514,7 @@ function sla_ptrHL() {
 * Clock: 6T
 */
 function sla_ptrIXd(d) {
+    CPU.tCycles += 6;
     const ix = r16.get(i16.IX);
     const n = mem[ix + d];
     const nShifted = get_shifted_sla(n);
@@ -508,6 +531,7 @@ function sla_ptrIXd(d) {
 * Clock: 6T
 */
 function sla_ptrIYd(d) {
+    CPU.tCycles += 6;
     const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     const nShifted = get_shifted_sla(n);
@@ -519,7 +543,7 @@ function sla_ptrIYd(d) {
  * @param {number} n Byte
  * @returns {number} Byte shifted right
  */
- function get_shifted_sra(n) {
+function get_shifted_sra(n) {
     const bit7 = n >> 7;
     const bit0 = n & 1;
     const nShifted = (n >> 1) | (bit7 << 7);
@@ -546,6 +570,7 @@ function sla_ptrIYd(d) {
 * Clock: 2T
 */
 function sra_r(rIndex) {
+    CPU.tCycles += 2;
     const r = r8.get(rIndex);
     const rShifted = get_shifted_sra(r);
     r8.set(rIndex, rShifted);
@@ -561,6 +586,7 @@ function sra_r(rIndex) {
 * Clock: 4T
 */
 function sra_ptrHL() {
+    CPU.tCycles += 4;
     const hl = r16.get(i16.HL);
     const n = mem[hl];
     const nShifted = get_shifted_sra(n);
@@ -577,6 +603,7 @@ function sra_ptrHL() {
 * Clock: 6T
 */
 function sra_ptrIXd(d) {
+    CPU.tCycles += 6;
     const ix = r16.get(i16.IX);
     const n = mem[ix + d];
     const nShifted = get_shifted_sra(n);
@@ -593,6 +620,7 @@ function sra_ptrIXd(d) {
 * Clock: 6T
 */
 function sra_ptrIYd(d) {
+    CPU.tCycles += 6;
     const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     const nShifted = get_shifted_sra(n);
@@ -604,7 +632,7 @@ function sra_ptrIYd(d) {
  * @param {number} n Byte
  * @returns {number} Byte shifted right
  */
- function get_shifted_srl(n) {
+function get_shifted_srl(n) {
     const bit0 = n & 1;
     const nShifted = n >> 1;
     const f = createFlags(
@@ -630,6 +658,7 @@ function sra_ptrIYd(d) {
 * Clock: 2T
 */
 function srl_r(rIndex) {
+    CPU.tCycles += 2;
     const r = r8.get(rIndex);
     const rShifted = get_shifted_srl(r);
     r8.set(rIndex, rShifted);
@@ -645,6 +674,7 @@ function srl_r(rIndex) {
 * Clock: 4T
 */
 function srl_ptrHL() {
+    CPU.tCycles += 4;
     const hl = r16.get(i16.HL);
     const n = mem[hl];
     const nShifted = get_shifted_srl(n);
@@ -661,6 +691,7 @@ function srl_ptrHL() {
 * Clock: 6T
 */
 function srl_ptrIXd(d) {
+    CPU.tCycles += 6;
     const ix = r16.get(i16.IX);
     const n = mem[ix + d];
     const nShifted = get_shifted_srl(n);
@@ -677,6 +708,7 @@ function srl_ptrIXd(d) {
 * Clock: 6T
 */
 function srl_ptrIYd(d) {
+    CPU.tCycles += 6;
     const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     const nShifted = get_shifted_srl(n);
@@ -694,7 +726,8 @@ function srl_ptrIYd(d) {
 * of the high-order bits of the Accumulator are unaffected.
 * Clock: 18T
 */
-function rld() {    
+function rld() {
+    CPU.tCycles += 18;
     const hl = r16.get(i16.HL);
     let n = mem[hl];
     const nLow = n & 0xf;
@@ -705,7 +738,7 @@ function rld() {
     const aLow = a & 0xf;
     a = (a & 0xf0) | nHigh; // (*2)
     n = (n & 0xf0) | aLow; // (*3)
-    
+
     const f = createFlags(
         flags.get(fi.C),
         false,
@@ -718,7 +751,7 @@ function rld() {
     );
 
     r8.set(i8.F, f);
-    r8.set(i8.A, a);    
+    r8.set(i8.A, a);
     mem[hl] = n;
 }
 
@@ -733,7 +766,8 @@ function rld() {
 * Accumulator are unaffected.
 * Clock: 18T
 */
-function rrd() {    
+function rrd() {
+    CPU.tCycles += 18;
     const hl = r16.get(i16.HL);
 
     let n = mem[hl];
@@ -745,7 +779,7 @@ function rrd() {
     a = (a & 0xf0) | nLow;  // (*1)
     n = nLow | (aLow << 4); // (*2)
     n = (n & 0xf0) | nHigh; // (*3)
-    
+
     const f = createFlags(
         flags.get(fi.C),
         false,
@@ -758,7 +792,7 @@ function rrd() {
     );
 
     r8.set(i8.F, f);
-    r8.set(i8.A, a);    
+    r8.set(i8.A, a);
     mem[hl] = n;
 }
 
