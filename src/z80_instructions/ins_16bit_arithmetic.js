@@ -20,7 +20,6 @@ function createFlags(C, N, PV, F3, H, F5, Z, S) {
 * 
 * The contents of register pair ss (any of register pairs BC, DE, HL, or SP) are added to the
 * contents of register pair HL and the result is stored in HL.
-* Clock: 11T
 */
 function add_HL_ss(ssIndex) {
     CPU.tCycles = 11;    
@@ -46,7 +45,6 @@ function add_HL_ss(ssIndex) {
 * The contents of register pair ss (any of register pairs BC, DE, HL, or SP) are added with
 * the Carry flag (C flag in the F Register) to the contents of register pair HL, and the result is
 * stored in HL.
-* Clock: 15T
 */
 function adc_HL_ss(ssIndex) {
     CPU.tCycles = 15;
@@ -78,7 +76,6 @@ function adc_HL_ss(ssIndex) {
 * The contents of the register pair ss (any of register pairs BC, DE, HL, or SP) and the Carry
 * Flag (C flag in the F Register) are subtracted from the contents of register pair HL, and the
 * result is stored in HL.
-* Clock: 15T
 */
 function sbc_HL_ss(ssIndex) {
     CPU.tCycles = 15;
@@ -128,7 +125,6 @@ function add_II_XX(iiIndex, xxIndex) {
 * 
 * The contents of register pair pp (any of register pairs BC, DE, IX, or SP) are added to the
 * contents of Index Register IX, and the results are stored in IX.
-* Clock: 15T
 */
 function add_IX_pp(ppIndex) {
     CPU.tCycles = 15;
@@ -140,7 +136,6 @@ function add_IX_pp(ppIndex) {
 * 
 * The contents of register pair rr (any of register pairs BC, DE, IY, or SP) are added to the
 * contents of Index Register IY, and the result is stored in IY.
-* Clock: 15T
 */
 function add_IY_rr(rrIndex) {
     CPU.tCycles = 15;
@@ -151,7 +146,6 @@ function add_IY_rr(rrIndex) {
 * INC ss
 * 
 * The contents of register pair ss (any of register pairs BC, DE, HL, or SP) are incremented.
-* Clock: 6T
 */
 function inc_ss(ssIndex) {
     CPU.tCycles = 6;
@@ -165,7 +159,6 @@ function inc_ss(ssIndex) {
 * INC IX
 * 
 * The contents of register IX are incremented.
-* Clock: 10T
 */
 function inc_IX() {
     CPU.tCycles = 10;
@@ -176,7 +169,6 @@ function inc_IX() {
 * INC IY
 * 
 * The contents of register IY are incremented.
-* Clock: 10T
 */
 function inc_IY() {
     CPU.tCycles = 10;
@@ -187,7 +179,6 @@ function inc_IY() {
 * DEC ss
 * 
 * The contents of register pair ss (any of the register pairs BC, DE, HL, or SP) are decremented.
-* Clock: 6T
 */
 function dec_ss(ssIndex) {
     CPU.tCycles = 6;
@@ -201,7 +192,6 @@ function dec_ss(ssIndex) {
 * DEC IX
 * 
 * The contents of register pair IX are decremented.
-* Clock: 10T
 */
 function dec_IX() {
     CPU.tCycles = 10;
@@ -212,7 +202,6 @@ function dec_IX() {
 * DEC IY
 * 
 * The contents of register pair IY are decremented.
-* Clock: 10T
 */
 function dec_IY() {
     CPU.tCycles = 10;
