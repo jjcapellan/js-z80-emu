@@ -21,7 +21,12 @@ const i_input_output = require('./z80_instructions/ins_input_output');
 const i_data = require('./cpu.js');
 
 class Z80 {
-    constructor() {
+    /**
+     * 
+     * @param {number} clockSpeed Clock speed in Mhz
+     */
+    constructor(clockSpeed = 3.5) {
+        this.clockSpeed = clockSpeed;
         this.memory = memory;
         this.ports = ports;
         this.registers = registers;
