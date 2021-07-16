@@ -116,7 +116,7 @@ class Z80 {
 
     step() {
         const byte = this.getByte();
-        decoder.decode(this, byte);
+        decoder.decode(byte);
     }
 
     getPC() {
