@@ -20,6 +20,27 @@ const i_jump = require('./z80_instructions/ins_jump');
 const i_input_output = require('./z80_instructions/ins_input_output');
 const i_data = require('./cpu.js');
 
+const isNode = typeof process === 'object' &&
+    typeof process.versions === 'object' &&
+    typeof process.versions.node !== 'undefined';
+
+let hrt0 = 0; // for use only in node by hrtime
+
+
+const node_get_t0 = () => { console.log('t0');
+    hrt0 = process.hrtime();
+    return hrt0[1] / 1000; // microseconds (us)
+}
+const node_get_t1 = () => {
+    return process.hrtime(hrt0)[1] / 1000; // microseconds (us)
+}
+const browser_get_t0 = () => {
+    console.log('t0');
+    return performance.now() * 1000 // microseconds (us)
+}
+const browser_get_t1 = browser_get_t0;
+
+
 class Z80 {
     /**
      * 
@@ -29,6 +50,8 @@ class Z80 {
         this.clockSpeed = clockSpeed;
         this.cycleMicroseconds = 1 / clockSpeed;
         this.tCycles = 0; // Remaining T cycles for instruction use
+        this.get_t0 = isNode ? node_get_t0 : browser_get_t0;
+        this.get_t1 = isNode ? node_get_t1 : browser_get_t1;
         this.memory = memory;
         this.ports = ports;
         this.registers = registers;
