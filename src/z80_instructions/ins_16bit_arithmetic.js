@@ -5,9 +5,9 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-let r8, i8, r16, i16, flags, fi;
+let CPU, r8, i8, r16, i16, flags, fi;
 function setCPU(data) {
-    ({ r8, i8, r16, i16, flags, fi } = data);
+    ({ CPU, r8, i8, r16, i16, flags, fi } = data);
 }
 
 function createFlags(C, N, PV, F3, H, F5, Z, S) {
@@ -23,6 +23,7 @@ function createFlags(C, N, PV, F3, H, F5, Z, S) {
 * Clock: 11T
 */
 function add_HL_ss(ssIndex) {
+    CPU.tCycles = 11;    
     const ss = r16.get(ssIndex);
     const hl = r16.get(i16.HL);
     let f = r8.get(i8.F);
@@ -48,6 +49,7 @@ function add_HL_ss(ssIndex) {
 * Clock: 15T
 */
 function adc_HL_ss(ssIndex) {
+    CPU.tCycles = 15;
     const ss = r16.get(ssIndex);
     const hl = r16.get(i16.HL);
     const cf = flags.get(fi.C);
@@ -79,6 +81,7 @@ function adc_HL_ss(ssIndex) {
 * Clock: 15T
 */
 function sbc_HL_ss(ssIndex) {
+    CPU.tCycles = 15;
     const ss = r16.get(ssIndex);
     const hl = r16.get(i16.HL);
     const cf = flags.get(fi.C);
@@ -128,6 +131,7 @@ function add_II_XX(iiIndex, xxIndex) {
 * Clock: 15T
 */
 function add_IX_pp(ppIndex) {
+    CPU.tCycles = 15;
     add_II_XX(i16.IX, ppIndex);
 }
 
@@ -139,6 +143,7 @@ function add_IX_pp(ppIndex) {
 * Clock: 15T
 */
 function add_IY_rr(rrIndex) {
+    CPU.tCycles = 15;
     add_II_XX(i16.IY, rrIndex);
 }
 
@@ -149,6 +154,7 @@ function add_IY_rr(rrIndex) {
 * Clock: 6T
 */
 function inc_ss(ssIndex) {
+    CPU.tCycles = 6;
     const ss = r16.get(ssIndex);
     const sum = ss + 1;
     const result = sum & 0xffff;
@@ -162,6 +168,7 @@ function inc_ss(ssIndex) {
 * Clock: 10T
 */
 function inc_IX() {
+    CPU.tCycles = 10;
     inc_ss(i16.IX);
 }
 
@@ -172,6 +179,7 @@ function inc_IX() {
 * Clock: 10T
 */
 function inc_IY() {
+    CPU.tCycles = 10;
     inc_ss(i16.IY);
 }
 
@@ -182,6 +190,7 @@ function inc_IY() {
 * Clock: 6T
 */
 function dec_ss(ssIndex) {
+    CPU.tCycles = 6;
     const ss = r16.get(ssIndex);
     const sub = ss - 1;
     const result = sub & 0xffff;
@@ -195,6 +204,7 @@ function dec_ss(ssIndex) {
 * Clock: 10T
 */
 function dec_IX() {
+    CPU.tCycles = 10;
     dec_ss(i16.IX);
 }
 
@@ -205,6 +215,7 @@ function dec_IX() {
 * Clock: 10T
 */
 function dec_IY() {
+    CPU.tCycles = 10;
     dec_ss(i16.IY);
 }
 
