@@ -5,9 +5,9 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-let r8, i8, r16, i16, flags, fi;
+let CPU, r8, i8, r16, i16, flags, fi;
 function setCPU(data) {
-    ({ r8, i8, r16, i16, flags, fi} = data);
+    ({ CPU, r8, i8, r16, i16, flags, fi } = data);
 }
 
 /**
@@ -18,6 +18,7 @@ function setCPU(data) {
 * Clock: 10T
 */
 function jp_nn(nn) {
+    CPU.tCycles += 10;
     r16.set(i16.PC, nn);
 }
 
@@ -28,6 +29,7 @@ function jp_nn(nn) {
 * Clock: 10T
 */
 function jp_nz_nn(nn) {
+    CPU.tCycles += 10;
     if (!flags.get(fi.Z))
         r16.set(i16.PC, nn);
 }
@@ -39,6 +41,7 @@ function jp_nz_nn(nn) {
 * Clock: 10T
 */
 function jp_z_nn(nn) {
+    CPU.tCycles += 10;
     if (flags.get(fi.Z))
         r16.set(i16.PC, nn);
 }
@@ -50,6 +53,7 @@ function jp_z_nn(nn) {
 * Clock: 10T
 */
 function jp_nc_nn(nn) {
+    CPU.tCycles += 10;
     if (!flags.get(fi.C))
         r16.set(i16.PC, nn);
 }
@@ -61,6 +65,7 @@ function jp_nc_nn(nn) {
 * Clock: 10T
 */
 function jp_c_nn(nn) {
+    CPU.tCycles += 10;
     if (flags.get(fi.C))
         r16.set(i16.PC, nn);
 }
@@ -72,6 +77,7 @@ function jp_c_nn(nn) {
 * Clock: 10T
 */
 function jp_po_nn(nn) {
+    CPU.tCycles += 10;
     if (!flags.get(fi.PV))
         r16.set(i16.PC, nn);
 }
@@ -83,6 +89,7 @@ function jp_po_nn(nn) {
 * Clock: 10T
 */
 function jp_pe_nn(nn) {
+    CPU.tCycles += 10;
     if (flags.get(fi.PV))
         r16.set(i16.PC, nn);
 }
@@ -94,6 +101,7 @@ function jp_pe_nn(nn) {
 * Clock: 10T
 */
 function jp_p_nn(nn) {
+    CPU.tCycles += 10;
     if (!flags.get(fi.S))
         r16.set(i16.PC, nn);
 }
@@ -105,6 +113,7 @@ function jp_p_nn(nn) {
 * Clock: 10T
 */
 function jp_m_nn(nn) {
+    CPU.tCycles += 10;
     if (flags.get(fi.S))
         r16.set(i16.PC, nn);
 }
@@ -117,6 +126,7 @@ function jp_m_nn(nn) {
 * Clock: 4T
 */
 function jp_ptrHL() {
+    CPU.tCycles += 4;
     const hl = r16.get(i16.HL);
     r16.set(i16.PC, hl);
 }
@@ -129,6 +139,7 @@ function jp_ptrHL() {
 * Clock: 8T
 */
 function jp_ptrIX() {
+    CPU.tCycles += 8;
     const ix = r16.get(i16.IX);
     r16.set(i16.PC, ix);
 }
@@ -141,6 +152,7 @@ function jp_ptrIX() {
 * Clock: 8T
 */
 function jp_ptrIY() {
+    CPU.tCycles += 8;
     const iy = r16.get(i16.IY);
     r16.set(i16.PC, iy);
 }
@@ -155,6 +167,7 @@ function jp_ptrIY() {
 * Clock: 12T
 */
 function jr_e(e) {
+    CPU.tCycles += 12;
     r16.set(i16.PC, r16.get(i16.PC) + e);
 }
 
@@ -172,8 +185,11 @@ function jr_e(e) {
 * Clock: 12T (if condition is met)    7T (if condition is not met)
 */
 function jr_c_e(e) {
-    if (flags.get(fi.C))
+    CPU.tCycles += 7;
+    if (flags.get(fi.C)) {
+        CPU.tCycles += 5;
         r16.set(i16.PC, r16.get(i16.PC) + e);
+    }
 }
 
 /**
@@ -190,8 +206,11 @@ function jr_c_e(e) {
 * Clock: 12T (if condition is met)    7T (if condition is not met)
 */
 function jr_nc_e(e) {
-    if (!flags.get(fi.C))
+    CPU.tCycles += 7;
+    if (!flags.get(fi.C)) {
+        CPU.tCycles += 5;
         r16.set(i16.PC, r16.get(i16.PC) + e);
+    }
 }
 
 /**
@@ -208,8 +227,11 @@ function jr_nc_e(e) {
 * Clock: 12T (if condition is met)    7T (if condition is not met)
 */
 function jr_z_e(e) {
-    if (flags.get(fi.Z))
+    CPU.tCycles += 7;
+    if (flags.get(fi.Z)) {
+        CPU.tCycles += 5;
         r16.set(i16.PC, r16.get(i16.PC) + e);
+    }
 }
 
 /**
@@ -226,8 +248,11 @@ function jr_z_e(e) {
 * Clock: 12T (if condition is met)    7T (if condition is not met)
 */
 function jr_nz_e(e) {
-    if (!flags.get(fi.Z))
+    CPU.tCycles += 7;
+    if (!flags.get(fi.Z)) {
+        CPU.tCycles += 5;
         r16.set(i16.PC, r16.get(i16.PC) + e);
+    }
 }
 
 /**
@@ -241,13 +266,16 @@ function jr_nz_e(e) {
 * The assembler automatically adjusts for the twice incremented PC.
 * If the result of decrementing leaves B with a zero value, the next instruction executed is
 * taken from the location following this instruction.
-* Clock: 13T (if B == 0)    8T (if B != 0)
+* Clock: 13T (if B != 0)    8T (if B == 0)
 */
 function djnz_e(e) {
+    CPU.tCycles += 8;
     let b = r8.get(i8.B);
     r8.set(i8.B, b - 1);
-    if ((b - 1) != 0)
+    if ((b - 1) != 0) {
+        CPU.tCycles += 5;
         r16.set(i16.PC, r16.get(i16.PC) + e);
+    }
 }
 
 module.exports = {
