@@ -15,8 +15,7 @@ function setCPU(data) {
  * 
  * The 2-byte integer nn is loaded to the dd register pair, in which dd defines the BC, DE,
  * HL, or SP register pairs.
- * Clock: 10T
- */
+  */
 function ld_dd_nn(ddIndex, nn) {
     CPU.tCycles = 10;
     r16.set(ddIndex, nn);
@@ -27,8 +26,7 @@ function ld_dd_nn(ddIndex, nn) {
  * 
  * The n integer is loaded to Index Register IX. The first n operand after the op code is the
  * low-order byte.
- * Clock: 14T
- */
+  */
 function ld_IX_nn(nn) {
     CPU.tCycles = 14;
     r16.set(i16.IX, nn);
@@ -39,8 +37,7 @@ function ld_IX_nn(nn) {
  * 
  * The n integer is loaded to Index Register IY. The first n operand after the op code is the
  * low-order byte.
- * Clock: 14T
- */
+  */
 function ld_IY_nn(nn) {
     CPU.tCycles = 14;
     r16.set(i16.IY, nn);
@@ -53,8 +50,7 @@ function ld_IY_nn(nn) {
  * HL (Register L), and the contents of the next highest memory address (nn + 1) are loaded
  * to the high-order portion of HL (Register H). The first n operand after the op code is the
  * low-order byte of nn.
- * Clock: 16T
- */
+  */
 function ld_HL_ptrnn(ptrnn) {
     CPU.tCycles = 16;
     ld_dd_ptrnn(i16.HL, ptrnn);
@@ -66,8 +62,7 @@ function ld_HL_ptrnn(ptrnn) {
  * The contents of address (nn) are loaded to the low-order portion of register pair dd, and the
  * contents of the next highest memory address (nn + 1) are loaded to the high-order portion
  * of dd. Register pair dd defines BC, DE, HL, or SP register pairs.
- * Clock: 20T
- */
+  */
 function ld_dd_ptrnn(ddIndex, ptrnn) {
     CPU.tCycles = 20;
     const dHigh = mem[ptrnn + 1];
@@ -82,8 +77,7 @@ function ld_dd_ptrnn(ddIndex, ptrnn) {
  * The contents of the address (nn) are loaded to the low-order portion of Index Register IX,
  * and the contents of the next highest memory address (nn + 1) are loaded to the high-order
  * portion of IX. The first n operand after the op code is the low-order byte of nn.
- * Clock: 20T
- */
+  */
 function ld_IX_ptrnn(ptrnn) {
     CPU.tCycles = 20;
     ld_dd_ptrnn(i16.IX, ptrnn);
@@ -95,8 +89,7 @@ function ld_IX_ptrnn(ptrnn) {
  * The contents of the address (nn) are loaded to the low-order portion of Index Register IY,
  * and the contents of the next highest memory address (nn + 1) are loaded to the high-order
  * portion of IY. The first n operand after the op code is the low-order byte of nn.
- * Clock: 20T
- */
+  */
 function ld_IY_ptrnn(ptrnn) {
     CPU.tCycles = 20;
     ld_dd_ptrnn(i16.IY, ptrnn);
@@ -108,8 +101,7 @@ function ld_IY_ptrnn(ptrnn) {
  * The contents of the low-order portion of register pair HL (Register L) are loaded to memory address (nn), and the contents of the high-order portion of HL (Register H) are loaded
  * to the next highest memory address (nn + 1). The first n operand after the op code is the
  * low-order byte of nn.
- * Clock: 16T
- */
+  */
 function ld_ptrnn_HL(ptrnn) {
     CPU.tCycles = 16;
     mem[ptrnn] = r8.get(i8.L);
@@ -121,8 +113,7 @@ function ld_ptrnn_HL(ptrnn) {
  * 
  * The low-order byte of register pair dd is loaded to memory address (nn); the upper byte is
  * loaded to memory address (nn + 1). Register pair dd defines either BC, DE, HL, or SP.
- * Clock: 20T
- */
+  */
 function ld_ptrnn_dd(ddIndex, ptrnn) {
     CPU.tCycles = 20;
     const dd = r16.get(ddIndex);
@@ -136,8 +127,7 @@ function ld_ptrnn_dd(ddIndex, ptrnn) {
  * The low-order byte in Index Register IX is loaded to memory address (nn); the upper order
  * byte is loaded to the next highest address (nn + 1). The first n operand after the op code is
  * the low-order byte of nn.
- * Clock: 20T
- */
+  */
 function ld_ptrnn_IX(ptrnn) {
     CPU.tCycles = 20;
     ld_ptrnn_dd(i16.IX, ptrnn);
@@ -149,8 +139,7 @@ function ld_ptrnn_IX(ptrnn) {
  * The low-order byte in Index Register IY is loaded to memory address (nn); the upper order
  * byte is loaded to the next highest address (nn + 1). The first n operand after the op code is
  * the low-order byte of nn.
- * Clock: 20T
- */
+  */
 function ld_ptrnn_IY(ptrnn) {
     CPU.tCycles = 20;
     ld_ptrnn_dd(i16.IY, ptrnn);
@@ -160,8 +149,7 @@ function ld_ptrnn_IY(ptrnn) {
  * LD SP, HL
  * 
  * The contents of the register pair HL are loaded to the Stack Pointer (SP).
- * Clock: 6T
- */
+  */
 function ld_SP_HL() {
     CPU.tCycles = 6;
     r16.set(i16.SP, r16.get(i16.HL));
@@ -171,8 +159,7 @@ function ld_SP_HL() {
  * LD SP, IX
  * 
  * The 2-byte contents of Index Register IX are loaded to the Stack Pointer (SP)
- * Clock: 10T
- */
+  */
 function ld_SP_IX() {
     CPU.tCycles = 10;
     r16.set(i16.SP, r16.get(i16.IX));
@@ -182,8 +169,7 @@ function ld_SP_IX() {
  * LD SP, IY
  * 
  * The 2-byte contents of Index Register IY are loaded to the Stack Pointer (SP)
- * Clock: 10T
- */
+  */
 function ld_SP_IY() {
     CPU.tCycles = 10;
     r16.set(i16.SP, r16.get(i16.IY));
@@ -198,8 +184,7 @@ function ld_SP_IY() {
  * register pair qq to the memory address specified by the SP. The SP is decremented again and
  * loads the low-order byte of qq to the memory location corresponding to this new address
  * in the SP. The operand qq identifies register pair BC, DE, HL, or AF.
- * Clock: 11T
- */
+  */
 function push_qq(qqIndex) {
     CPU.tCycles = 11;
     const qq = r16.get(qqIndex);
@@ -219,8 +204,7 @@ function push_qq(qqIndex) {
  * top of the Stack. This instruction first decrements SP and loads the high-order byte of IX
  * to the memory address specified by SP; then decrements SP again and loads the low-order
  * byte to the memory location corresponding to this new address in SP.
- * Clock: 15T
- */
+  */
 function push_IX() {
     CPU.tCycles = 15;
     push_qq(i16.IX);
@@ -234,8 +218,7 @@ function push_IX() {
  * top of the Stack. This instruction first decrements the SP and loads the high-order byte of
  * IY to the memory address specified by SP; then decrements SP again and loads the loworder
  * byte to the memory location corresponding to this new address in SP.
- * Clock: 15T
- */
+  */
 function push_IY() {
     CPU.tCycles = 15;
     push_qq(i16.IY);
@@ -251,8 +234,7 @@ function push_IY() {
  * the corresponding adjacent memory location are loaded to the high-order portion
  * of qq and the SP is now incremented again. The operand qq identifies register pair BC,
  * DE, HL, or AF.
- * Clock: 10T
- */
+  */
 function pop_qq(qqIndex) {
     CPU.tCycles = 10;
     let qq = 0;
@@ -274,8 +256,7 @@ function pop_qq(qqIndex) {
  * at the memory location corresponding to the contents of SP; then SP is incremented and
  * the contents of the corresponding adjacent memory location are loaded to the high-order
  * portion of IX. The SP is incremented again.
- * Clock: 14T
- */
+  */
 function pop_IX() {
     CPU.tCycles = 14;
     pop_qq(i16.IX);
@@ -290,8 +271,7 @@ function pop_IX() {
  * at the memory location corresponding to the contents of SP; then SP is incremented and
  * the contents of the corresponding adjacent memory location are loaded to the high-order
  * portion of IY. The SP is incremented again.
- * Clock: 14T
- */
+  */
 function pop_IY() {
     CPU.tCycles = 14;
     pop_qq(i16.IY);
