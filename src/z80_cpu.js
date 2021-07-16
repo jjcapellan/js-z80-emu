@@ -27,18 +27,18 @@ const isNode = typeof process === 'object' &&
 let hrt0 = 0; // for use only in node by hrtime
 
 
-const node_get_t0 = () => { console.log('t0');
-    hrt0 = process.hrtime();
-    return hrt0[1] / 1000; // microseconds (us)
+const node_set_t0 = () => {
+    hrt0 = process.hrtime(); // [seconds, nanoseconds]
 }
-const node_get_t1 = () => {
+const node_get_delta = () => {
     return process.hrtime(hrt0)[1] / 1000; // microseconds (us)
 }
-const browser_get_t0 = () => {
-    console.log('t0');
-    return performance.now() * 1000 // microseconds (us)
+const browser_set_t0 = () => {
+    hrt0 = performance.now(); // milliseconds (ms)
 }
-const browser_get_t1 = browser_get_t0;
+const browser_get_delta = () => {
+    return (performance.now() - hrt0) * 1000; // microseconds (us)
+};
 
 
 class Z80 {
@@ -50,8 +50,8 @@ class Z80 {
         this.clockSpeed = clockSpeed;
         this.cycleMicroseconds = 1 / clockSpeed;
         this.tCycles = 0; // Remaining T cycles for instruction use
-        this.get_t0 = isNode ? node_get_t0 : browser_get_t0;
-        this.get_t1 = isNode ? node_get_t1 : browser_get_t1;
+        this.set_t0 = isNode ? node_set_t0 : browser_set_t0;
+        this.get_delta = isNode ? node_get_delta : browser_get_delta;
         this.memory = memory;
         this.ports = ports;
         this.registers = registers;
@@ -115,12 +115,19 @@ class Z80 {
     }
 
     step() {
-        const byte = this.getByte();
-        decoder.decode(byte);
-    }
+        let delta, waitTime;
+        this.tCycles = 0;
 
-    getPC() {
-        // TODO
+        const byte = this.getByte();
+
+        this.set_t0();
+        decoder.decode(byte);
+
+        delta = this.get_delta();
+        waitTime = ((this.tCycles * this.cycleMicroseconds) - delta) / 1000; // (ms)
+        waitTime = (waitTime < 0) ? 0 : waitTime;
+
+        setTimeout(step, waitTime);
     }
 }
 
