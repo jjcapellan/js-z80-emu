@@ -28,6 +28,7 @@ class Z80 {
     constructor(clockSpeed = 3.5) {
         this.clockSpeed = clockSpeed;
         this.cycleMicroseconds = 1 / clockSpeed;
+        this.tCycles = 0; // Remaining T cycles for instruction use
         this.memory = memory;
         this.ports = ports;
         this.registers = registers;
