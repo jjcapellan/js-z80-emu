@@ -15,8 +15,7 @@ function setCPU(data) {
  * 
  * The contents of any register r' are loaded to any other register r. r, r' identifies any of the
  * registers A, B, C, D, E, H, or L.
- * Clock: 4T
- */
+  */
 function ld_r_r2(rIndex, r2Index) {
     CPU.tCycles = 4;
     const r2 = r8.get(r2Index);
@@ -29,8 +28,7 @@ function ld_r_r2(rIndex, r2Index) {
  * 
  * The 8-bit integer n is loaded to any register r, in which r identifies registers A, B, C, D, E,
  * H, or L.
- * Clock: 7T
- */
+  */
 function ld_r_n(rIndex, n) {
     CPU.tCycles = 7;
     r8.set(rIndex, n);
@@ -41,8 +39,7 @@ function ld_r_n(rIndex, n) {
  * 
  * The 8-bit contents of memory location (HL) are loaded to register r, in which r identifies
  * registers A, B, C, D, E, H, or L
- * Clock: 7T
- */
+  */
 function ld_r_ptrHL(rIndex) {
     CPU.tCycles = 7;
     const ptrHLcontent = mem[r16.get(i16.HL)];
@@ -55,8 +52,7 @@ function ld_r_ptrHL(rIndex) {
  * The (IX+d) operand (i.e., the contents of Index Register IX summed with two’s-complement 
  * displacement integer d) is loaded to register r, in which r identifies registers A, B, C,
  * D, E, H, or L
- * Clock: 19T
- */
+  */
 function ld_r_ptrIXd(rIndex, d) {
     CPU.tCycles = 19;
     const ptr = r16.get(i16.IX) + d;
@@ -70,8 +66,7 @@ function ld_r_ptrIXd(rIndex, d) {
  * The (IY+d) operand (i.e., the contents of Index Register IY summed with two’s-complement 
  * displacement integer d) is loaded to register r, in which r identifies registers A, B, C,
  * D, E, H, or L
- * Clock: 19T
- */
+  */
 function ld_r_ptrIYd(rIndex, d) {
     CPU.tCycles = 19;
     const ptr = r16.get(i16.IY) + d;
@@ -84,8 +79,7 @@ function ld_r_ptrIYd(rIndex, d) {
  * 
  * The contents of register r are loaded to the memory location specified by the contents of
  * the HL register pair. The r symbol identifies registers A, B, C, D, E, H, or L.
- * Clock: 7T
- */
+  */
 function ld_ptrHL_r(rIndex) {
     CPU.tCycles = 7;
     const ptr = r16.get(i16.HL);
@@ -98,8 +92,7 @@ function ld_ptrHL_r(rIndex) {
  * The contents of register r are loaded to the memory address specified by the contents of
  * Index Register IX summed with d, a two’s-complement displacement integer. 
  * The r symbol identifies registers A, B, C, D, E, H, or L.
- * Clock: 19T
- */
+  */
 function ld_ptrIXd_r(rIndex, d) {
     CPU.tCycles = 19;
     const ptr = r16.get(i16.IX) + d;
@@ -112,8 +105,7 @@ function ld_ptrIXd_r(rIndex, d) {
  * The contents of register r are loaded to the memory address specified by the contents of
  * Index Register IY summed with d, a two’s-complement displacement integer. 
  * The r symbol identifies registers A, B, C, D, E, H, or L.
- * Clock: 19T
- */
+  */
 function ld_ptrIYd_r(rIndex, d) {
     CPU.tCycles = 19;
     const ptr = r16.get(i16.IY) + d;
@@ -125,8 +117,7 @@ function ld_ptrIYd_r(rIndex, d) {
  * 
  * The n integer is loaded to the memory address specified by the contents of the HL register
  * pair.
- * Clock: 10T
- */
+  */
 function ld_ptrHL_n(n) {
     CPU.tCycles = 10;
     const ptr = r16.get(i16.HL);
@@ -138,8 +129,7 @@ function ld_ptrHL_n(n) {
  * 
  * The n operand is loaded to the memory address specified by the sum of Index Register IX
  * and the two’s complement displacement operand d.
- * Clock: 19T
- */
+  */
 function ld_ptrIXd_n(n, d) {
     CPU.tCycles = 19;
     const ptr = r16.get(i16.IX) + d;
@@ -151,8 +141,7 @@ function ld_ptrIXd_n(n, d) {
  * 
  * The n operand is loaded to the memory address specified by the sum of Index Register IY
  * and the two’s complement displacement operand d.
- * Clock: 19T
- */
+  */
 function ld_ptrIYd_n(n, d) {
     CPU.tCycles = 19;
     const ptr = r16.get(i16.IY) + d;
@@ -164,8 +153,7 @@ function ld_ptrIYd_n(n, d) {
  * 
  * The contents of the memory location specified by the contents of the BC register pair are
  * loaded to the Accumulator.
- * Clock: 7T
- */
+  */
 function ld_A_ptrBC() {
     CPU.tCycles = 7;
     const ptr = r16.get(i16.BC);
@@ -177,8 +165,7 @@ function ld_A_ptrBC() {
  * 
  * The contents of the memory location specified by the contents of the DE register pair are
  * loaded to the Accumulator.
- * Clock: 7T
- */
+  */
 function ld_A_ptrDE() {
     CPU.tCycles = 7;
     const ptr = r16.get(i16.DE);
@@ -190,8 +177,7 @@ function ld_A_ptrDE() {
  * 
  * The contents of the memory location specified by the operands nn are loaded to the Accumulator.
  * The first n operand after the op code is the low-order byte of a 2-byte memory address.
- * Clock: 13T
- */
+  */
 function ld_A_ptrnn(nn) {
     CPU.tCycles = 13;
     r8.set(i8.A, mem[nn]);
@@ -202,8 +188,7 @@ function ld_A_ptrnn(nn) {
  * 
  * The contents of the Accumulator are loaded to the memory location specified by the contents 
  * of the register pair BC.
- * Clock: 7T
- */
+  */
 function ld_ptrBC_A() {
     CPU.tCycles = 7;
     const ptr = r16.get(i16.BC);
@@ -216,8 +201,7 @@ function ld_ptrBC_A() {
  * 
  * The contents of the Accumulator are loaded to the memory location specified by the contents 
  * of the register pair DE.
- * Clock: 7T
- */
+  */
 function ld_ptrDE_A() {
     CPU.tCycles = 7;
     const ptr = r16.get(i16.DE);
@@ -230,8 +214,7 @@ function ld_ptrDE_A() {
  * 
  * The contents of the Accumulator are loaded to the memory address specified by the operand nn.
  * The first n operand after the op code is the low-order byte of nn.
- * Clock: 13T
- */
+  */
 function ld_ptrnn_A(nn) {
     CPU.tCycles = 13;
     mem[nn] = r8.get(i8.A);
@@ -256,8 +239,7 @@ function ld_A_X(xIndex) {
  * LD A, I
  * 
  * The contents of the Interrupt Vector Register I are loaded to the Accumulator.
- * Clock: 9T
- */
+  */
 function ld_A_I() {
     CPU.tCycles = 9;
     ld_A_X(i8.I);
@@ -267,8 +249,7 @@ function ld_A_I() {
  * LD A, R
  * 
  * The contents of Memory Refresh Register R are loaded to the Accumulator
- * Clock: 9T
- */
+  */
 function ld_A_R() {
     CPU.tCycles = 9;
     ld_A_X(i8.R);
@@ -278,8 +259,7 @@ function ld_A_R() {
  * LD I, A
  * 
  * The contents of the Accumulator are loaded to the Interrupt Control Vector Register, I
- * Clock: 9T
- */
+  */
 function ld_I_A() {
     CPU.tCycles = 9;
     r8.set(i8.I, r8.get(i8.A));
@@ -289,8 +269,7 @@ function ld_I_A() {
  * LD R, A
  * 
  * The contents of the Accumulator are loaded to the Memory Refresh register R.
- * Clock: 9T
- */
+  */
 function ld_R_A() {
     CPU.tCycles = 9;
     r8.set(i8.R, r8.get(i8.A));
