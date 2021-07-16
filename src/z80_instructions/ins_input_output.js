@@ -27,6 +27,7 @@ function createFlags(C, N, PV, F3, H, F5, Z, S) {
 * Clock: 11T
 */
 function in_A_n(n) {
+    CPU.tCycles += 11;
     const a = r8.get(i8.A);
     r8.set(i8.A, ports[a * 256 + n]);
 }
@@ -43,6 +44,7 @@ function in_A_n(n) {
 * Clock: 12T
 */
 function in_r_C(rIndex) {
+    CPU.tCycles += 12;
     const bc = r16.get(i16.BC);
     const n = ports[bc];
     r8.set(rIndex, n);
@@ -104,6 +106,7 @@ function in_id(_isDec) {
 * Clock: 16T
 */
 function ini() {
+    CPU.tCycles += 16;
     in_id(false);
 }
 
@@ -117,9 +120,12 @@ function ini() {
 function inir() {
     const b = r8.get(i8.B);
 
-    ini();
+    ini(); // 16 tCycles
 
-    if ((b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
+    if ((b - 1) != 0) {
+        CPU.tCycles += 5;
+        r16.set(i16.PC, r16.get(i16.PC) - 2);
+    }
 }
 
 /**
@@ -130,6 +136,7 @@ function inir() {
 * Clock: 16T
 */
 function ind() {
+    CPU.tCycles += 16;
     in_id(true);
 }
 
@@ -143,9 +150,12 @@ function ind() {
 function indr() {
     const b = r8.get(i8.B);
 
-    ind();
+    ind(); // 16 tCycles
 
-    if ((b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
+    if ((b - 1) != 0) {
+        CPU.tCycles += 5;
+        r16.set(i16.PC, r16.get(i16.PC) - 2);
+    }
 }
 
 /**
@@ -153,6 +163,7 @@ function indr() {
 * Clock: 11T
 */
 function out_n_A(n) {
+    CPU.tCycles += 11;
     const a = r8.get(i8.A);
     const port = a * 256 + n;
     ports[port] = a;
@@ -163,6 +174,7 @@ function out_n_A(n) {
 * Clock: 12T
 */
 function out_C_r(rIndex) {
+    CPU.tCycles += 12;
     const bc = r16.get(i16.BC);
     const value = r8.get(rIndex);
     ports[bc] = value;
@@ -214,6 +226,7 @@ function out_id(_isDec) {
 * Clock: 16T
 */
 function outi() {
+    CPU.tCycles += 16;
     out_id(false);
 }
 
@@ -227,9 +240,12 @@ function outi() {
 function otir() {
     const b = r8.get(i8.B);
 
-    outi();
+    outi(); // 16 tCycles
 
-    if ((b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
+    if ((b - 1) != 0) {
+        CPU.tCycles += 5;
+        r16.set(i16.PC, r16.get(i16.PC) - 2);
+    }
 }
 
 /**
@@ -239,6 +255,7 @@ function otir() {
 * Clock: 16T
 */
 function outd() {
+    CPU.tCycles += 16;
     out_id(true);
 }
 
@@ -252,9 +269,12 @@ function outd() {
 function outdr() {
     const b = r8.get(i8.B);
 
-    outd();
+    outd(); // 16 tCycles
 
-    if ((b - 1) != 0) r16.set(i16.PC, r16.get(i16.PC) - 2);
+    if ((b - 1) != 0) {
+        CPU.tCycles += 5;
+        r16.set(i16.PC, r16.get(i16.PC) - 2);
+    }
 }
 
 module.exports = {
