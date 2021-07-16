@@ -14,8 +14,7 @@ function setCPU(data){
 * ADD A, r
 * 
 * The contents of register r are added to the contents of the Accumulator, and the result is
-* stored in the Accumulator. The r symbol identifies the registers A, B, C, D, E, H, or L,
-* Clock: 4T
+* stored in the Accumulator. The r symbol identifies the registers A, B, C, D, E, H, or L.
 */
 function add_A_r(rIndex) {
     CPU.tCycles = 4;
@@ -31,7 +30,6 @@ function add_A_r(rIndex) {
 * 
 * The n integer is added to the contents of the Accumulator, and the results are stored in the
 * Accumulator.
-* Clock: 7T
 */
 function add_A_n(n) {
     CPU.tCycles = 7;
@@ -58,7 +56,6 @@ function add_A_ptrXXplusd(xxIndex, d) {
 * 
 * The byte at the memory address specified by the contents of the HL register pair is added
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
-* Clock: 7T
 */
 function add_A_ptrHL() {
     CPU.tCycles = 7;
@@ -71,7 +68,6 @@ function add_A_ptrHL() {
 * The contents of the Index (register pair IX) Register is added to a two’s 
 * complement displacement d to point to an address in memory. The contents of this address is then added to
 * the contents of the Accumulator and the result is stored in the Accumulator.
-* Clock: 19T
 */
 function add_A_ptrIXplusd(d) {
     CPU.tCycles = 19;
@@ -84,7 +80,6 @@ function add_A_ptrIXplusd(d) {
 * The contents of the Index (register pair IY) Register is added to a two’s 
 * complement displacement d to point to an address in memory. The contents of this address is then added to
 * the contents of the Accumulator, and the result is stored in the Accumulator.
-* Clock: 19T
 */
 function add_A_ptrIYplusd(d) {
     CPU.tCycles = 19;
@@ -96,7 +91,6 @@ function add_A_ptrIYplusd(d) {
 * 
 * The r operand, along with the Carry Flag (C in the F Register) is added to the contents of
 * the Accumulator, and the result is stored in the Accumulator.
-* Clock: 4T
 */
 function adc_A_r(rIndex) {
     CPU.tCycles = 4;
@@ -114,7 +108,6 @@ function adc_A_r(rIndex) {
 * 
 * The n operand, along with the Carry Flag (C in the F Register) is added to the contents of
 * the Accumulator, and the result is stored in the Accumulator.
-* Clock: 7T
 */
 function adc_A_n(n) {
     CPU.tCycles = 7;
@@ -144,7 +137,6 @@ function adc_A_ptrXXplusd(xxIndex, d) {
 * 
 * The content of memory address (HL), along with the Carry Flag (C in the F Register) is added to the contents of
 * the Accumulator, and the result is stored in the Accumulator.
-* Clock: 7T
 */
 function adc_A_ptrHL() {
     CPU.tCycles = 7;
@@ -156,7 +148,6 @@ function adc_A_ptrHL() {
 * 
 * The content of memory address(IX + d), along with the Carry Flag (C in the F Register) is added to the contents of
 * the Accumulator, and the result is stored in the Accumulator.
-* Clock: 19T
 */
 function adc_A_ptrIXplusd(d) {
     CPU.tCycles = 19;
@@ -168,7 +159,6 @@ function adc_A_ptrIXplusd(d) {
 * 
 * The content of memory address(IY + d), along with the Carry Flag (C in the F Register) is added to the contents of
 * the Accumulator, and the result is stored in the Accumulator.
-* Clock: 19T
 */
 function adc_A_ptrIYplusd(d) {
     CPU.tCycles = 19;
@@ -180,7 +170,6 @@ function adc_A_ptrIYplusd(d) {
 * 
 * The contents of register r are substracted to the contents of the Accumulator, and the result is
 * stored in the Accumulator. The r symbol identifies the registers A, B, C, D, E, H, or L,
-* Clock: 4T
 */
 function sub_A_r(rIndex) {
     CPU.tCycles = 4;
@@ -196,7 +185,6 @@ function sub_A_r(rIndex) {
 * 
 * The n integer is substracted to the contents of the Accumulator, and the results are stored in the
 * Accumulator.
-* Clock: 7T
 */
 function sub_A_n(n) {
     CPU.tCycles = 7;
@@ -223,7 +211,6 @@ function sub_A_ptrXXplusd(xxIndex, d) {
 * 
 * The byte at the memory address specified by the contents of the HL register pair is substracted
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
-* Clock: 7T
 */
 function sub_A_ptrHL() {
     CPU.tCycles = 7;
@@ -236,7 +223,6 @@ function sub_A_ptrHL() {
 * The contents of the Index (register pair IX) Register is added to a two’s 
 * complement displacement d to point to an address in memory. The contents of this address is then substracted 
 * to the contents of the Accumulator and the result is stored in the Accumulator.
-* Clock: 19T
 */
 function sub_A_ptrIXplusd(d) {
     CPU.tCycles = 19;
@@ -249,7 +235,6 @@ function sub_A_ptrIXplusd(d) {
 * The contents of the Index (register pair IY) Register is added to a two’s 
 * complement displacement d to point to an address in memory. The contents of this address is then substracted
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
-* Clock: 19T
 */
 function sub_A_ptrIYplusd(d) {
     CPU.tCycles = 19;
@@ -261,7 +246,6 @@ function sub_A_ptrIYplusd(d) {
 * 
 * The r operand, along with the Carry Flag (C in the F Register) is substracted to the contents of
 * the Accumulator, and the result is stored in the Accumulator.
-* Clock: 4T
 */
 function sbc_A_r(rIndex) {
     CPU.tCycles = 4;
@@ -279,7 +263,6 @@ function sbc_A_r(rIndex) {
 * 
 * The n operand, along with the Carry Flag (C in the F Register) is substracted to the contents of
 * the Accumulator, and the result is stored in the Accumulator.
-* Clock: 7T
 */
 function sbc_A_n(n) {
     CPU.tCycles = 7;
@@ -309,7 +292,6 @@ function sbc_A_ptrXXplusd(xxIndex, d) {
 * 
 * The content of memory address (HL), along with the Carry Flag (C in the F Register) is substracted to the contents of
 * the Accumulator, and the result is stored in the Accumulator.
-* Clock: 7T
 */
 function sbc_A_ptrHL() {
     CPU.tCycles = 7;
@@ -321,7 +303,6 @@ function sbc_A_ptrHL() {
 * 
 * The content of memory address(IX + d), along with the Carry Flag (C in the F Register) is substracted 
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
-* Clock: 19T
 */
 function sbc_A_ptrIXplusd(d) {
     CPU.tCycles = 19;
@@ -333,7 +314,6 @@ function sbc_A_ptrIXplusd(d) {
 * 
 * The content of memory address(IY + d), along with the Carry Flag (C in the F Register) is substracted 
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
-* Clock: 19T
 */
 function sbc_A_ptrIYplusd(d) {
     CPU.tCycles = 19;
@@ -346,7 +326,6 @@ function sbc_A_ptrIYplusd(d) {
 * A logical AND operation is performed between the byte specified by the register r and the
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 * r identifies registers B, C, D, E, H, L, or A.
-* Clock: 4T
 */
 function and_r(rIndex) {
     CPU.tCycles = 4;
@@ -362,7 +341,6 @@ function and_r(rIndex) {
 * 
 * A logical AND operation is performed between 8bit integer n and the
 * byte contained in the Accumulator; the result is stored in the Accumulator.
-* Clock: 7T
 */
 function and_n(n) {
     CPU.tCycles = 7;
@@ -389,7 +367,6 @@ function and_ptrXXplusd(xxIndex, d) {
 * 
 * A logical AND operation is performed between the byte located at HL memory address and the
 * byte contained in the Accumulator; the result is stored in the Accumulator.
-* Clock: 7T
 */
 function and_ptrHL() {
     CPU.tCycles = 7;
@@ -401,7 +378,6 @@ function and_ptrHL() {
 * 
 * A logical AND operation is performed between the byte located at (IX + d) memory address and the
 * byte contained in the Accumulator; the result is stored in the Accumulator.
-* Clock: 19T
 */
 function and_ptrIXplusd(d) {
     CPU.tCycles = 19;
@@ -413,7 +389,6 @@ function and_ptrIXplusd(d) {
 * 
 * A logical AND operation is performed between the byte located at (IY + d) memory address and the
 * byte contained in the Accumulator; the result is stored in the Accumulator.
-* Clock: 19T
 */
 function and_ptrIYplusd(d) {
     CPU.tCycles = 19;
@@ -426,7 +401,6 @@ function and_ptrIYplusd(d) {
 * A logical OR operation is performed between the byte specified by register r and the
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 * r identifies registers B, C, D, E, H, L, or A.
-* Clock: 4T
 */
 function or_r(rIndex) {
     CPU.tCycles = 4;
@@ -442,7 +416,6 @@ function or_r(rIndex) {
 * 
 * A logical OR operation is performed between the byte n and the
 * byte contained in the Accumulator; the result is stored in the Accumulator.
-* Clock: 7T
 */
 function or_n(n) {
     CPU.tCycles = 7;
@@ -469,7 +442,6 @@ function or_ptrXXplusd(xxIndex, d) {
 * 
 * A logical OR operation is performed between the byte located at HL memory address and the
 * byte contained in the Accumulator; the result is stored in the Accumulator.
-* Clock: 7T
 */
 function or_ptrHL() {
     CPU.tCycles = 7;
@@ -481,7 +453,6 @@ function or_ptrHL() {
 * 
 * A logical OR operation is performed between the byte located at (IX + d) memory address and the
 * byte contained in the Accumulator; the result is stored in the Accumulator.
-* Clock: 19T
 */
 function or_ptrIXplusd(d) {
     CPU.tCycles = 19;
@@ -493,7 +464,6 @@ function or_ptrIXplusd(d) {
 * 
 * A logical OR operation is performed between the byte located at (IY + d) memory address and the
 * byte contained in the Accumulator; the result is stored in the Accumulator.
-* Clock: 19T
 */
 function or_ptrIYplusd(d) {
     CPU.tCycles = 19;
@@ -506,7 +476,6 @@ function or_ptrIYplusd(d) {
 * A logical XOR operation is performed between the byte specified by register r and the
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 * r identifies registers B, C, D, E, H, L, or A.
-* Clock: 4T
 */
 function xor_r(rIndex) {
     CPU.tCycles = 4;
@@ -522,7 +491,6 @@ function xor_r(rIndex) {
 * 
 * A logical XOR operation is performed between the byte n and the
 * byte contained in the Accumulator; the result is stored in the Accumulator.
-* Clock: 7T
 */
 function xor_n(n) {
     CPU.tCycles = 7;
@@ -549,7 +517,6 @@ function xor_ptrXXplusd(xxIndex, d) {
 * 
 * A logical XOR operation is performed between the byte located at HL memory address and the
 * byte contained in the Accumulator; the result is stored in the Accumulator.
-* Clock: 7T
 */
 function xor_ptrHL() {
     CPU.tCycles = 7;
@@ -561,7 +528,6 @@ function xor_ptrHL() {
 * 
 * A logical XOR operation is performed between the byte located at (IX + d) memory address and the
 * byte contained in the Accumulator; the result is stored in the Accumulator.
-* Clock: 19T
 */
 function xor_ptrIXplusd(d) {
     CPU.tCycles = 19;
@@ -573,7 +539,6 @@ function xor_ptrIXplusd(d) {
 * 
 * A logical XOR operation is performed between the byte located at (IY + d) memory address and the
 * byte contained in the Accumulator; the result is stored in the Accumulator.
-* Clock: 19T
 */
 function xor_ptrIYplusd(d) {
     CPU.tCycles = 19;
@@ -586,7 +551,6 @@ function xor_ptrIYplusd(d) {
 * The contents of the register r operand are compared with the contents of the Accumulator. If there
 * is a true compare, the Z flag is set. The execution of this instruction does not affect the
 * contents of the Accumulator. r identifies registers B, C, D, E, H, L, or A.
-* Clock: 4T
 */
 function cp_r(rIndex) {
     CPU.tCycles = 4;
@@ -603,7 +567,6 @@ function cp_r(rIndex) {
 * The 8bit number n is compared with the contents of the Accumulator. If there
 * is a true compare, the Z flag is set. The execution of this instruction does not affect the
 * contents of the Accumulator.
-* Clock: 7T
 */
 function cp_n(n) {
     CPU.tCycles = 7;
@@ -630,7 +593,6 @@ function cp_ptrXXplusd(xxIndex, d) {
 * The content of HL memory address is compared with the contents of the Accumulator. If there
 * is a true compare, the Z flag is set. The execution of this instruction does not affect the
 * contents of the Accumulator.
-* Clock: 7T
 */
 function cp_ptrHL() {
     CPU.tCycles = 7;
@@ -643,7 +605,6 @@ function cp_ptrHL() {
 * The content of (IX + d) memory address is compared with the contents of the Accumulator. If there
 * is a true compare, the Z flag is set. The execution of this instruction does not affect the
 * contents of the Accumulator.
-* Clock: 19T
 */
 function cp_ptrIXplusd(d) {
     CPU.tCycles = 19;
@@ -656,7 +617,6 @@ function cp_ptrIXplusd(d) {
 * The content of (IY + d) memory address is compared with the contents of the Accumulator. If there
 * is a true compare, the Z flag is set. The execution of this instruction does not affect the
 * contents of the Accumulator.
-* Clock: 19T
 */
 function cp_ptrIYplusd(d) {
     CPU.tCycles = 19;
@@ -678,7 +638,6 @@ function setFlagsIncDec(n, VLimit) {
 * INC r
 * 
 * Register r is incremented and register r identifies any of the registers A, B, C, D, E, H, or L.
-* Clock: 4T
 */
 function inc_r(rIndex) {
     CPU.tCycles = 4;
@@ -691,7 +650,6 @@ function inc_r(rIndex) {
 * INC (HL)
 * 
 * The byte contained in the address specified by the contents of the HL register pair is incremented.
-* Clock: 11T
 */
 function inc_ptrHL() {
     CPU.tCycles = 11;
@@ -705,7 +663,6 @@ function inc_ptrHL() {
 * INC (IX + d)
 * 
 * The byte contained in the address specified by the contents of (IX + d) is incremented.
-* Clock: 23T
 */
 function inc_ptrIXplusd(d) {
     CPU.tCycles = 23;
@@ -719,7 +676,6 @@ function inc_ptrIXplusd(d) {
 * INC (IY + d)
 * 
 * The byte contained in the address specified by the contents of (IY + d) is incremented.
-* Clock: 23T
 */
 function inc_ptrIYplusd(d) {
     CPU.tCycles = 23;
@@ -733,7 +689,6 @@ function inc_ptrIYplusd(d) {
 * DEC r
 * 
 * Register r is decremented and register r identifies any of the registers A, B, C, D, E, H, or L.
-* Clock: 4T
 */
 function dec_r(rIndex) {
     CPU.tCycles = 4;
@@ -746,7 +701,6 @@ function dec_r(rIndex) {
 * DEC (HL)
 * 
 * The byte contained in the address specified by the contents of the HL register pair is decremented.
-* Clock: 11T
 */
 function dec_ptrHL() {
     CPU.tCycles = 11;
@@ -760,7 +714,6 @@ function dec_ptrHL() {
 * DEC (IX + d)
 * 
 * The byte contained in the address specified by the contents of (IX + d) is decremented.
-* Clock: 23T
 */
 function dec_ptrIXplusd(d) {
     CPU.tCycles = 23;
@@ -774,7 +727,6 @@ function dec_ptrIXplusd(d) {
 * DEC (IY + d)
 * 
 * The byte contained in the address specified by the contents of (IY + d) is incremented.
-* Clock: 23T
 */
 function dec_ptrIYplusd(d) {
     CPU.tCycles = 23;
