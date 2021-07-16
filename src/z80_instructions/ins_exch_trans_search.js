@@ -5,9 +5,9 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-let r8, i8, r16, i16, flags, fi, mem;
+let CPU, r8, i8, r16, i16, flags, fi, mem;
 function setCPU(data) {
-    ({ r8, i8, r16, i16, flags, fi, mem } = data);
+    ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data);
 }
 
 /**
@@ -17,6 +17,7 @@ function setCPU(data) {
  * Clock: 4T
  */
 function ex_DE_HL() {
+    CPU.tCycles += 4;
     const de = r16.get(i16.DE);
     const hl = r16.get(i16.HL);
     r16.set(i16.DE, hl);
@@ -31,6 +32,7 @@ function ex_DE_HL() {
  * Clock: 4T
  */
 function ex_AF_AF2() {
+    CPU.tCycles += 4;
     const af = r16.get(i16.AF);
     const af2 = r16.get(i16.AF, true);
     r16.set(i16.AF, af2);
@@ -45,6 +47,7 @@ function ex_AF_AF2() {
  * Clock: 4T
  */
 function exx() {
+    CPU.tCycles += 4;
     const bc = r16.get(i16.BC);
     const de = r16.get(i16.DE);
     const hl = r16.get(i16.HL);
@@ -82,6 +85,7 @@ function ex_ptrSP_XX(xxIndex) {
  * Clock: 19T
  */
 function ex_ptrSP_HL() {
+    CPU.tCycles += 19;
     ex_ptrSP_XX(i16.HL);
 }
 
@@ -94,6 +98,7 @@ function ex_ptrSP_HL() {
  * Clock: 23T
  */
 function ex_ptrSP_IX() {
+    CPU.tCycles += 23;
     ex_ptrSP_XX(i16.IX);
 }
 
@@ -106,6 +111,7 @@ function ex_ptrSP_IX() {
  * Clock: 23T
  */
 function ex_ptrSP_IY() {
+    CPU.tCycles += 23;
     ex_ptrSP_XX(i16.IY);
 }
 
@@ -119,6 +125,7 @@ function ex_ptrSP_IY() {
  * Clock: 16T
  */
 function ldi() {
+    CPU.tCycles += 16;
 
     let hl = r16.get(i16.HL);
     let de = r16.get(i16.DE);
@@ -152,10 +159,11 @@ function ldir() {
     let bc = r16.get(i16.BC);
     let pc = r16.get(i16.PC);
 
-    ldi();
+    ldi(); // 16 tCycles
 
     // Repeat condition
-    if ((bc - 1) == 0) {
+    if ((bc - 1) != 0) {
+        CPU.tCycles += 5;
         pc -= 2;
         r16.set(i16.PC, pc);
     }
@@ -171,6 +179,7 @@ function ldir() {
  * Clock: 16T
  */
 function ldd(bucle = false) {
+    CPU.tCycles += 16;
 
     let hl = r16.get(i16.HL);
     let de = r16.get(i16.DE);
@@ -198,16 +207,17 @@ function ldd(bucle = false) {
  * the program counter is decremented by two and the instruction is repeated. Interrupts are
  * recognized and two refresh cycles execute after each data transfer.
  * When the BC is set to 0, prior to instruction execution, the instruction loops through 64 KB.
- * Clock: 21T (BC != 0); 22T (BC == 0)
+ * Clock: 21T (BC != 0); 16T (BC == 0)
  */
 function lddr() {
     let bc = r16.get(i16.BC);
     let pc = r16.get(i16.PC);
 
-    ldd(true);
+    ldd(true); // 16 tCycles
 
     // Repeat condition
-    if ((bc - 1) == 0) {
+    if ((bc - 1) != 0) {
+        CPU.tCycles += 5;
         pc -= 2;
         r16.set(i16.PC, pc);
     }
@@ -223,6 +233,7 @@ contents of the Accumulator. With a true compare, a condition bit is set. Then H
  * Clock: 16T
  */
 function cpi() {
+    CPU.tCycles += 16;
 
     const a = r8.get(i8.A);
     let hl = r16.get(i16.HL);
@@ -264,6 +275,7 @@ function cpir() {
     const bc = r16.get(i16.BC);
 
     if (bc != 0 && diff != 0) {
+        CPU.tCycles += 5;
         pc -= 2;
         r16.set(i16.PC, pc);
     }
@@ -276,9 +288,10 @@ function cpir() {
  * The contents of the memory location addressed by the HL register pair is compared with
  * the contents of the Accumulator. During a compare operation, a condition bit is set. The
  * HL and Byte Counter (register pair BC) are decremented.
- * Clock: 21T (BC != 0 && A != (HL)); 16T (BC == 0 || A ==(HL))
+ * Clock: 16T
  */
 function cpd() {
+    CPU.tCycles += 16;
 
     const a = r8.get(i8.A);
     let hl = r16.get(i16.HL);
@@ -307,7 +320,7 @@ function cpd() {
  * program counter is decremented by two and the instruction is repeated. Interrupts are 
  * recognized and two refresh cycles execute after each data transfer. When the BC is set to 0,
  * prior to instruction execution, the instruction loops through 64 KB if no match is found
- * Clock: 16T
+ * Clock: 21T  16T
  */
 function cpdr() {
 
@@ -315,10 +328,11 @@ function cpdr() {
     const hl = r16.get(i16.HL);
     const diff = a - mem[hl];
     let pc = r16.get(i16.PC);
-    cpd();
+    cpd(); // 16 tCycles
     const bc = r16.get(i16.BC);
 
     if (bc != 0 && diff != 0) {
+        CPU.tCycles += 5;
         pc -= 2;
         r16.set(i16.PC, pc);
     }
