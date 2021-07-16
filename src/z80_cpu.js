@@ -52,6 +52,7 @@ class Z80 {
         this.tCycles = 0; // Remaining T cycles for instruction use
         this.set_t0 = isNode ? node_set_t0 : browser_set_t0;
         this.get_delta = isNode ? node_get_delta : browser_get_delta;
+        this.instructionTimer = 0;
         this.memory = memory;
         this.ports = ports;
         this.registers = registers;
@@ -114,6 +115,10 @@ class Z80 {
         return this.memory[pc - 1];
     }
 
+    exit() {
+        clearTimeout(this.instructionTimer);
+    }
+
     step() {
         let delta, waitTime;
         this.tCycles = 0;
@@ -127,7 +132,7 @@ class Z80 {
         waitTime = ((this.tCycles * this.cycleMicroseconds) - delta) / 1000; // (ms)
         waitTime = (waitTime < 0) ? 0 : waitTime;
 
-        setTimeout(step, waitTime);
+        this.instructionTimer = setTimeout(step, waitTime);
     }
 }
 
