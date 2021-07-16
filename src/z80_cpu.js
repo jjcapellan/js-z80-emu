@@ -27,6 +27,7 @@ class Z80 {
      */
     constructor(clockSpeed = 3.5) {
         this.clockSpeed = clockSpeed;
+        this.cycleMicroseconds = 1 / clockSpeed;
         this.memory = memory;
         this.ports = ports;
         this.registers = registers;
@@ -34,7 +35,7 @@ class Z80 {
         this.interruptMode = 0;
 
         let addFlagsArray = flagTables.generateAddFlagsArray();
-        let subFlagsArray =flagTables.generateSubFlagsArray();
+        let subFlagsArray = flagTables.generateSubFlagsArray();
         let parityArray = flagTables.generateParityArray();
         let andFlagsArray = flagTables.generateAndFlagsArray();
         let orFlagsArray = flagTables.generateOrFlagsArray();
@@ -49,11 +50,11 @@ class Z80 {
             daaTable: daaArray,
             parityTable: parityArray
         };
-        
+
         i_data.setData(this);
 
         decoder.setCPU(i_data.z80);
-        
+
         i_8bit_arithm.setCPU(i_data.z80);
         i_16bit_arithm.setCPU(i_data.z80);
         i_8bit_load.setCPU(i_data.z80);
@@ -81,7 +82,7 @@ class Z80 {
      * Returns a byte from memory and increments PC by one.
      * @returns byte from memory address PC
      */
-    getByte(){
+    getByte() {
         const r16 = this.registers.regs16;
         let pc = r16.get(r16.idx.PC);
         pc++;
@@ -91,7 +92,7 @@ class Z80 {
 
     step() {
         const byte = this.getByte();
-        decoder.decode(this, byte);        
+        decoder.decode(this, byte);
     }
 
     getPC() {
