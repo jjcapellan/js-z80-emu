@@ -17,7 +17,7 @@ function setCPU(data){
 * stored in the Accumulator. The r symbol identifies the registers A, B, C, D, E, H, or L.
 */
 function add_A_r(rIndex) {
-    CPU.tCycles = 4;
+    CPU.tCycles += 4;
     const r = r8.get(rIndex);
     const a = r8.get(i8.A);
     r8.set(i8.A, a + r);
@@ -32,7 +32,7 @@ function add_A_r(rIndex) {
 * Accumulator.
 */
 function add_A_n(n) {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     const a = r8.get(i8.A);
     r8.set(i8.A, a + n);
     let f = CPU.tables.addFlagsTable[(a << 8) | n];
@@ -58,7 +58,7 @@ function add_A_ptrXXplusd(xxIndex, d) {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 */
 function add_A_ptrHL() {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     add_A_ptrXXplusd(i16.HL, 0);
 }
 
@@ -70,7 +70,7 @@ function add_A_ptrHL() {
 * the contents of the Accumulator and the result is stored in the Accumulator.
 */
 function add_A_ptrIXplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     add_A_ptrXXplusd(i16.IX, d);
 }
 
@@ -82,7 +82,7 @@ function add_A_ptrIXplusd(d) {
 * the contents of the Accumulator, and the result is stored in the Accumulator.
 */
 function add_A_ptrIYplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     add_A_ptrXXplusd(i16.IY, d);
 }
 
@@ -93,7 +93,7 @@ function add_A_ptrIYplusd(d) {
 * the Accumulator, and the result is stored in the Accumulator.
 */
 function adc_A_r(rIndex) {
-    CPU.tCycles = 4;
+    CPU.tCycles += 4;
     const c = flags.get(fi.C);
     const r = r8.get(rIndex);
     const a = r8.get(i8.A);
@@ -110,7 +110,7 @@ function adc_A_r(rIndex) {
 * the Accumulator, and the result is stored in the Accumulator.
 */
 function adc_A_n(n) {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     const c = flags.get(fi.C);
     const a = r8.get(i8.A);
     n += c;
@@ -139,7 +139,7 @@ function adc_A_ptrXXplusd(xxIndex, d) {
 * the Accumulator, and the result is stored in the Accumulator.
 */
 function adc_A_ptrHL() {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     adc_A_ptrXXplusd(i16.HL, 0);
 }
 
@@ -150,7 +150,7 @@ function adc_A_ptrHL() {
 * the Accumulator, and the result is stored in the Accumulator.
 */
 function adc_A_ptrIXplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     adc_A_ptrXXplusd(i16.IX, d);
 }
 
@@ -161,7 +161,7 @@ function adc_A_ptrIXplusd(d) {
 * the Accumulator, and the result is stored in the Accumulator.
 */
 function adc_A_ptrIYplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     adc_A_ptrXXplusd(i16.IY, d);
 }
 
@@ -172,7 +172,7 @@ function adc_A_ptrIYplusd(d) {
 * stored in the Accumulator. The r symbol identifies the registers A, B, C, D, E, H, or L,
 */
 function sub_A_r(rIndex) {
-    CPU.tCycles = 4;
+    CPU.tCycles += 4;
     const r = r8.get(rIndex);
     const a = r8.get(i8.A);
     r8.set(i8.A, a - r);
@@ -187,7 +187,7 @@ function sub_A_r(rIndex) {
 * Accumulator.
 */
 function sub_A_n(n) {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     const a = r8.get(i8.A);
     r8.set(i8.A, a - n);
     let f = CPU.tables.subFlagsTable[(a << 8) | n];
@@ -213,7 +213,7 @@ function sub_A_ptrXXplusd(xxIndex, d) {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 */
 function sub_A_ptrHL() {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     sub_A_ptrXXplusd(i16.HL, 0);
 }
 
@@ -225,7 +225,7 @@ function sub_A_ptrHL() {
 * to the contents of the Accumulator and the result is stored in the Accumulator.
 */
 function sub_A_ptrIXplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     sub_A_ptrXXplusd(i16.IX, d);
 }
 
@@ -237,7 +237,7 @@ function sub_A_ptrIXplusd(d) {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 */
 function sub_A_ptrIYplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     sub_A_ptrXXplusd(i16.IY, d);
 }
 
@@ -248,7 +248,7 @@ function sub_A_ptrIYplusd(d) {
 * the Accumulator, and the result is stored in the Accumulator.
 */
 function sbc_A_r(rIndex) {
-    CPU.tCycles = 4;
+    CPU.tCycles += 4;
     const c = flags.get(fi.C);
     const r = r8.get(rIndex);
     const a = r8.get(i8.A);
@@ -265,7 +265,7 @@ function sbc_A_r(rIndex) {
 * the Accumulator, and the result is stored in the Accumulator.
 */
 function sbc_A_n(n) {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     const c = flags.get(fi.C);
     const a = r8.get(i8.A);
     n += c;
@@ -294,7 +294,7 @@ function sbc_A_ptrXXplusd(xxIndex, d) {
 * the Accumulator, and the result is stored in the Accumulator.
 */
 function sbc_A_ptrHL() {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     sbc_A_ptrXXplusd(i16.HL, 0);
 }
 
@@ -305,7 +305,7 @@ function sbc_A_ptrHL() {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 */
 function sbc_A_ptrIXplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     sbc_A_ptrXXplusd(i16.IX, d);
 }
 
@@ -316,7 +316,7 @@ function sbc_A_ptrIXplusd(d) {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 */
 function sbc_A_ptrIYplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     sbc_A_ptrXXplusd(i16.IY, d);
 }
 
@@ -328,7 +328,7 @@ function sbc_A_ptrIYplusd(d) {
 * r identifies registers B, C, D, E, H, L, or A.
 */
 function and_r(rIndex) {
-    CPU.tCycles = 4;
+    CPU.tCycles += 4;
     const a = r8.get(i8.A);
     const r = r8.get(rIndex);
     let f = CPU.tables.andFlagsTable[(a << 8) | r];
@@ -343,7 +343,7 @@ function and_r(rIndex) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function and_n(n) {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     const a = r8.get(i8.A);
     let f = CPU.tables.andFlagsTable[(a << 8) | n];
     r8.set(i8.F, f);
@@ -369,7 +369,7 @@ function and_ptrXXplusd(xxIndex, d) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function and_ptrHL() {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     and_ptrXXplusd(i16.HL, 0);
 }
 
@@ -380,7 +380,7 @@ function and_ptrHL() {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function and_ptrIXplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     and_ptrXXplusd(i16.IX, d);
 }
 
@@ -391,7 +391,7 @@ function and_ptrIXplusd(d) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function and_ptrIYplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     and_ptrXXplusd(i16.IY, d);
 }
 
@@ -403,7 +403,7 @@ function and_ptrIYplusd(d) {
 * r identifies registers B, C, D, E, H, L, or A.
 */
 function or_r(rIndex) {
-    CPU.tCycles = 4;
+    CPU.tCycles += 4;
     const a = r8.get(i8.A);
     const r = r8.get(rIndex);
     let f = CPU.tables.orFlagsTable[(a << 8) | r];
@@ -418,7 +418,7 @@ function or_r(rIndex) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function or_n(n) {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     const a = r8.get(i8.A);
     let f = CPU.tables.orFlagsTable[(a << 8) | n];
     r8.set(i8.F, f);
@@ -444,7 +444,7 @@ function or_ptrXXplusd(xxIndex, d) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function or_ptrHL() {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     or_ptrXXplusd(i16.HL, 0);
 }
 
@@ -455,7 +455,7 @@ function or_ptrHL() {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function or_ptrIXplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     or_ptrXXplusd(i16.IX, d);
 }
 
@@ -466,7 +466,7 @@ function or_ptrIXplusd(d) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function or_ptrIYplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     or_ptrXXplusd(i16.IY, d);
 }
 
@@ -478,7 +478,7 @@ function or_ptrIYplusd(d) {
 * r identifies registers B, C, D, E, H, L, or A.
 */
 function xor_r(rIndex) {
-    CPU.tCycles = 4;
+    CPU.tCycles += 4;
     const a = r8.get(i8.A);
     const r = r8.get(rIndex);
     let f = CPU.tables.xorFlagsTable[(a << 8) | r];
@@ -493,7 +493,7 @@ function xor_r(rIndex) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function xor_n(n) {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     const a = r8.get(i8.A);
     let f = CPU.tables.xorFlagsTable[(a << 8) | n];
     r8.set(i8.F, f);
@@ -519,7 +519,7 @@ function xor_ptrXXplusd(xxIndex, d) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function xor_ptrHL() {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     xor_ptrXXplusd(i16.HL, 0);
 }
 
@@ -530,7 +530,7 @@ function xor_ptrHL() {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function xor_ptrIXplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     xor_ptrXXplusd(i16.IX, d);
 }
 
@@ -541,7 +541,7 @@ function xor_ptrIXplusd(d) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function xor_ptrIYplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     xor_ptrXXplusd(i16.IY, d);
 }
 
@@ -553,7 +553,7 @@ function xor_ptrIYplusd(d) {
 * contents of the Accumulator. r identifies registers B, C, D, E, H, L, or A.
 */
 function cp_r(rIndex) {
-    CPU.tCycles = 4;
+    CPU.tCycles += 4;
     const r = r8.get(rIndex);
     const a = r8.get(i8.A);
     let f = CPU.tables.subFlagsTable[(a << 8) | r];
@@ -569,7 +569,7 @@ function cp_r(rIndex) {
 * contents of the Accumulator.
 */
 function cp_n(n) {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     const a = r8.get(i8.A);
     let f = CPU.tables.subFlagsTable[(a << 8) | n];
     f = (f & 0b11010111) | (n & 0b00101000); // Overwrites flags F3 and F5 from operand r
@@ -595,7 +595,7 @@ function cp_ptrXXplusd(xxIndex, d) {
 * contents of the Accumulator.
 */
 function cp_ptrHL() {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     cp_ptrXXplusd(i16.HL, 0);
 }
 
@@ -607,7 +607,7 @@ function cp_ptrHL() {
 * contents of the Accumulator.
 */
 function cp_ptrIXplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     cp_ptrXXplusd(i16.IX, d);
 }
 
@@ -619,7 +619,7 @@ function cp_ptrIXplusd(d) {
 * contents of the Accumulator.
 */
 function cp_ptrIYplusd(d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     cp_ptrXXplusd(i16.IY, d);
 }
 
@@ -640,7 +640,7 @@ function setFlagsIncDec(n, VLimit) {
 * Register r is incremented and register r identifies any of the registers A, B, C, D, E, H, or L.
 */
 function inc_r(rIndex) {
-    CPU.tCycles = 4;
+    CPU.tCycles += 4;
     const r = r8.get(rIndex);
     setFlagsIncDec(r, 0x7f);
     r8.set(rIndex, r + 1);
@@ -652,7 +652,7 @@ function inc_r(rIndex) {
 * The byte contained in the address specified by the contents of the HL register pair is incremented.
 */
 function inc_ptrHL() {
-    CPU.tCycles = 11;
+    CPU.tCycles += 11;
     const hl = r16.get(i16.HL);
     const n = mem[hl];
     setFlagsIncDec(n, 0x7f);
@@ -665,7 +665,7 @@ function inc_ptrHL() {
 * The byte contained in the address specified by the contents of (IX + d) is incremented.
 */
 function inc_ptrIXplusd(d) {
-    CPU.tCycles = 23;
+    CPU.tCycles += 23;
     const ix = r16.get(i16.IX);
     const n = mem[ix + d];
     setFlagsIncDec(n, 0x7f);
@@ -678,7 +678,7 @@ function inc_ptrIXplusd(d) {
 * The byte contained in the address specified by the contents of (IY + d) is incremented.
 */
 function inc_ptrIYplusd(d) {
-    CPU.tCycles = 23;
+    CPU.tCycles += 23;
     const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     setFlagsIncDec(n, 0x7f);
@@ -691,7 +691,7 @@ function inc_ptrIYplusd(d) {
 * Register r is decremented and register r identifies any of the registers A, B, C, D, E, H, or L.
 */
 function dec_r(rIndex) {
-    CPU.tCycles = 4;
+    CPU.tCycles += 4;
     const r = r8.get(rIndex);
     setFlagsIncDec(r, 0x80);
     r8.set(rIndex, r - 1);
@@ -703,7 +703,7 @@ function dec_r(rIndex) {
 * The byte contained in the address specified by the contents of the HL register pair is decremented.
 */
 function dec_ptrHL() {
-    CPU.tCycles = 11;
+    CPU.tCycles += 11;
     const hl = r16.get(i16.HL);
     const n = mem[hl];
     setFlagsIncDec(n, 0x80);
@@ -716,7 +716,7 @@ function dec_ptrHL() {
 * The byte contained in the address specified by the contents of (IX + d) is decremented.
 */
 function dec_ptrIXplusd(d) {
-    CPU.tCycles = 23;
+    CPU.tCycles += 23;
     const ix = r16.get(i16.IX);
     const n = mem[ix + d];
     setFlagsIncDec(n, 0x80);
@@ -729,7 +729,7 @@ function dec_ptrIXplusd(d) {
 * The byte contained in the address specified by the contents of (IY + d) is incremented.
 */
 function dec_ptrIYplusd(d) {
-    CPU.tCycles = 23;
+    CPU.tCycles += 23;
     const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     setFlagsIncDec(n, 0x80);

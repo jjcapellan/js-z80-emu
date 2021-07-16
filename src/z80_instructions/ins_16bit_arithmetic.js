@@ -22,7 +22,7 @@ function createFlags(C, N, PV, F3, H, F5, Z, S) {
 * contents of register pair HL and the result is stored in HL.
 */
 function add_HL_ss(ssIndex) {
-    CPU.tCycles = 11;    
+    CPU.tCycles += 11;    
     const ss = r16.get(ssIndex);
     const hl = r16.get(i16.HL);
     let f = r8.get(i8.F);
@@ -47,7 +47,7 @@ function add_HL_ss(ssIndex) {
 * stored in HL.
 */
 function adc_HL_ss(ssIndex) {
-    CPU.tCycles = 15;
+    CPU.tCycles += 15;
     const ss = r16.get(ssIndex);
     const hl = r16.get(i16.HL);
     const cf = flags.get(fi.C);
@@ -78,7 +78,7 @@ function adc_HL_ss(ssIndex) {
 * result is stored in HL.
 */
 function sbc_HL_ss(ssIndex) {
-    CPU.tCycles = 15;
+    CPU.tCycles += 15;
     const ss = r16.get(ssIndex);
     const hl = r16.get(i16.HL);
     const cf = flags.get(fi.C);
@@ -127,7 +127,7 @@ function add_II_XX(iiIndex, xxIndex) {
 * contents of Index Register IX, and the results are stored in IX.
 */
 function add_IX_pp(ppIndex) {
-    CPU.tCycles = 15;
+    CPU.tCycles += 15;
     add_II_XX(i16.IX, ppIndex);
 }
 
@@ -138,7 +138,7 @@ function add_IX_pp(ppIndex) {
 * contents of Index Register IY, and the result is stored in IY.
 */
 function add_IY_rr(rrIndex) {
-    CPU.tCycles = 15;
+    CPU.tCycles += 15;
     add_II_XX(i16.IY, rrIndex);
 }
 
@@ -148,7 +148,7 @@ function add_IY_rr(rrIndex) {
 * The contents of register pair ss (any of register pairs BC, DE, HL, or SP) are incremented.
 */
 function inc_ss(ssIndex) {
-    CPU.tCycles = 6;
+    CPU.tCycles += 6;
     const ss = r16.get(ssIndex);
     const sum = ss + 1;
     const result = sum & 0xffff;
@@ -161,7 +161,7 @@ function inc_ss(ssIndex) {
 * The contents of register IX are incremented.
 */
 function inc_IX() {
-    CPU.tCycles = 10;
+    CPU.tCycles += 10;
     inc_ss(i16.IX);
 }
 
@@ -171,7 +171,7 @@ function inc_IX() {
 * The contents of register IY are incremented.
 */
 function inc_IY() {
-    CPU.tCycles = 10;
+    CPU.tCycles += 10;
     inc_ss(i16.IY);
 }
 
@@ -181,7 +181,7 @@ function inc_IY() {
 * The contents of register pair ss (any of the register pairs BC, DE, HL, or SP) are decremented.
 */
 function dec_ss(ssIndex) {
-    CPU.tCycles = 6;
+    CPU.tCycles += 6;
     const ss = r16.get(ssIndex);
     const sub = ss - 1;
     const result = sub & 0xffff;
@@ -194,7 +194,7 @@ function dec_ss(ssIndex) {
 * The contents of register pair IX are decremented.
 */
 function dec_IX() {
-    CPU.tCycles = 10;
+    CPU.tCycles += 10;
     dec_ss(i16.IX);
 }
 
@@ -204,7 +204,7 @@ function dec_IX() {
 * The contents of register pair IY are decremented.
 */
 function dec_IY() {
-    CPU.tCycles = 10;
+    CPU.tCycles += 10;
     dec_ss(i16.IY);
 }
 

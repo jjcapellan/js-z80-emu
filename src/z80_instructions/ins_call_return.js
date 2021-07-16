@@ -145,7 +145,7 @@ function ret() {
 function ret_nz() {
     CPU.tCycles += 5;
     if (!flags.get(fi.Z)) {
-        CPU.tCycles =+ 1;
+        CPU.tCycles += 1;
         ret(); // 10 tCycles
     }
 }

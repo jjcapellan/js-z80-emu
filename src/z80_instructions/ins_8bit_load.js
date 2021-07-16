@@ -17,7 +17,7 @@ function setCPU(data) {
  * registers A, B, C, D, E, H, or L.
   */
 function ld_r_r2(rIndex, r2Index) {
-    CPU.tCycles = 4;
+    CPU.tCycles += 4;
     const r2 = r8.get(r2Index);
     r8.set(rIndex, r2);
 }
@@ -30,7 +30,7 @@ function ld_r_r2(rIndex, r2Index) {
  * H, or L.
   */
 function ld_r_n(rIndex, n) {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     r8.set(rIndex, n);
 }
 
@@ -41,7 +41,7 @@ function ld_r_n(rIndex, n) {
  * registers A, B, C, D, E, H, or L
   */
 function ld_r_ptrHL(rIndex) {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     const ptrHLcontent = mem[r16.get(i16.HL)];
     r8.set(rIndex, ptrHLcontent);
 }
@@ -54,7 +54,7 @@ function ld_r_ptrHL(rIndex) {
  * D, E, H, or L
   */
 function ld_r_ptrIXd(rIndex, d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     const ptr = r16.get(i16.IX) + d;
     const ptrContent = mem[ptr];
     r8.set(rIndex, ptrContent);
@@ -68,7 +68,7 @@ function ld_r_ptrIXd(rIndex, d) {
  * D, E, H, or L
   */
 function ld_r_ptrIYd(rIndex, d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     const ptr = r16.get(i16.IY) + d;
     const ptrContent = mem[ptr];
     r8.set(rIndex, ptrContent);
@@ -81,7 +81,7 @@ function ld_r_ptrIYd(rIndex, d) {
  * the HL register pair. The r symbol identifies registers A, B, C, D, E, H, or L.
   */
 function ld_ptrHL_r(rIndex) {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     const ptr = r16.get(i16.HL);
     mem[ptr] = r8.get(rIndex);
 }
@@ -94,7 +94,7 @@ function ld_ptrHL_r(rIndex) {
  * The r symbol identifies registers A, B, C, D, E, H, or L.
   */
 function ld_ptrIXd_r(rIndex, d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     const ptr = r16.get(i16.IX) + d;
     mem[ptr] = r8.get(rIndex);
 }
@@ -107,7 +107,7 @@ function ld_ptrIXd_r(rIndex, d) {
  * The r symbol identifies registers A, B, C, D, E, H, or L.
   */
 function ld_ptrIYd_r(rIndex, d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     const ptr = r16.get(i16.IY) + d;
     mem[ptr] = r8.get(rIndex);
 }
@@ -119,7 +119,7 @@ function ld_ptrIYd_r(rIndex, d) {
  * pair.
   */
 function ld_ptrHL_n(n) {
-    CPU.tCycles = 10;
+    CPU.tCycles += 10;
     const ptr = r16.get(i16.HL);
     mem[ptr] = n;
 }
@@ -131,7 +131,7 @@ function ld_ptrHL_n(n) {
  * and the two’s complement displacement operand d.
   */
 function ld_ptrIXd_n(n, d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     const ptr = r16.get(i16.IX) + d;
     mem[ptr] = n;
 }
@@ -143,7 +143,7 @@ function ld_ptrIXd_n(n, d) {
  * and the two’s complement displacement operand d.
   */
 function ld_ptrIYd_n(n, d) {
-    CPU.tCycles = 19;
+    CPU.tCycles += 19;
     const ptr = r16.get(i16.IY) + d;
     mem[ptr] = n;
 }
@@ -155,7 +155,7 @@ function ld_ptrIYd_n(n, d) {
  * loaded to the Accumulator.
   */
 function ld_A_ptrBC() {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     const ptr = r16.get(i16.BC);
     r8.set(i8.A, mem[ptr]);
 }
@@ -167,7 +167,7 @@ function ld_A_ptrBC() {
  * loaded to the Accumulator.
   */
 function ld_A_ptrDE() {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     const ptr = r16.get(i16.DE);
     r8.set(i8.A, mem[ptr]);
 }
@@ -179,7 +179,7 @@ function ld_A_ptrDE() {
  * The first n operand after the op code is the low-order byte of a 2-byte memory address.
   */
 function ld_A_ptrnn(nn) {
-    CPU.tCycles = 13;
+    CPU.tCycles += 13;
     r8.set(i8.A, mem[nn]);
 }
 
@@ -190,7 +190,7 @@ function ld_A_ptrnn(nn) {
  * of the register pair BC.
   */
 function ld_ptrBC_A() {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     const ptr = r16.get(i16.BC);
     const a = r8.get(i8.A);
     mem[ptr] = a;
@@ -203,7 +203,7 @@ function ld_ptrBC_A() {
  * of the register pair DE.
   */
 function ld_ptrDE_A() {
-    CPU.tCycles = 7;
+    CPU.tCycles += 7;
     const ptr = r16.get(i16.DE);
     const a = r8.get(i8.A);
     mem[ptr] = a;
@@ -216,7 +216,7 @@ function ld_ptrDE_A() {
  * The first n operand after the op code is the low-order byte of nn.
   */
 function ld_ptrnn_A(nn) {
-    CPU.tCycles = 13;
+    CPU.tCycles += 13;
     mem[nn] = r8.get(i8.A);
 }
 
@@ -241,7 +241,7 @@ function ld_A_X(xIndex) {
  * The contents of the Interrupt Vector Register I are loaded to the Accumulator.
   */
 function ld_A_I() {
-    CPU.tCycles = 9;
+    CPU.tCycles += 9;
     ld_A_X(i8.I);
 }
 
@@ -251,7 +251,7 @@ function ld_A_I() {
  * The contents of Memory Refresh Register R are loaded to the Accumulator
   */
 function ld_A_R() {
-    CPU.tCycles = 9;
+    CPU.tCycles += 9;
     ld_A_X(i8.R);
 }
 
@@ -261,7 +261,7 @@ function ld_A_R() {
  * The contents of the Accumulator are loaded to the Interrupt Control Vector Register, I
   */
 function ld_I_A() {
-    CPU.tCycles = 9;
+    CPU.tCycles += 9;
     r8.set(i8.I, r8.get(i8.A));
 }
 
@@ -271,7 +271,7 @@ function ld_I_A() {
  * The contents of the Accumulator are loaded to the Memory Refresh register R.
   */
 function ld_R_A() {
-    CPU.tCycles = 9;
+    CPU.tCycles += 9;
     r8.set(i8.R, r8.get(i8.A));
 }
 

@@ -23,7 +23,7 @@ function createFlags(C, N, PV, F3, H, F5, Z, S) {
 * This instruction tests bit b in register r and sets the Z flag accordingly.
 */
 function bit_b_r(b, rIndex) {
-    CPU.tCyles = 8;
+    CPU.tCycles += 8;
     const r = r8.get(rIndex);
     const z = ((r & (1 << b)) == 0) ? true : false;
     let f = createFlags(
@@ -46,7 +46,7 @@ function bit_b_r(b, rIndex) {
 * of the HL register pair and sets the Z flag accordingly.
 */
 function bit_b_ptrHL(b) {
-    CPU.tCyles = 12;
+    CPU.tCycles += 12;
     const hl = r16.get(i16.HL);
     const n = mem[hl];
     const z = ((n & (1 << b)) == 0) ? true : false;
@@ -70,7 +70,7 @@ function bit_b_ptrHL(b) {
 * IX combined with the two’s complement displacement d and sets the Z flag accordingly.
 */
 function bit_b_ptrIXplusd(b, d) {
-    CPU.tCyles = 20;
+    CPU.tCycles += 20;
     const ix = r16.get(i16.IX);
     const n = mem[ix + d];
     const z = ((n & (1 << b)) == 0) ? true : false;
@@ -95,7 +95,7 @@ function bit_b_ptrIXplusd(b, d) {
 * IY combined with the two’s complement displacement d and sets the Z flag accordingly.
 */
 function bit_b_ptrIYplusd(b, d) {
-    CPU.tCyles = 20;
+    CPU.tCycles += 20;
     const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     const z = ((n & (1 << b)) == 0) ? true : false;
@@ -129,7 +129,7 @@ function set_bit(b, n) {
 * Bit b in register r (any of registers B, C, D, E, H, L, or A) is set.
 */
 function set_b_r(b, rIndex) {
-    CPU.tCyles = 8;
+    CPU.tCycles += 8;
     r8.set(rIndex, set_bit(b, r8.get(rIndex)));
 }
 
@@ -145,7 +145,7 @@ function set_bit_mem(b, rrIndex, d) {
 * Bit b in the memory location addressed by the contents of register pair HL is set.
 */
 function set_b_ptrHL(b) {
-    CPU.tCyles = 15;
+    CPU.tCycles += 15;
     set_bit_mem(b, i16.HL, 0);
 }
 
@@ -156,7 +156,7 @@ function set_b_ptrHL(b) {
 * and the two’s complement integer d is set.
 */
 function set_b_ptrIXplusd(b, d) {
-    CPU.tCyles = 23;
+    CPU.tCycles += 23;
     set_bit_mem(b, i16.IX, d);
 }
 
@@ -167,7 +167,7 @@ function set_b_ptrIXplusd(b, d) {
 * and the two’s complement integer d is set.
 */
 function set_b_ptrIYplusd(b, d) {
-    CPU.tCyles = 23;
+    CPU.tCycles += 23;
     set_bit_mem(b, i16.IY, d);
 }
 
@@ -187,7 +187,7 @@ function reset_bit(b, n) {
 * Bit b in register r (any of registers B, C, D, E, H, L, or A) is reset.
 */
 function res_b_r(b, rIndex) {
-    CPU.tCyles = 8;
+    CPU.tCycles += 8;
     r8.set(rIndex, reset_bit(b, r8.get(rIndex)));
 }
 
@@ -203,7 +203,7 @@ function reset_bit_mem(b, rrIndex, d) {
 * Bit b in the memory location addressed by the contents of register pair HL is reset.
 */
 function res_b_ptrHL(b) {
-    CPU.tCyles = 15;
+    CPU.tCycles += 15;
     reset_bit_mem(b, i16.HL, 0);
 }
 
@@ -214,7 +214,7 @@ function res_b_ptrHL(b) {
 * and the two’s complement integer d is reset.
 */
 function res_b_ptrIXplusd(b, d) {
-    CPU.tCyles = 23;
+    CPU.tCycles += 23;
     reset_bit_mem(b, i16.IX, d);
 }
 
@@ -225,7 +225,7 @@ function res_b_ptrIXplusd(b, d) {
 * and the two’s complement integer d is reset.
 */
 function res_b_ptrIYplusd(b, d) {
-    CPU.tCyles = 23;
+    CPU.tCycles += 23;
     reset_bit_mem(b, i16.IY, d);
 }
 
