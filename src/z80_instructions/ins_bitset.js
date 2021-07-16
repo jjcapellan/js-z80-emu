@@ -7,9 +7,9 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-let r8, i8, r16, i16, flags, fi, mem;
+let CPU, r8, i8, r16, i16, flags, fi, mem;
 function setCPU(data) {
-    ({ r8, i8, r16, i16, flags, fi, mem } = data);
+    ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data);
 }
 
 function createFlags(C, N, PV, F3, H, F5, Z, S) {
@@ -24,6 +24,7 @@ function createFlags(C, N, PV, F3, H, F5, Z, S) {
 * Clock: 8T
 */
 function bit_b_r(b, rIndex) {
+    CPU.tCyles = 8;
     const r = r8.get(rIndex);
     const z = ((r & (1 << b)) == 0) ? true : false;
     let f = createFlags(
@@ -47,6 +48,7 @@ function bit_b_r(b, rIndex) {
 * Clock: 12T
 */
 function bit_b_ptrHL(b) {
+    CPU.tCyles = 12;
     const hl = r16.get(i16.HL);
     const n = mem[hl];
     const z = ((n & (1 << b)) == 0) ? true : false;
@@ -71,6 +73,7 @@ function bit_b_ptrHL(b) {
 * Clock: 20T
 */
 function bit_b_ptrIXplusd(b, d) {
+    CPU.tCyles = 20;
     const ix = r16.get(i16.IX);
     const n = mem[ix + d];
     const z = ((n & (1 << b)) == 0) ? true : false;
@@ -96,6 +99,7 @@ function bit_b_ptrIXplusd(b, d) {
 * Clock: 20T
 */
 function bit_b_ptrIYplusd(b, d) {
+    CPU.tCyles = 20;
     const iy = r16.get(i16.IY);
     const n = mem[iy + d];
     const z = ((n & (1 << b)) == 0) ? true : false;
@@ -130,6 +134,7 @@ function set_bit(b, n) {
 * Clock: 8T
 */
 function set_b_r(b, rIndex) {
+    CPU.tCyles = 8;
     r8.set(rIndex, set_bit(b, r8.get(rIndex)));
 }
 
@@ -146,6 +151,7 @@ function set_bit_mem(b, rrIndex, d) {
 * Clock: 15T
 */
 function set_b_ptrHL(b) {
+    CPU.tCyles = 15;
     set_bit_mem(b, i16.HL, 0);
 }
 
@@ -157,6 +163,7 @@ function set_b_ptrHL(b) {
 * Clock: 23T
 */
 function set_b_ptrIXplusd(b, d) {
+    CPU.tCyles = 23;
     set_bit_mem(b, i16.IX, d);
 }
 
@@ -168,6 +175,7 @@ function set_b_ptrIXplusd(b, d) {
 * Clock: 23T
 */
 function set_b_ptrIYplusd(b, d) {
+    CPU.tCyles = 23;
     set_bit_mem(b, i16.IY, d);
 }
 
@@ -188,6 +196,7 @@ function reset_bit(b, n) {
 * Clock: 8T
 */
 function res_b_r(b, rIndex) {
+    CPU.tCyles = 8;
     r8.set(rIndex, reset_bit(b, r8.get(rIndex)));
 }
 
@@ -204,6 +213,7 @@ function reset_bit_mem(b, rrIndex, d) {
 * Clock: 15T
 */
 function res_b_ptrHL(b) {
+    CPU.tCyles = 15;
     reset_bit_mem(b, i16.HL, 0);
 }
 
@@ -215,6 +225,7 @@ function res_b_ptrHL(b) {
 * Clock: 23T
 */
 function res_b_ptrIXplusd(b, d) {
+    CPU.tCyles = 23;
     reset_bit_mem(b, i16.IX, d);
 }
 
@@ -226,6 +237,7 @@ function res_b_ptrIXplusd(b, d) {
 * Clock: 23T
 */
 function res_b_ptrIYplusd(b, d) {
+    CPU.tCyles = 23;
     reset_bit_mem(b, i16.IY, d);
 }
 
