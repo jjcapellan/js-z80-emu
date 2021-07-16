@@ -18,6 +18,7 @@ function setCPU(data) {
  * Clock: 4T
  */
 function ld_r_r2(rIndex, r2Index) {
+    CPU.tCycles = 4;
     const r2 = r8.get(r2Index);
     r8.set(rIndex, r2);
 }
@@ -31,6 +32,7 @@ function ld_r_r2(rIndex, r2Index) {
  * Clock: 7T
  */
 function ld_r_n(rIndex, n) {
+    CPU.tCycles = 7;
     r8.set(rIndex, n);
 }
 
@@ -42,6 +44,7 @@ function ld_r_n(rIndex, n) {
  * Clock: 7T
  */
 function ld_r_ptrHL(rIndex) {
+    CPU.tCycles = 7;
     const ptrHLcontent = mem[r16.get(i16.HL)];
     r8.set(rIndex, ptrHLcontent);
 }
@@ -55,6 +58,7 @@ function ld_r_ptrHL(rIndex) {
  * Clock: 19T
  */
 function ld_r_ptrIXd(rIndex, d) {
+    CPU.tCycles = 19;
     const ptr = r16.get(i16.IX) + d;
     const ptrContent = mem[ptr];
     r8.set(rIndex, ptrContent);
@@ -69,6 +73,7 @@ function ld_r_ptrIXd(rIndex, d) {
  * Clock: 19T
  */
 function ld_r_ptrIYd(rIndex, d) {
+    CPU.tCycles = 19;
     const ptr = r16.get(i16.IY) + d;
     const ptrContent = mem[ptr];
     r8.set(rIndex, ptrContent);
@@ -82,6 +87,7 @@ function ld_r_ptrIYd(rIndex, d) {
  * Clock: 7T
  */
 function ld_ptrHL_r(rIndex) {
+    CPU.tCycles = 7;
     const ptr = r16.get(i16.HL);
     mem[ptr] = r8.get(rIndex);
 }
@@ -95,6 +101,7 @@ function ld_ptrHL_r(rIndex) {
  * Clock: 19T
  */
 function ld_ptrIXd_r(rIndex, d) {
+    CPU.tCycles = 19;
     const ptr = r16.get(i16.IX) + d;
     mem[ptr] = r8.get(rIndex);
 }
@@ -108,6 +115,7 @@ function ld_ptrIXd_r(rIndex, d) {
  * Clock: 19T
  */
 function ld_ptrIYd_r(rIndex, d) {
+    CPU.tCycles = 19;
     const ptr = r16.get(i16.IY) + d;
     mem[ptr] = r8.get(rIndex);
 }
@@ -120,6 +128,7 @@ function ld_ptrIYd_r(rIndex, d) {
  * Clock: 10T
  */
 function ld_ptrHL_n(n) {
+    CPU.tCycles = 10;
     const ptr = r16.get(i16.HL);
     mem[ptr] = n;
 }
@@ -132,6 +141,7 @@ function ld_ptrHL_n(n) {
  * Clock: 19T
  */
 function ld_ptrIXd_n(n, d) {
+    CPU.tCycles = 19;
     const ptr = r16.get(i16.IX) + d;
     mem[ptr] = n;
 }
@@ -144,6 +154,7 @@ function ld_ptrIXd_n(n, d) {
  * Clock: 19T
  */
 function ld_ptrIYd_n(n, d) {
+    CPU.tCycles = 19;
     const ptr = r16.get(i16.IY) + d;
     mem[ptr] = n;
 }
@@ -156,6 +167,7 @@ function ld_ptrIYd_n(n, d) {
  * Clock: 7T
  */
 function ld_A_ptrBC() {
+    CPU.tCycles = 7;
     const ptr = r16.get(i16.BC);
     r8.set(i8.A, mem[ptr]);
 }
@@ -168,6 +180,7 @@ function ld_A_ptrBC() {
  * Clock: 7T
  */
 function ld_A_ptrDE() {
+    CPU.tCycles = 7;
     const ptr = r16.get(i16.DE);
     r8.set(i8.A, mem[ptr]);
 }
@@ -180,6 +193,7 @@ function ld_A_ptrDE() {
  * Clock: 13T
  */
 function ld_A_ptrnn(nn) {
+    CPU.tCycles = 13;
     r8.set(i8.A, mem[nn]);
 }
 
@@ -191,6 +205,7 @@ function ld_A_ptrnn(nn) {
  * Clock: 7T
  */
 function ld_ptrBC_A() {
+    CPU.tCycles = 7;
     const ptr = r16.get(i16.BC);
     const a = r8.get(i8.A);
     mem[ptr] = a;
@@ -204,6 +219,7 @@ function ld_ptrBC_A() {
  * Clock: 7T
  */
 function ld_ptrDE_A() {
+    CPU.tCycles = 7;
     const ptr = r16.get(i16.DE);
     const a = r8.get(i8.A);
     mem[ptr] = a;
@@ -217,6 +233,7 @@ function ld_ptrDE_A() {
  * Clock: 13T
  */
 function ld_ptrnn_A(nn) {
+    CPU.tCycles = 13;
     mem[nn] = r8.get(i8.A);
 }
 
@@ -242,6 +259,7 @@ function ld_A_X(xIndex) {
  * Clock: 9T
  */
 function ld_A_I() {
+    CPU.tCycles = 9;
     ld_A_X(i8.I);
 }
 
@@ -252,6 +270,7 @@ function ld_A_I() {
  * Clock: 9T
  */
 function ld_A_R() {
+    CPU.tCycles = 9;
     ld_A_X(i8.R);
 }
 
@@ -262,6 +281,7 @@ function ld_A_R() {
  * Clock: 9T
  */
 function ld_I_A() {
+    CPU.tCycles = 9;
     r8.set(i8.I, r8.get(i8.A));
 }
 
@@ -272,6 +292,7 @@ function ld_I_A() {
  * Clock: 9T
  */
 function ld_R_A() {
+    CPU.tCycles = 9;
     r8.set(i8.R, r8.get(i8.A));
 }
 
