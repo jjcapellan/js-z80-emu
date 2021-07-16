@@ -28,6 +28,7 @@ const C = 0b00000001;
 * Clock: 4T
 */
 function daa() {
+    CPU.tCycles += 4;
     const f = r8.get(i8.F);
     const a = r8.get(i8.A);
     // Get adjustment and carry flag
@@ -59,6 +60,7 @@ function daa() {
 * Clock: 4T
 */
 function cpl() {
+    CPU.tCycles += 4;
     const a = r8.get(i8.A);
     let f = r8.get(i8.F);
     const result = a ^ 0xff;
@@ -80,6 +82,7 @@ function cpl() {
 * Clock: 8T
 */
 function neg() {
+    CPU.tCycles += 8;
     const a = r8.get(i8.A);
     const result = (0 - a) & 0xff;
 
@@ -105,6 +108,7 @@ function neg() {
 * Clock: 4T
 */
 function ccf() {
+    CPU.tCycles += 4;
     const a = r8.get(i8.A);
     let f = r8.get(i8.F);
     const hf = f & C;
@@ -124,6 +128,7 @@ function ccf() {
 * Clock: 4T
 */
 function scf() {
+    CPU.tCycles += 4;
     const a = r8.get(i8.A);
     let f = r8.get(i8.F);
     f &= (~H);
@@ -143,6 +148,7 @@ function scf() {
 * Clock: 4T
 */
 function halt() {
+    CPU.tCycles += 4;
     CPU.isHalt = true;
 }
 
@@ -154,6 +160,7 @@ function halt() {
 * Clock: 4T
 */
 function di() {
+    CPU.tCycles += 4;
     CPU.registers.iff.IFF1 = false;
     CPU.registers.iff.IFF2 = false;
 }
@@ -166,6 +173,7 @@ function di() {
 * Clock: 4T
 */
 function ei() {
+    CPU.tCycles += 4;
     CPU.registers.iff.IFF1 = true;
     CPU.registers.iff.IFF2 = true;
 }
@@ -190,6 +198,7 @@ function ei() {
 * Clock: 8T
 */
 function im(interruptMode) {
+    CPU.tCycles += 8;
     CPU.interruptMode = interruptMode;
 }
 
