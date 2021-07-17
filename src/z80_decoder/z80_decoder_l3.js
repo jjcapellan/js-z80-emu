@@ -45,7 +45,7 @@ function get_nn() {
 
 function decodeCBXX(byte) {
     const bits76 = byte >> 6;
-    const r = byte & 0b111; // (bits 2-0)stores the register code
+    const r = regsTable[byte & 0b111]; // (bits 2-0)stores the register code
 
     if (bits76) {
         const bit = (byte & 0x1f) >> 2; // (bits 5-3) stores bit used in the instruction
@@ -56,7 +56,7 @@ function decodeCBXX(byte) {
                     ins_bit_set.bit_b_ptrHL(bit);
                     break;
                 }
-                ins_bit_set.bit_b_r(bit, regsTable[r]);
+                ins_bit_set.bit_b_r(bit, r);
                 break;
 
             case 2: // RES
