@@ -18,6 +18,7 @@ const ins_in_out = require('../z80_instructions/ins_input_output');
 
 const {
     decodeCBXX,
+    decodeEDXX,
     setDecoderL3CPU
 } = require('./z80_decoder_l3');
 
@@ -1091,7 +1092,8 @@ function decode0xeX(byte) {
             ins_call_return.call_pe_nn(get_nn());
             break;
 
-        case 0xed: // EXTD prefix <-------------- TODO
+        case 0xed: // EXTD prefix
+            decodeEDXX(CPU.getByte());
             break;
 
         case 0xee: // XOR n
