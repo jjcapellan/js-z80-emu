@@ -28,98 +28,23 @@ function setCPU(data) {
 * Clock: 17T
 */
 function call_nn(nn) {
-    CPU.tCycles += 5;
+    CPU.tCycles += 6;
     r16.set(i16.PC, r16.get(i16.PC) + 3);
     push_qq(i16.PC); // 11 tCycles
     r16.set(i16.PC, nn);
 }
 
 /**
-* CALL NZ, nn
+* CALL cc, nn
 * 
 * Clock: 17T (condition true)    10T (condition false)
 */
-function call_nz_nn(nn) {
+function call_cc_nn(flagIndex, isActive, nn) {
     CPU.tCycles += 10;
-    if (!flags.get(fi.Z))
-        call_nn(nn);
-}
-
-/**
-* CALL Z, nn
-* 
-* Clock: 17T (condition true)    10T (condition false)
-*/
-function call_z_nn(nn) {
-    CPU.tCycles += 10;
-    if (flags.get(fi.Z))
-        call_nn(nn);
-}
-
-/**
-* CALL NC, nn
-* 
-* Clock: 17T (condition true)    10T (condition false)
-*/
-function call_nc_nn(nn) {
-    CPU.tCycles += 10;
-    if (!flags.get(fi.C))
-        call_nn(nn);
-}
-
-/**
-* CALL C, nn
-* 
-* Clock: 17T (condition true)    10T (condition false)
-*/
-function call_c_nn(nn) {
-    CPU.tCycles += 10;
-    if (flags.get(fi.C))
-        call_nn(nn);
-}
-
-/**
-* CALL PO, nn
-* 
-* Clock: 17T (condition true)    10T (condition false)
-*/
-function call_po_nn(nn) {
-    CPU.tCycles += 10;
-    if (!flags.get(fi.PV))
-        call_nn(nn);
-}
-
-/**
-* CALL PE, nn
-* 
-* Clock: 17T (condition true)    10T (condition false)
-*/
-function call_pe_nn(nn) {
-    CPU.tCycles += 10;
-    if (flags.get(fi.PV))
-        call_nn(nn);
-}
-
-/**
-* CALL P, nn
-* 
-* Clock: 17T (condition true)    10T (condition false)
-*/
-function call_p_nn(nn) {
-    CPU.tCycles += 10;
-    if (!flags.get(fi.S))
-        call_nn(nn);
-}
-
-/**
-* CALL M, nn
-* 
-* Clock: 17T (condition true)    10T (condition false)
-*/
-function call_m_nn(nn) {
-    CPU.tCycles += 10;
-    if (flags.get(fi.S))
-        call_nn(nn);
+    if (flags.get(flagIndex) == isActive) {
+        CPU.tCycles -= 10
+        call_nn(nn); // 17 tCycles
+    }
 }
 
 /**
@@ -143,7 +68,7 @@ function ret() {
 * cc is a flag condition (nz, z, nc, c, po, pe, p, m)
 * Clock: 11T (condition true)    5T (condition false)
 */
-function ret_cc(flagIndex, isActive){
+function ret_cc(flagIndex, isActive) {
     CPU.tCycles += 5;
     if (flags.get(flagIndex) == isActive) {
         CPU.tCycles += 1;
@@ -204,14 +129,7 @@ function rst_p(p) {
 
 module.exports = {
     call_nn,
-    call_c_nn,
-    call_nc_nn,
-    call_z_nn,
-    call_nz_nn,
-    call_pe_nn,
-    call_po_nn,
-    call_m_nn,
-    call_p_nn,
+    call_cc_nn,
     ret,
     ret_cc,
     rst_p,
