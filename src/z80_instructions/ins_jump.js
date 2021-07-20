@@ -23,98 +23,14 @@ function jp_nn(nn) {
 }
 
 /**
-* JP NZ, nn
+* JP cc, nn
 * 
-* nn is loaded to register pair Program Counter (PC) if NZ (Z not set) is true.
+* nn is loaded to register pair Program Counter (PC) if condition cc (NZ, Z, C, NC, PO, PE, P, M) is true.
 * Clock: 10T
 */
-function jp_nz_nn(nn) {
+function jp_cc_nn(flagIndex, isActive, nn){
     CPU.tCycles += 10;
-    if (!flags.get(fi.Z))
-        r16.set(i16.PC, nn);
-}
-
-/**
-* JP Z, nn
-* 
-* nn is loaded to register pair Program Counter (PC) if condition Z (Z is set) is true.
-* Clock: 10T
-*/
-function jp_z_nn(nn) {
-    CPU.tCycles += 10;
-    if (flags.get(fi.Z))
-        r16.set(i16.PC, nn);
-}
-
-/**
-* JP NC, nn
-* 
-* nn is loaded to register pair Program Counter (PC) if condition NC (C not set) is true.
-* Clock: 10T
-*/
-function jp_nc_nn(nn) {
-    CPU.tCycles += 10;
-    if (!flags.get(fi.C))
-        r16.set(i16.PC, nn);
-}
-
-/**
-* JP C, nn
-* 
-* nn is loaded to register pair Program Counter (PC) if condition C (C is set) is true.
-* Clock: 10T
-*/
-function jp_c_nn(nn) {
-    CPU.tCycles += 10;
-    if (flags.get(fi.C))
-        r16.set(i16.PC, nn);
-}
-
-/**
-* JP PO, nn
-* 
-* nn is loaded to register pair Program Counter (PC) if condition PO (PV not set) is true.
-* Clock: 10T
-*/
-function jp_po_nn(nn) {
-    CPU.tCycles += 10;
-    if (!flags.get(fi.PV))
-        r16.set(i16.PC, nn);
-}
-
-/**
-* JP PE, nn
-* 
-* nn is loaded to register pair Program Counter (PC) if condition PE (PV is set) is true.
-* Clock: 10T
-*/
-function jp_pe_nn(nn) {
-    CPU.tCycles += 10;
-    if (flags.get(fi.PV))
-        r16.set(i16.PC, nn);
-}
-
-/**
-* JP P, nn
-* 
-* nn is loaded to register pair Program Counter (PC) if condition P (Sign positive: S not set) is true.
-* Clock: 10T
-*/
-function jp_p_nn(nn) {
-    CPU.tCycles += 10;
-    if (!flags.get(fi.S))
-        r16.set(i16.PC, nn);
-}
-
-/**
-* JP M, nn
-* 
-* nn is loaded to register pair Program Counter (PC) if condition M (Sign negative: S is set) is true.
-* Clock: 10T
-*/
-function jp_m_nn(nn) {
-    CPU.tCycles += 10;
-    if (flags.get(fi.S))
+    if (flags.get(flagIndex) == isActive)
         r16.set(i16.PC, nn);
 }
 
@@ -280,15 +196,7 @@ function djnz_e(e) {
 
 module.exports = {
     jp_nn,
-    jp_c_nn,
-    jp_nc_nn,
-    jp_z_nn,
-    jp_nz_nn,
-    jp_po_nn,
-    jp_pe_nn,
-    jp_c_nn,
-    jp_p_nn,
-    jp_m_nn,
+    jp_cc_nn,
     jp_ptrHL,
     jp_ptrIX,
     jp_ptrIY,
