@@ -138,104 +138,14 @@ function ret() {
 }
 
 /**
-* RET NZ
+* RET cc
 * 
+* cc is a flag condition (nz, z, nc, c, po, pe, p, m)
 * Clock: 11T (condition true)    5T (condition false)
 */
-function ret_nz() {
+function ret_cc(flagIndex, isActive){
     CPU.tCycles += 5;
-    if (!flags.get(fi.Z)) {
-        CPU.tCycles += 1;
-        ret(); // 10 tCycles
-    }
-}
-
-/**
-* RET Z
-* 
-* Clock: 11T (condition true)    5T (condition false)
-*/
-function ret_z() {
-    CPU.tCycles += 5;
-    if (flags.get(fi.Z)) {
-        CPU.tCycles += 1;
-        ret(); // 10 tCycles
-    }
-}
-
-/**
-* RET NC
-* 
-* Clock: 11T (condition true)    5T (condition false)
-*/
-function ret_nc() {
-    CPU.tCycles += 5;
-    if (!flags.get(fi.C)) {
-        CPU.tCycles += 1;
-        ret(); // 10 tCycles
-    }
-}
-
-/**
-* RET C
-* 
-* Clock: 11T (condition true)    5T (condition false)
-*/
-function ret_c() {
-    CPU.tCycles += 5;
-    if (flags.get(fi.C)) {
-        CPU.tCycles += 1;
-        ret(); // 10 tCycles
-    }
-}
-
-/**
-* RET PO
-* 
-* Clock: 11T (condition true)    5T (condition false)
-*/
-function ret_po() {
-    CPU.tCycles += 5;
-    if (!flags.get(fi.PV)) {
-        CPU.tCycles += 1;
-        ret(); // 10 tCycles
-    }
-}
-
-/**
-* RET PE
-* 
-* Clock: 11T (condition true)    5T (condition false)
-*/
-function ret_pe() {
-    CPU.tCycles += 5;
-    if (flags.get(fi.PV)) {
-        CPU.tCycles += 1;
-        ret(); // 10 tCycles
-    }
-}
-
-/**
-* RET P
-* 
-* Clock: 11T (condition true)    5T (condition false)
-*/
-function ret_p() {
-    CPU.tCycles += 5;
-    if (!flags.get(fi.S)) {
-        CPU.tCycles += 1;
-        ret(); // 10 tCycles
-    }
-}
-
-/**
-* RET M
-* 
-* Clock: 11T (condition true)    5T (condition false)
-*/
-function ret_m() {
-    CPU.tCycles += 5;
-    if (flags.get(fi.S)) {
+    if (flags.get(flagIndex) == isActive) {
         CPU.tCycles += 1;
         ret(); // 10 tCycles
     }
