@@ -77,7 +77,7 @@ function ld_r_ptrIXd(rIndex, d) {
  * D, E, H, or L
   */
 function ld_r_ptrIYd(rIndex, d) {
-    ld_r_ptrXYd(rIndex, d, i16.IX);
+    ld_r_ptrXYd(rIndex, d, i16.IY);
 }
 
 /**
