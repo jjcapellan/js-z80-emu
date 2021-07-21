@@ -93,6 +93,15 @@ function ld_ptrHL_r(rIndex) {
 }
 
 /**
+ * Helper for ld_ptrIX_r and ld_ptrIY_r
+ */
+ function ld_ptrXYd_r(rIndex, d, xyIndex) {
+    CPU.tCycles += 19;
+    const ptr = r16.get(xyIndex) + d;
+    mem[ptr] = r8.get(rIndex);
+}
+
+/**
  * LD (IX+d), r
  * 
  * The contents of register r are loaded to the memory address specified by the contents of
@@ -100,9 +109,7 @@ function ld_ptrHL_r(rIndex) {
  * The r symbol identifies registers A, B, C, D, E, H, or L.
   */
 function ld_ptrIXd_r(rIndex, d) {
-    CPU.tCycles += 19;
-    const ptr = r16.get(i16.IX) + d;
-    mem[ptr] = r8.get(rIndex);
+    ld_ptrXYd_r(rIndex, d, i16.IX);
 }
 
 /**
@@ -113,9 +120,7 @@ function ld_ptrIXd_r(rIndex, d) {
  * The r symbol identifies registers A, B, C, D, E, H, or L.
   */
 function ld_ptrIYd_r(rIndex, d) {
-    CPU.tCycles += 19;
-    const ptr = r16.get(i16.IY) + d;
-    mem[ptr] = r8.get(rIndex);
+    ld_ptrXYd_r(rIndex, d, i16.IY);
 }
 
 /**
