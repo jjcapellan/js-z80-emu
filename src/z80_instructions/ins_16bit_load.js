@@ -124,13 +124,22 @@ function ld_ptrnn_dd(ddIndex, ptrnn) {
 /**
  * LD (nn), IX
  * 
+ * Helper for ld_ptrnn_IX and ld_ptrnnIY
+  */
+function ld_ptrnn_XY(ptrnn, xyIndex) {
+    CPU.tCycles += 20;
+    ld_ptrnn_dd(xyIndex, ptrnn);
+}
+
+/**
+ * LD (nn), IX
+ * 
  * The low-order byte in Index Register IX is loaded to memory address (nn); the upper order
  * byte is loaded to the next highest address (nn + 1). The first n operand after the op code is
  * the low-order byte of nn.
   */
 function ld_ptrnn_IX(ptrnn) {
-    CPU.tCycles += 20;
-    ld_ptrnn_dd(i16.IX, ptrnn);
+    ld_ptrnn_XY(ptrnn, i16.IX);
 }
 
 /**
@@ -141,8 +150,7 @@ function ld_ptrnn_IX(ptrnn) {
  * the low-order byte of nn.
   */
 function ld_ptrnn_IY(ptrnn) {
-    CPU.tCycles += 20;
-    ld_ptrnn_dd(i16.IY, ptrnn);
+    ld_ptrnn_XY(ptrnn, i16.IY);
 }
 
 /**
@@ -287,6 +295,7 @@ module.exports = {
     ld_IY_ptrnn,
     ld_ptrnn_HL,
     ld_ptrnn_dd,
+    ld_ptrnn_XY,
     ld_ptrnn_IX,
     ld_ptrnn_IY,
     ld_SP_HL,
