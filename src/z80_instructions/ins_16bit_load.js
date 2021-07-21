@@ -22,14 +22,21 @@ function ld_dd_nn(ddIndex, nn) {
 }
 
 /**
+ * Helper for ld_IX_nn and ld_IY_nn
+*/
+ function ld_XY_nn(xyIndex, nn) {
+    CPU.tCycles += 14;
+    r16.set(xyIndex, nn);
+}
+
+/**
  * LD IX, nn
  * 
  * The n integer is loaded to Index Register IX. The first n operand after the op code is the
  * low-order byte.
   */
 function ld_IX_nn(nn) {
-    CPU.tCycles += 14;
-    r16.set(i16.IX, nn);
+    ld_XY_nn(i16.IX, nn);
 }
 
 /**
@@ -39,8 +46,7 @@ function ld_IX_nn(nn) {
  * low-order byte.
   */
 function ld_IY_nn(nn) {
-    CPU.tCycles += 14;
-    r16.set(i16.IY, nn);
+    ld_XY_nn(i16.IY, nn);
 }
 
 /**
@@ -291,6 +297,7 @@ module.exports = {
     ld_IY_nn,
     ld_HL_ptrnn,
     ld_dd_ptrnn,
+    ld_XY_nn,
     ld_IX_ptrnn,
     ld_IY_ptrnn,
     ld_ptrnn_HL,
