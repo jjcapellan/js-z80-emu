@@ -161,8 +161,8 @@ function inc_ss(ssIndex) {
 * The contents of register IX are incremented.
 */
 function inc_IX() {
-    CPU.tCycles += 10;
-    inc_ss(i16.IX);
+    CPU.tCycles += 4;
+    inc_ss(i16.IX); // 6 tCycles
 }
 
 /**
@@ -171,8 +171,8 @@ function inc_IX() {
 * The contents of register IY are incremented.
 */
 function inc_IY() {
-    CPU.tCycles += 10;
-    inc_ss(i16.IY);
+    CPU.tCycles += 4;
+    inc_ss(i16.IY); // 6 tCycles
 }
 
 /**
