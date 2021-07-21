@@ -47,6 +47,18 @@ function ld_r_ptrHL(rIndex) {
 }
 
 /**
+ * LD r, (XY+d)
+ * 
+ * Helper for ld_r_ptrIXd and ld_r_ptrIYd 
+ */
+ function ld_r_ptrXYd(rIndex, d, xyIndex) {
+    CPU.tCycles += 19;
+    const ptr = r16.get(xyIndex) + d;
+    const ptrContent = mem[ptr];
+    r8.set(rIndex, ptrContent);
+}
+
+/**
  * LD r, (IX+d)
  * 
  * The (IX+d) operand (i.e., the contents of Index Register IX summed with two’s-complement 
@@ -54,10 +66,7 @@ function ld_r_ptrHL(rIndex) {
  * D, E, H, or L
   */
 function ld_r_ptrIXd(rIndex, d) {
-    CPU.tCycles += 19;
-    const ptr = r16.get(i16.IX) + d;
-    const ptrContent = mem[ptr];
-    r8.set(rIndex, ptrContent);
+    ld_r_ptrXYd(rIndex, d, i16.IX);
 }
 
 /**
@@ -68,10 +77,7 @@ function ld_r_ptrIXd(rIndex, d) {
  * D, E, H, or L
   */
 function ld_r_ptrIYd(rIndex, d) {
-    CPU.tCycles += 19;
-    const ptr = r16.get(i16.IY) + d;
-    const ptrContent = mem[ptr];
-    r8.set(rIndex, ptrContent);
+    ld_r_ptrXYd(rIndex, d, i16.IX);
 }
 
 /**
@@ -281,6 +287,7 @@ module.exports = {
     ld_r_ptrHL,
     ld_r_ptrIXd,
     ld_r_ptrIYd,
+    ld_r_ptrXYd,
     ld_ptrHL_r,
     ld_ptrIXd_r,
     ld_ptrIYd_r,
