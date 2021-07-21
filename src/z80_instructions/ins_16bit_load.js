@@ -85,7 +85,6 @@ function ld_dd_ptrnn(ddIndex, ptrnn) {
  * portion of IX. The first n operand after the op code is the low-order byte of nn.
   */
 function ld_IX_ptrnn(ptrnn) {
-    CPU.tCycles += 20;
     ld_dd_ptrnn(i16.IX, ptrnn);
 }
 
@@ -97,7 +96,6 @@ function ld_IX_ptrnn(ptrnn) {
  * portion of IY. The first n operand after the op code is the low-order byte of nn.
   */
 function ld_IY_ptrnn(ptrnn) {
-    CPU.tCycles += 20;
     ld_dd_ptrnn(i16.IY, ptrnn);
 }
 
