@@ -79,6 +79,116 @@ function get_nn() {
     return (hsb << 8) | lsb;
 }
 
+function decodeCBXX(byte) {
+    const bits76 = byte >> 6;
+    const bits543 = (byte & 0x1f) >> 2;
+    const bits210 = byte & 0b111;
+
+    const r = regsTable[bits210]; // (bits 2-0)stores the register code
+
+    if (bits76) {
+        const bit = bits543; // (bits 5-3) stores bit used in the instruction
+        switch (bits76) {
+
+            case 1: // BIT
+                if (r == 6) {
+                    ins_bit_set.bit_b_ptrHL(bit);
+                    break;
+                }
+                ins_bit_set.bit_b_r(bit, r);
+                break;
+
+            case 2: // RES
+                if (r == 6) {
+                    ins_bit_set.res_b_ptrHL(bit);
+                    break;
+                }
+                ins_bit_set.res_b_r(bit, r);
+                break;
+
+            case 3: // SET
+                if (r == 6) {
+                    ins_bit_set.set_b_ptrHL(bit);
+                    break;
+                }
+                ins_bit_set.set_b_r(bit, r);
+                break;
+
+            default:
+                break;
+        } // end switch
+        return;
+    } // end if
+
+
+    switch (bits543) {
+        case 0: // RLC
+            if (!r) {
+                ins_rot_shift.rlc_ptrHL();
+                break;
+            }
+            ins_rot_shift.rlc_r(r);
+            break;
+
+        case 1: // RRC
+            if (!r) {
+                ins_rot_shift.rrc_ptrHL();
+                break;
+            }
+            ins_rot_shift.rrc_r(r);
+            break;
+
+        case 2: // RL
+            if (!r) {
+                ins_rot_shift.rl_ptrHL();
+                break;
+            }
+            ins_rot_shift.rl_r(r);
+            break;
+
+        case 3: // RR
+            if (!r) {
+                ins_rot_shift.rr_ptrHL();
+                break;
+            }
+            ins_rot_shift.rr_r(r);
+            break;
+
+        case 4: // SLA
+            if (!r) {
+                ins_rot_shift.sla_ptrHL();
+                break;
+            }
+            ins_rot_shift.sla_r(r);
+            break;
+
+        case 5: // SRA
+            if (!r) {
+                ins_rot_shift.sra_ptrHL();
+                break;
+            }
+            ins_rot_shift.sra_r(r);
+            break;
+
+        case 6: // SLL
+            // <-------------- TODO undocumented
+            console.log('SLL instruction not implemented (TODO)');
+            break;
+
+        case 7: // SRL
+            if (!r) {
+                ins_rot_shift.srl_ptrHL();
+                break;
+            }
+            ins_rot_shift.srl_r(r);
+            break;
+
+        default:
+            break;
+    } // end switch
+}
+
+
 function decode(byte) {
     let bits76 = byte >> 6;
     const bits54 = (byte >> 4) & 0b11;
@@ -405,7 +515,8 @@ function decode(byte) {
                     ins_general_arithm_cpu.di();
                     break;
 
-                case 0xcb: // prefix BITS <-------- TODO
+                case 0xcb: // prefix BITS
+                    decodeCBXX(CPU.getByte());
                     break;
 
                 case 0xdb:
