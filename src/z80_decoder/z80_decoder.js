@@ -189,6 +189,195 @@ function decodeCBXX(byte) {
 }
 
 
+function decodeEDXX(byte) {
+    const bits76 = byte >> 6;
+    const bits543 = (byte & 0x1f) >> 2;
+    const r = regsTable[bits543];
+    if (bits76 == 1) { // Rows 4 - 7
+        const bits210 = byte & 0b111;
+        switch (bits210) {
+            case 0:
+                {
+                    if (!r) {
+                        // TODO (0x70)
+                        break;
+                    }
+                    ins_input_output.in_r_C(r);
+                    break;
+                }
+
+            case 1:
+                {
+                    if (!r) {
+                        // TODO (0x71)
+                        break;
+                    }
+                    ins_input_output.out_C_r(r);
+                    break;
+                }
+
+            case 2:
+                {
+                    const bit3 = (byte & 0xf) >> 3;
+                    const ss = regs16Table[(byte & 0x3f) >> 4];
+                    if (bit3) {
+                        ins_16bit_arithm.adc_HL_ss(ss);
+                        break;
+                    }
+                    ins_16bit_arithm.sbc_HL_ss(ss);
+                    break;
+                }
+
+            case 3:
+                {
+                    const bit3 = (byte & 0xf) >> 3;
+                    const dd = regs16Table[(byte & 0x3f) >> 4];
+                    const nn = get_nn();
+                    if (bit3) {
+                        ins_16bit_load.ld_dd_ptrnn(dd, nn);
+                        break;
+                    }
+                    ins_16bit_load.ld_ptrnn_dd(dd, nn);
+                    break;
+                }
+
+            case 4:
+                ins_general_arithm_cpu.neg();
+                break;
+
+            case 5:
+                if (byte == 0x4d) {
+                    ins_call_return.reti();
+                    break;
+                }
+                ins_call_return.retn();
+                break;
+
+            case 6:
+                {
+                    const bit3 = (byte & 0xf) >> 3;
+                    const bit4 = (byte >> 4) & 1;
+                    if (!bit4) {
+                        ins_general_arithm_cpu.im(0);
+                        break;
+                    }
+                    if (bit3) {
+                        ins_general_arithm_cpu.im(2);
+                        break;
+                    }
+                    ins_general_arithm_cpu.im(1);
+                    break;
+                }
+
+            default:
+                switch (byte) {
+                    case 0x47:
+                        ins_8bit_load.ld_I_A();
+                        break;
+
+                    case 0x57:
+                        ins_8bit_load.ld_A_I();
+                        break;
+
+                    case 0x67:
+                        ins_rot_shift.rrd();
+                        break;
+
+                    case 0x4f:
+                        ins_8bit_load.ld_R_A();
+                        break;
+
+                    case 0x5f:
+                        ins_8bit_load.ld_A_R();
+                        break;
+
+                    case 0x6f:
+                        ins_rot_shift.rld();
+                        break;
+
+                    default:
+                        // TODO NOP2X
+                        console.log('NOP2X instruction not implemented (TODO)');
+                        break;
+                } // end nested switch
+                break;
+        } // end switch
+        return;
+    } // end if (bits76 == 1)
+
+    switch (byte) {
+        case 0xa0:
+            ins_exch_tran.ldi();
+            break;
+
+        case 0xb0:
+            ins_exch_tran.ldir();
+            break;
+
+        case 0xa1:
+            ins_exch_tran.cpi();
+            break;
+
+        case 0xb1:
+            ins_exch_tran.cpir();
+            break;
+
+        case 0xa2:
+            ins_input_output.ini();
+            break;
+
+        case 0xb2:
+            ins_input_output.inir();
+            break;
+
+        case 0xa3:
+            ins_input_output.outi();
+            break;
+
+        case 0xb3:
+            ins_input_output.otir();
+            break;
+
+        case 0xa8:
+            ins_exch_tran.ldd();
+            break;
+
+        case 0xb8:
+            ins_exch_tran.lddr();
+            break;
+
+        case 0xa9:
+            ins_exch_tran.cpd();
+            break;
+
+        case 0xb9:
+            ins_exch_tran.cpdr();
+            break;
+
+        case 0xaa:
+            ins_input_output.ind();
+            break;
+
+        case 0xba:
+            ins_input_output.indr();
+            break;
+
+        case 0xab:
+            ins_input_output.outd();
+            break;
+
+        case 0xbb:
+            ins_input_output.outdr();
+            break;
+
+        default:
+            // TODO NOP2X
+            console.log('NOP2X instruction not implemented (TODO)');
+            break;
+    }
+} // end function decodeEDXX
+
+
 function decode(byte) {
     let bits76 = byte >> 6;
     const bits54 = (byte >> 4) & 0b11;
@@ -555,7 +744,8 @@ function decode(byte) {
                 case 0xdd: // IX prefix   <------- TODO
                     break;
 
-                case 0xed: // EXTD prefix <------- TODO
+                case 0xed: // EXTD prefix
+                    decodeEDXX(CPU.getByte());
                     break;
 
                 case 0xfd: // IY prefix   <------- TODO
