@@ -660,16 +660,24 @@ function inc_ptrHL() {
 }
 
 /**
-* INC (IX + d)
-* 
-* The byte contained in the address specified by the contents of (IX + d) is incremented.
+* Helper for inc_ptrIXplusd and inc_ptrIYplusd
 */
-function inc_ptrIXplusd(d) {
+function inc_ptrXYplusd(xyIndex, d) {
     CPU.tCycles += 23;
     const ix = r16.get(i16.IX);
     const n = mem[ix + d];
     setFlagsIncDec(n, 0x7f);
     mem[ix + d] = n + 1;
+}
+
+
+/**
+* INC (IX + d)
+* 
+* The byte contained in the address specified by the contents of (IX + d) is incremented.
+*/
+function inc_ptrIXplusd(d) {
+    inc_ptrXYplusd(i16.IX, d);
 }
 
 /**
@@ -678,11 +686,7 @@ function inc_ptrIXplusd(d) {
 * The byte contained in the address specified by the contents of (IY + d) is incremented.
 */
 function inc_ptrIYplusd(d) {
-    CPU.tCycles += 23;
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    setFlagsIncDec(n, 0x7f);
-    mem[iy + d] = n + 1;
+    inc_ptrXYplusd(i16.IY, d);
 }
 
 /**
@@ -779,6 +783,7 @@ module.exports = {
     cp_ptrIYplusd,
     inc_r,
     inc_ptrHL,
+    inc_ptrXYplusd,
     inc_ptrIXplusd,
     inc_ptrIYplusd,
     dec_r,
