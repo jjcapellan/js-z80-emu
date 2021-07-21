@@ -194,8 +194,8 @@ function dec_ss(ssIndex) {
 * The contents of register pair IX are decremented.
 */
 function dec_IX() {
-    CPU.tCycles += 10;
-    dec_ss(i16.IX);
+    CPU.tCycles += 4;
+    dec_ss(i16.IX); // 6 tCycles
 }
 
 /**
@@ -204,8 +204,8 @@ function dec_IX() {
 * The contents of register pair IY are decremented.
 */
 function dec_IY() {
-    CPU.tCycles += 10;
-    dec_ss(i16.IY);
+    CPU.tCycles += 4;
+    dec_ss(i16.IY); // 6 tCycles
 }
 
 module.exports = {
