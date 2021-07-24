@@ -350,6 +350,7 @@ function and_n(n) {
  * Helper function for AND (XX)
  */
 function and_ptrXXplusd(xxIndex, d) {
+    CPU.tCycles += 19;
     const xx = r16.get(xxIndex);
     const n = mem[xx + d];
     const a = r8.get(i8.A);
@@ -365,7 +366,7 @@ function and_ptrXXplusd(xxIndex, d) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function and_ptrHL() {
-    CPU.tCycles += 7;
+    CPU.tCycles -= 12;
     and_ptrXXplusd(i16.HL, 0);
 }
 
@@ -376,7 +377,6 @@ function and_ptrHL() {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function and_ptrIXplusd(d) {
-    CPU.tCycles += 19;
     and_ptrXXplusd(i16.IX, d);
 }
 
@@ -387,7 +387,6 @@ function and_ptrIXplusd(d) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function and_ptrIYplusd(d) {
-    CPU.tCycles += 19;
     and_ptrXXplusd(i16.IY, d);
 }
 
@@ -766,6 +765,7 @@ module.exports = {
     sbc_A_ptrIYplusd,
     and_r,
     and_n,
+    and_ptrXXplusd,
     and_ptrHL,
     and_ptrIXplusd,
     and_ptrIYplusd,
