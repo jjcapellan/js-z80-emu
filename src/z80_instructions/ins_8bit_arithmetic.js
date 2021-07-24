@@ -275,6 +275,7 @@ function sbc_A_n(n) {
  * Helper function for SBC A, (XX)
  */
 function sbc_A_ptrXXplusd(xxIndex, d) {
+    CPU.tCycles += 19;
     const xx = r16.get(xxIndex);
     const c = flags.get(fi.C);
     const a = r8.get(i8.A);
@@ -291,7 +292,7 @@ function sbc_A_ptrXXplusd(xxIndex, d) {
 * the Accumulator, and the result is stored in the Accumulator.
 */
 function sbc_A_ptrHL() {
-    CPU.tCycles += 7;
+    CPU.tCycles -= 12;
     sbc_A_ptrXXplusd(i16.HL, 0);
 }
 
@@ -302,7 +303,6 @@ function sbc_A_ptrHL() {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 */
 function sbc_A_ptrIXplusd(d) {
-    CPU.tCycles += 19;
     sbc_A_ptrXXplusd(i16.IX, d);
 }
 
@@ -313,7 +313,6 @@ function sbc_A_ptrIXplusd(d) {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 */
 function sbc_A_ptrIYplusd(d) {
-    CPU.tCycles += 19;
     sbc_A_ptrXXplusd(i16.IY, d);
 }
 
@@ -761,6 +760,7 @@ module.exports = {
     sub_A_ptrIYplusd,
     sbc_A_r,
     sbc_A_n,
+    sbc_A_ptrXXplusd,
     sbc_A_ptrHL,
     sbc_A_ptrIXplusd,
     sbc_A_ptrIYplusd,
