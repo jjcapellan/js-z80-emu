@@ -196,6 +196,7 @@ function sub_A_n(n) {
  * Helper function for SUB A, (XX)
  */
 function sub_A_ptrXXplusd(xxIndex, d) {
+    CPU.tCycles += 19;
     const a = r8.get(i8.A);
     const xx = r16.get(xxIndex);
     const n = mem[xx + d];
@@ -211,7 +212,7 @@ function sub_A_ptrXXplusd(xxIndex, d) {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 */
 function sub_A_ptrHL() {
-    CPU.tCycles += 7;
+    CPU.tCycles -= 12;
     sub_A_ptrXXplusd(i16.HL, 0);
 }
 
@@ -223,7 +224,6 @@ function sub_A_ptrHL() {
 * to the contents of the Accumulator and the result is stored in the Accumulator.
 */
 function sub_A_ptrIXplusd(d) {
-    CPU.tCycles += 19;
     sub_A_ptrXXplusd(i16.IX, d);
 }
 
@@ -235,7 +235,6 @@ function sub_A_ptrIXplusd(d) {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 */
 function sub_A_ptrIYplusd(d) {
-    CPU.tCycles += 19;
     sub_A_ptrXXplusd(i16.IY, d);
 }
 
@@ -756,6 +755,7 @@ module.exports = {
     adc_A_ptrIYplusd,
     sub_A_r,
     sub_A_n,
+    sub_A_ptrXXplusd,
     sub_A_ptrHL,
     sub_A_ptrIXplusd,
     sub_A_ptrIYplusd,
