@@ -424,6 +424,7 @@ function or_n(n) {
  * Helper function for OR (XX)
  */
 function or_ptrXXplusd(xxIndex, d) {
+    CPU.tCycles += 19;
     const xx = r16.get(xxIndex);
     const n = mem[xx + d];
     const a = r8.get(i8.A);
@@ -439,7 +440,7 @@ function or_ptrXXplusd(xxIndex, d) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function or_ptrHL() {
-    CPU.tCycles += 7;
+    CPU.tCycles -= 12;
     or_ptrXXplusd(i16.HL, 0);
 }
 
@@ -450,7 +451,6 @@ function or_ptrHL() {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function or_ptrIXplusd(d) {
-    CPU.tCycles += 19;
     or_ptrXXplusd(i16.IX, d);
 }
 
@@ -461,7 +461,6 @@ function or_ptrIXplusd(d) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function or_ptrIYplusd(d) {
-    CPU.tCycles += 19;
     or_ptrXXplusd(i16.IY, d);
 }
 
@@ -574,6 +573,7 @@ function cp_n(n) {
  * Helper function for CP (XX)
  */
 function cp_ptrXXplusd(xxIndex, d) {
+    CPU.tCycles += 19;
     const a = r8.get(i8.A);
     const xx = r16.get(xxIndex);
     const n = mem[xx + d];
@@ -589,7 +589,7 @@ function cp_ptrXXplusd(xxIndex, d) {
 * contents of the Accumulator.
 */
 function cp_ptrHL() {
-    CPU.tCycles += 7;
+    CPU.tCycles -= 12;
     cp_ptrXXplusd(i16.HL, 0);
 }
 
@@ -601,7 +601,6 @@ function cp_ptrHL() {
 * contents of the Accumulator.
 */
 function cp_ptrIXplusd(d) {
-    CPU.tCycles += 19;
     cp_ptrXXplusd(i16.IX, d);
 }
 
@@ -613,7 +612,6 @@ function cp_ptrIXplusd(d) {
 * contents of the Accumulator.
 */
 function cp_ptrIYplusd(d) {
-    CPU.tCycles += 19;
     cp_ptrXXplusd(i16.IY, d);
 }
 
@@ -770,6 +768,7 @@ module.exports = {
     and_ptrIYplusd,
     or_r,
     or_n,
+    or_ptrXXplusd,
     or_ptrHL,
     or_ptrIXplusd,
     or_ptrIYplusd,
@@ -781,6 +780,7 @@ module.exports = {
     xor_ptrIYplusd,
     cp_r,
     cp_n,
+    cp_ptrXXplusd,
     cp_ptrHL,
     cp_ptrIXplusd,
     cp_ptrIYplusd,
