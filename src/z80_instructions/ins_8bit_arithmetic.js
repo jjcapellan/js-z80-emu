@@ -43,6 +43,7 @@ function add_A_n(n) {
  * Helper for ADD A, (XX)
  */
 function add_A_ptrXXplusd(xxIndex, d) {
+    CPU.tCycles += 19;
     const a = r8.get(i8.A);
     const xx = r16.get(xxIndex);
     const n = mem[xx + d];
@@ -58,8 +59,8 @@ function add_A_ptrXXplusd(xxIndex, d) {
 * to the contents of the Accumulator, and the result is stored in the Accumulator.
 */
 function add_A_ptrHL() {
-    CPU.tCycles += 7;
-    add_A_ptrXXplusd(i16.HL, 0);
+    CPU.tCycles -= 12;
+    add_A_ptrXXplusd(i16.HL, 0); // 19 tCycles
 }
 
 /**
@@ -70,7 +71,6 @@ function add_A_ptrHL() {
 * the contents of the Accumulator and the result is stored in the Accumulator.
 */
 function add_A_ptrIXplusd(d) {
-    CPU.tCycles += 19;
     add_A_ptrXXplusd(i16.IX, d);
 }
 
@@ -82,7 +82,6 @@ function add_A_ptrIXplusd(d) {
 * the contents of the Accumulator, and the result is stored in the Accumulator.
 */
 function add_A_ptrIYplusd(d) {
-    CPU.tCycles += 19;
     add_A_ptrXXplusd(i16.IY, d);
 }
 
@@ -746,6 +745,7 @@ function dec_ptrIYplusd(d) {
 module.exports = {
     add_A_r,
     add_A_n,
+    add_A_ptrXXplusd,
     add_A_ptrHL,
     add_A_ptrIXplusd,
     add_A_ptrIYplusd,
