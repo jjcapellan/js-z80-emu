@@ -135,6 +135,15 @@ function ld_ptrHL_n(n) {
     mem[ptr] = n;
 }
 
+/** 
+ * Helper function for ld_ptrIXd_n and ld_ptrIXd_n
+ */
+function ld_ptrXYd_n(xyIndex, n, d) {
+    CPU.tCycles += 19;
+    const ptr = r16.get(xyIndex) + d;
+    mem[ptr] = n;
+}
+
 /**
  * LD (IX+d), n
  * 
@@ -142,9 +151,7 @@ function ld_ptrHL_n(n) {
  * and the two’s complement displacement operand d.
   */
 function ld_ptrIXd_n(n, d) {
-    CPU.tCycles += 19;
-    const ptr = r16.get(i16.IX) + d;
-    mem[ptr] = n;
+    ld_ptrXYd_n(i16.IX, n, d);
 }
 
 /**
@@ -154,9 +161,8 @@ function ld_ptrIXd_n(n, d) {
  * and the two’s complement displacement operand d.
   */
 function ld_ptrIYd_n(n, d) {
-    CPU.tCycles += 19;
-    const ptr = r16.get(i16.IY) + d;
-    mem[ptr] = n;
+    ld_ptrXYd_n(i16.IY, n, d);
+
 }
 
 /**
@@ -298,6 +304,7 @@ module.exports = {
     ld_ptrIXd_r,
     ld_ptrIYd_r,
     ld_ptrHL_n,
+    ld_ptrXYd_n,
     ld_ptrIXd_n,
     ld_ptrIYd_n,
     ld_A_ptrBC,
