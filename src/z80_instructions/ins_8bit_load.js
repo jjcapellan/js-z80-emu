@@ -93,7 +93,7 @@ function ld_ptrHL_r(rIndex) {
 }
 
 /**
- * Helper for ld_ptrIX_r and ld_ptrIY_r
+ * Helper for ld_ptrIXd_r and ld_ptrIYd_r
  */
  function ld_ptrXYd_r(rIndex, d, xyIndex) {
     CPU.tCycles += 19;
@@ -294,6 +294,7 @@ module.exports = {
     ld_r_ptrIYd,
     ld_r_ptrXYd,
     ld_ptrHL_r,
+    ld_ptrXYd_r,
     ld_ptrIXd_r,
     ld_ptrIYd_r,
     ld_ptrHL_n,
