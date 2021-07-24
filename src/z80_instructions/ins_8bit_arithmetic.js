@@ -122,6 +122,7 @@ function adc_A_n(n) {
  * Helper function for ADC A, (XX) 
  */
 function adc_A_ptrXXplusd(xxIndex, d) {
+    CPU.tCycles += 19;
     const xx = r16.get(xxIndex);
     const c = flags.get(fi.C);
     const a = r8.get(i8.A);
@@ -138,8 +139,8 @@ function adc_A_ptrXXplusd(xxIndex, d) {
 * the Accumulator, and the result is stored in the Accumulator.
 */
 function adc_A_ptrHL() {
-    CPU.tCycles += 7;
-    adc_A_ptrXXplusd(i16.HL, 0);
+    CPU.tCycles -= 12;
+    adc_A_ptrXXplusd(i16.HL, 0); // 19 tCycles
 }
 
 /**
@@ -149,7 +150,6 @@ function adc_A_ptrHL() {
 * the Accumulator, and the result is stored in the Accumulator.
 */
 function adc_A_ptrIXplusd(d) {
-    CPU.tCycles += 19;
     adc_A_ptrXXplusd(i16.IX, d);
 }
 
@@ -160,7 +160,6 @@ function adc_A_ptrIXplusd(d) {
 * the Accumulator, and the result is stored in the Accumulator.
 */
 function adc_A_ptrIYplusd(d) {
-    CPU.tCycles += 19;
     adc_A_ptrXXplusd(i16.IY, d);
 }
 
@@ -751,6 +750,7 @@ module.exports = {
     add_A_ptrIYplusd,
     adc_A_r,
     adc_A_n,
+    adc_A_ptrXXplusd,
     adc_A_ptrHL,
     adc_A_ptrIXplusd,
     adc_A_ptrIYplusd,
