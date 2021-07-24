@@ -715,16 +715,23 @@ function dec_ptrHL() {
 }
 
 /**
+* Helper for dec_ptrIXplusd and dec_ptrIYplusd
+*/
+function dec_ptrXYplusd(xyIndex, d) {
+    CPU.tCycles += 23;
+    const ix = r16.get(xyIndex);
+    const n = mem[ix + d];
+    setFlagsIncDec(n, 0x80);
+    mem[ix + d] = n - 1;
+}
+
+/**
 * DEC (IX + d)
 * 
 * The byte contained in the address specified by the contents of (IX + d) is decremented.
 */
 function dec_ptrIXplusd(d) {
-    CPU.tCycles += 23;
-    const ix = r16.get(i16.IX);
-    const n = mem[ix + d];
-    setFlagsIncDec(n, 0x80);
-    mem[ix + d] = n - 1;
+    dec_ptrXYplusd(i16.IX, d);
 }
 
 /**
@@ -733,11 +740,7 @@ function dec_ptrIXplusd(d) {
 * The byte contained in the address specified by the contents of (IY + d) is incremented.
 */
 function dec_ptrIYplusd(d) {
-    CPU.tCycles += 23;
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    setFlagsIncDec(n, 0x80);
-    mem[iy + d] = n - 1;
+    dec_ptrXYplusd(i16.IY, d);
 }
 
 module.exports = {
@@ -788,6 +791,7 @@ module.exports = {
     inc_ptrIYplusd,
     dec_r,
     dec_ptrHL,
+    dec_ptrXYplusd,
     dec_ptrIXplusd,
     dec_ptrIYplusd,
     setCPU
