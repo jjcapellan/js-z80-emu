@@ -664,7 +664,7 @@ function inc_ptrHL() {
 */
 function inc_ptrXYplusd(xyIndex, d) {
     CPU.tCycles += 23;
-    const ix = r16.get(i16.IX);
+    const ix = r16.get(xyIndex);
     const n = mem[ix + d];
     setFlagsIncDec(n, 0x7f);
     mem[ix + d] = n + 1;
