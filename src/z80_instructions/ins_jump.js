@@ -35,6 +35,15 @@ function jp_cc_nn(flagIndex, isActive, nn){
 }
 
 /**
+ * Helper function for JP (HL) , JP (IX), JP (IY)
+ */
+function jp_ptrXX(xxIndex) {
+    CPU.tCycles += 8;
+    const xx = r16.get(xxIndex);
+    r16.set(i16.PC, xx);
+}
+
+/**
 * JP (HL)
 * 
 * The Program Counter (PC) is loaded with the contents of the HL register pair. The next
@@ -42,9 +51,8 @@ function jp_cc_nn(flagIndex, isActive, nn){
 * Clock: 4T
 */
 function jp_ptrHL() {
-    CPU.tCycles += 4;
-    const hl = r16.get(i16.HL);
-    r16.set(i16.PC, hl);
+    CPU.tCycles -= 4;
+    jp_ptrXX(i16.HL);
 }
 
 /**
@@ -55,9 +63,7 @@ function jp_ptrHL() {
 * Clock: 8T
 */
 function jp_ptrIX() {
-    CPU.tCycles += 8;
-    const ix = r16.get(i16.IX);
-    r16.set(i16.PC, ix);
+    jp_ptrXX(i16.IX);
 }
 
 /**
@@ -68,9 +74,7 @@ function jp_ptrIX() {
 * Clock: 8T
 */
 function jp_ptrIY() {
-    CPU.tCycles += 8;
-    const iy = r16.get(i16.IY);
-    r16.set(i16.PC, iy);
+    jp_ptrXX(i16.IY);
 }
 
 /**
@@ -197,6 +201,7 @@ function djnz_e(e) {
 module.exports = {
     jp_nn,
     jp_cc_nn,
+    jp_ptrXX,
     jp_ptrHL,
     jp_ptrIX,
     jp_ptrIY,
