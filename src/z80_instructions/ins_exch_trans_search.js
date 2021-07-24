@@ -67,6 +67,7 @@ function exx() {
  * @param {number} xxIndex 16bit index (Ex: regs16.idx.AF, regs16.idx.IY, ...)
  */
 function ex_ptrSP_XX(xxIndex) {
+    CPU.tCycles += 23;
     const sp = r16.get(i16.SP);
     const xx = r16.get(xxIndex);
     const xxH = xx >> 8;
@@ -85,7 +86,7 @@ function ex_ptrSP_XX(xxIndex) {
  * Clock: 19T
  */
 function ex_ptrSP_HL() {
-    CPU.tCycles += 19;
+    CPU.tCycles -= 4;
     ex_ptrSP_XX(i16.HL);
 }
 
@@ -98,7 +99,6 @@ function ex_ptrSP_HL() {
  * Clock: 23T
  */
 function ex_ptrSP_IX() {
-    CPU.tCycles += 23;
     ex_ptrSP_XX(i16.IX);
 }
 
@@ -111,7 +111,6 @@ function ex_ptrSP_IX() {
  * Clock: 23T
  */
 function ex_ptrSP_IY() {
-    CPU.tCycles += 23;
     ex_ptrSP_XX(i16.IY);
 }
 
@@ -343,6 +342,7 @@ module.exports = {
     ex_DE_HL,
     ex_AF_AF2,
     exx,
+    ex_ptrSP_XX,
     ex_ptrSP_HL,
     ex_ptrSP_IX,
     ex_ptrSP_IY,
