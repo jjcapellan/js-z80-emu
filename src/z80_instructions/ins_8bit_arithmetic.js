@@ -499,6 +499,7 @@ function xor_n(n) {
  * Helper function for XOR (XX)
  */
 function xor_ptrXXplusd(xxIndex, d) {
+    CPU.tCycles += 19;
     const xx = r16.get(xxIndex);
     const n = mem[xx + d];
     const a = r8.get(i8.A);
@@ -514,7 +515,7 @@ function xor_ptrXXplusd(xxIndex, d) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function xor_ptrHL() {
-    CPU.tCycles += 7;
+    CPU.tCycles -= 12;
     xor_ptrXXplusd(i16.HL, 0);
 }
 
@@ -525,7 +526,6 @@ function xor_ptrHL() {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function xor_ptrIXplusd(d) {
-    CPU.tCycles += 19;
     xor_ptrXXplusd(i16.IX, d);
 }
 
@@ -536,7 +536,6 @@ function xor_ptrIXplusd(d) {
 * byte contained in the Accumulator; the result is stored in the Accumulator.
 */
 function xor_ptrIYplusd(d) {
-    CPU.tCycles += 19;
     xor_ptrXXplusd(i16.IY, d);
 }
 
@@ -776,6 +775,7 @@ module.exports = {
     or_ptrIYplusd,
     xor_r,
     xor_n,
+    xor_ptrXXplusd,
     xor_ptrHL,
     xor_ptrIXplusd,
     xor_ptrIYplusd,
