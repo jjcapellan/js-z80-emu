@@ -210,6 +210,7 @@ function dec_IY() {
 
 module.exports = {
     add_HL_ss,
+    add_II_XX,
     add_IX_pp,
     add_IY_rr,
     adc_HL_ss,
