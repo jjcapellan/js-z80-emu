@@ -34,135 +34,41 @@ function ld_r_n(rIndex, n) {
     r8.set(rIndex, n);
 }
 
-/**
- * LD r, (HL)
- * 
- * The 8-bit contents of memory location (HL) are loaded to register r, in which r identifies
- * registers A, B, C, D, E, H, or L
-  */
-function ld_r_ptrHL(rIndex) {
-    CPU.tCycles += 7;
-    const ptrHLcontent = mem[r16.get(i16.HL)];
-    r8.set(rIndex, ptrHLcontent);
-}
 
 /**
- * LD r, (XY+d)
+ * LD r, (XX) ---> LD r, (HL) ; LD r, (IX + d) ; LD r, (IY + d)
  * 
- * Helper for ld_r_ptrIXd and ld_r_ptrIYd 
+ * The 8-bit contents of memory location (XX + d) are loaded to register r, in which r identifies
+ * registers A, B, C, D, E, H, or L.
+ * XX can be HL, IX, IY
  */
- function ld_r_ptrXYd(rIndex, d, xyIndex) {
-    CPU.tCycles += 19;
-    const ptr = r16.get(xyIndex) + d;
-    const ptrContent = mem[ptr];
-    r8.set(rIndex, ptrContent);
+function ld_r_ptrXXplusd(rIndex, d, xxIndex, tCycles) {
+    CPU.tCycles += tCycles;
+    r8.set(rIndex, mem[r16.get(xxIndex) + d]);
 }
 
 /**
- * LD r, (IX+d)
- * 
- * The (IX+d) operand (i.e., the contents of Index Register IX summed with two’s-complement 
- * displacement integer d) is loaded to register r, in which r identifies registers A, B, C,
- * D, E, H, or L
-  */
-function ld_r_ptrIXd(rIndex, d) {
-    ld_r_ptrXYd(rIndex, d, i16.IX);
-}
-
-/**
- * LD r, (IY+d)
- * 
- * The (IY+d) operand (i.e., the contents of Index Register IY summed with two’s-complement 
- * displacement integer d) is loaded to register r, in which r identifies registers A, B, C,
- * D, E, H, or L
-  */
-function ld_r_ptrIYd(rIndex, d) {
-    ld_r_ptrXYd(rIndex, d, i16.IY);
-}
-
-/**
- * LD (HL), r
+ * LD (XX), r ---> LD (HL), r ; LD (IX + d), r ; LD (IY + d), r
  * 
  * The contents of register r are loaded to the memory location specified by the contents of
  * the HL register pair. The r symbol identifies registers A, B, C, D, E, H, or L.
-  */
-function ld_ptrHL_r(rIndex) {
-    CPU.tCycles += 7;
-    const ptr = r16.get(i16.HL);
-    mem[ptr] = r8.get(rIndex);
-}
-
-/**
- * Helper for ld_ptrIXd_r and ld_ptrIYd_r
+ * XX can be HL, IX or IY.
  */
- function ld_ptrXYd_r(rIndex, d, xyIndex) {
-    CPU.tCycles += 19;
-    const ptr = r16.get(xyIndex) + d;
-    mem[ptr] = r8.get(rIndex);
+function ld_ptrXXplusd_r(rIndex, d, xxIndex, tCycles) {
+    CPU.tCycles += tCycles;
+    mem[r16.get(xxIndex) + d] = r8.get(rIndex);
 }
 
 /**
- * LD (IX+d), r
+ * LD (XX), n ---> LD (HL), n ; LD (IX + d), n ; LD (IY + d), n
  * 
- * The contents of register r are loaded to the memory address specified by the contents of
- * Index Register IX summed with d, a two’s-complement displacement integer. 
- * The r symbol identifies registers A, B, C, D, E, H, or L.
-  */
-function ld_ptrIXd_r(rIndex, d) {
-    ld_ptrXYd_r(rIndex, d, i16.IX);
-}
-
-/**
- * LD (IY+d), r
- * 
- * The contents of register r are loaded to the memory address specified by the contents of
- * Index Register IY summed with d, a two’s-complement displacement integer. 
- * The r symbol identifies registers A, B, C, D, E, H, or L.
-  */
-function ld_ptrIYd_r(rIndex, d) {
-    ld_ptrXYd_r(rIndex, d, i16.IY);
-}
-
-/**
- * LD (HL), n
- * 
- * The n integer is loaded to the memory address specified by the contents of the HL register
- * pair.
-  */
-function ld_ptrHL_n(n) {
-    CPU.tCycles += 10;
-    const ptr = r16.get(i16.HL);
-    mem[ptr] = n;
-}
-
-/** 
- * Helper function for ld_ptrIXd_n and ld_ptrIXd_n
+ * The n integer is loaded to the memory address specified by the contents of the (XX + d) 
+ * memory address.
+ * XX can be HL, IX or IY.
  */
-function ld_ptrXYd_n(xyIndex, n, d) {
-    CPU.tCycles += 19;
-    const ptr = r16.get(xyIndex) + d;
-    mem[ptr] = n;
-}
-
-/**
- * LD (IX+d), n
- * 
- * The n operand is loaded to the memory address specified by the sum of Index Register IX
- * and the two’s complement displacement operand d.
-  */
-function ld_ptrIXd_n(n, d) {
-    ld_ptrXYd_n(i16.IX, n, d);
-}
-
-/**
- * LD (IY+d), n
- * 
- * The n operand is loaded to the memory address specified by the sum of Index Register IY
- * and the two’s complement displacement operand d.
-  */
-function ld_ptrIYd_n(n, d) {
-    ld_ptrXYd_n(i16.IY, n, d);
-
+function ld_ptrXXplusd_n(xxIndex, d, n, tCycles) {
+    CPU.tCycles += tCycles;
+    mem[r16.get(xxIndex) + d] = n;
 }
 
 /**
@@ -295,18 +201,9 @@ function ld_R_A() {
 module.exports = {
     ld_r_r2,
     ld_r_n,
-    ld_r_ptrHL,
-    ld_r_ptrIXd,
-    ld_r_ptrIYd,
-    ld_r_ptrXYd,
-    ld_ptrHL_r,
-    ld_ptrXYd_r,
-    ld_ptrIXd_r,
-    ld_ptrIYd_r,
-    ld_ptrHL_n,
-    ld_ptrXYd_n,
-    ld_ptrIXd_n,
-    ld_ptrIYd_n,
+    ld_r_ptrXXplusd,
+    ld_ptrXXplusd_r,
+    ld_ptrXXplusd_n,
     ld_A_ptrBC,
     ld_A_ptrDE,
     ld_A_ptrnn,
