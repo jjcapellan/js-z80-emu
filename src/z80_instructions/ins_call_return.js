@@ -5,7 +5,7 @@
  * @author Juan Jose Capellan <soycape@hotmail.com>
  */
 
-const { push_qq, pop_qq } = require('./ins_16bit_load');
+const { push_XX, pop_XX } = require('./ins_16bit_load');
 
 let CPU, r16, i16, flags, fi;
 function setCPU(data) {
@@ -30,7 +30,7 @@ function setCPU(data) {
 function call_nn(nn) {
     CPU.tCycles += 6;
     r16.set(i16.PC, r16.get(i16.PC) + 3);
-    push_qq(i16.PC); // 11 tCycles
+    push_XX(i16.PC, 11); // 11 tCycles
     r16.set(i16.PC, nn);
 }
 
@@ -59,7 +59,7 @@ function call_cc_nn(flagIndex, isActive, nn) {
 * Clock: 10T
 */
 function ret() {
-    pop_qq(i16.PC); // 10 tCycles
+    pop_XX(i16.PC, 10); // 10 tCycles
 }
 
 /**
@@ -123,7 +123,7 @@ function retn() {
 * Clock: 11T
 */
 function rst_p(p) {
-    push_qq(i16.PC); // 11 tCycles
+    push_XX(i16.PC, 11); // 11 tCycles
     r16.set(i16.PC, p);
 }
 
