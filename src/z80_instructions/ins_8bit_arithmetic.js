@@ -6,8 +6,8 @@
  */
 
 let CPU, r8, i8, r16, i16, flags, fi, mem;
-function setCPU(data){
-    ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data); 
+function setCPU(data) {
+    ({ CPU, r8, i8, r16, i16, flags, fi, mem } = data);
 }
 
 /**
@@ -40,49 +40,20 @@ function add_A_n(n) {
 }
 
 /**
- * Helper for ADD A, (XX)
+ * ADD A, (XX + d) ---> ADD A, (HL) ; ADD A, (IX + d) ; ADD A, (IY + d)
+ * 
+ * The byte at the memory address specified by the contents of the (XX register + d) is added
+ * to the contents of the Accumulator, and the result is stored in the Accumulator.
+ * XX can be HL, IX or IY.
  */
-function add_A_ptrXXplusd(xxIndex, d) {
-    CPU.tCycles += 19;
+function add_A_ptrXXplusd(xxIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
     const a = r8.get(i8.A);
     const xx = r16.get(xxIndex);
     const n = mem[xx + d];
     r8.set(i8.A, a + n);
     let f = CPU.tables.addFlagsTable[(a << 8) | n];
     r8.set(i8.F, f);
-};
-
-/**
-* ADD A, (HL)
-* 
-* The byte at the memory address specified by the contents of the HL register pair is added
-* to the contents of the Accumulator, and the result is stored in the Accumulator.
-*/
-function add_A_ptrHL() {
-    CPU.tCycles -= 12;
-    add_A_ptrXXplusd(i16.HL, 0); // 19 tCycles
-}
-
-/**
-* ADD A, (IX + d)
-* 
-* The contents of the Index (register pair IX) Register is added to a two’s 
-* complement displacement d to point to an address in memory. The contents of this address is then added to
-* the contents of the Accumulator and the result is stored in the Accumulator.
-*/
-function add_A_ptrIXplusd(d) {
-    add_A_ptrXXplusd(i16.IX, d);
-}
-
-/**
-* ADD A, (IY + d)
-* 
-* The contents of the Index (register pair IY) Register is added to a two’s 
-* complement displacement d to point to an address in memory. The contents of this address is then added to
-* the contents of the Accumulator, and the result is stored in the Accumulator.
-*/
-function add_A_ptrIYplusd(d) {
-    add_A_ptrXXplusd(i16.IY, d);
 }
 
 /**
@@ -119,10 +90,14 @@ function adc_A_n(n) {
 }
 
 /**
- * Helper function for ADC A, (XX) 
+ * ADC A, (XX) ---> ADC A, (HL) ; ADC A, (IX + d) ; ADC A, (IY + d)
+ * 
+ * The content of memory address (XX + d), along with the Carry Flag (C in the F Register) is added to the contents of
+ * the Accumulator, and the result is stored in the Accumulator.
+ * XX can be HL, IX or IY.
  */
-function adc_A_ptrXXplusd(xxIndex, d) {
-    CPU.tCycles += 19;
+function adc_A_ptrXXplusd(xxIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
     const xx = r16.get(xxIndex);
     const c = flags.get(fi.C);
     const a = r8.get(i8.A);
@@ -130,37 +105,6 @@ function adc_A_ptrXXplusd(xxIndex, d) {
     r8.set(i8.A, a + n);
     let f = CPU.tables.addFlagsTable[(a << 8) | n];
     r8.set(i8.F, f);
-}
-
-/**
-* ADC A, (HL)
-* 
-* The content of memory address (HL), along with the Carry Flag (C in the F Register) is added to the contents of
-* the Accumulator, and the result is stored in the Accumulator.
-*/
-function adc_A_ptrHL() {
-    CPU.tCycles -= 12;
-    adc_A_ptrXXplusd(i16.HL, 0); // 19 tCycles
-}
-
-/**
-* ADC A, (IX + d)
-* 
-* The content of memory address(IX + d), along with the Carry Flag (C in the F Register) is added to the contents of
-* the Accumulator, and the result is stored in the Accumulator.
-*/
-function adc_A_ptrIXplusd(d) {
-    adc_A_ptrXXplusd(i16.IX, d);
-}
-
-/**
-* ADC A, (IY + d)
-* 
-* The content of memory address(IY + d), along with the Carry Flag (C in the F Register) is added to the contents of
-* the Accumulator, and the result is stored in the Accumulator.
-*/
-function adc_A_ptrIYplusd(d) {
-    adc_A_ptrXXplusd(i16.IY, d);
 }
 
 /**
@@ -193,49 +137,20 @@ function sub_A_n(n) {
 }
 
 /**
- * Helper function for SUB A, (XX)
+ * SUB A, (XX) ---> SUB A, (HL) ; SUB A, (IX + d) ; SUB A, (IY + d)
+ * 
+ * The byte at the memory address specified by the contents of (XX + d) is substracted
+ * to the contents of the Accumulator, and the result is stored in the Accumulator.
+ * XX can be HL, IX or IY.
  */
-function sub_A_ptrXXplusd(xxIndex, d) {
-    CPU.tCycles += 19;
+function sub_A_ptrXXplusd(xxIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
     const a = r8.get(i8.A);
     const xx = r16.get(xxIndex);
     const n = mem[xx + d];
     r8.set(i8.A, a - n);
     let f = CPU.tables.subFlagsTable[(a << 8) | n];
     r8.set(i8.F, f);
-}
-
-/**
-* SUB A, (HL)
-* 
-* The byte at the memory address specified by the contents of the HL register pair is substracted
-* to the contents of the Accumulator, and the result is stored in the Accumulator.
-*/
-function sub_A_ptrHL() {
-    CPU.tCycles -= 12;
-    sub_A_ptrXXplusd(i16.HL, 0);
-}
-
-/**
-* SUB A, (IX + d)
-* 
-* The contents of the Index (register pair IX) Register is added to a two’s 
-* complement displacement d to point to an address in memory. The contents of this address is then substracted 
-* to the contents of the Accumulator and the result is stored in the Accumulator.
-*/
-function sub_A_ptrIXplusd(d) {
-    sub_A_ptrXXplusd(i16.IX, d);
-}
-
-/**
-* SUB A, (IY + d)
-* 
-* The contents of the Index (register pair IY) Register is added to a two’s 
-* complement displacement d to point to an address in memory. The contents of this address is then substracted
-* to the contents of the Accumulator, and the result is stored in the Accumulator.
-*/
-function sub_A_ptrIYplusd(d) {
-    sub_A_ptrXXplusd(i16.IY, d);
 }
 
 /**
@@ -272,10 +187,14 @@ function sbc_A_n(n) {
 }
 
 /**
- * Helper function for SBC A, (XX)
+ * SBC A, (XX) ---> SBC A, (HL) ; SBC A, (IX + d) ; SBC A, (IY + d)
+ * 
+ * The content of memory address (HL), along with the Carry Flag (C in the F Register) is substracted to the contents of
+ * the Accumulator, and the result is stored in the Accumulator.
+ * XX can be HL, IX or IY.
  */
-function sbc_A_ptrXXplusd(xxIndex, d) {
-    CPU.tCycles += 19;
+function sbc_A_ptrXXplusd(xxIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
     const xx = r16.get(xxIndex);
     const c = flags.get(fi.C);
     const a = r8.get(i8.A);
@@ -283,37 +202,6 @@ function sbc_A_ptrXXplusd(xxIndex, d) {
     r8.set(i8.A, a - n);
     let f = CPU.tables.subFlagsTable[(a << 8) | n];
     r8.set(i8.F, f);
-}
-
-/**
-* SBC A, (HL)
-* 
-* The content of memory address (HL), along with the Carry Flag (C in the F Register) is substracted to the contents of
-* the Accumulator, and the result is stored in the Accumulator.
-*/
-function sbc_A_ptrHL() {
-    CPU.tCycles -= 12;
-    sbc_A_ptrXXplusd(i16.HL, 0);
-}
-
-/**
-* SBC A, (IX + d)
-* 
-* The content of memory address(IX + d), along with the Carry Flag (C in the F Register) is substracted 
-* to the contents of the Accumulator, and the result is stored in the Accumulator.
-*/
-function sbc_A_ptrIXplusd(d) {
-    sbc_A_ptrXXplusd(i16.IX, d);
-}
-
-/**
-* SBC A, (IY + d)
-* 
-* The content of memory address(IY + d), along with the Carry Flag (C in the F Register) is substracted 
-* to the contents of the Accumulator, and the result is stored in the Accumulator.
-*/
-function sbc_A_ptrIYplusd(d) {
-    sbc_A_ptrXXplusd(i16.IY, d);
 }
 
 /**
@@ -347,47 +235,20 @@ function and_n(n) {
 }
 
 /**
- * Helper function for AND (XX)
+ * AND (XX) ---> AND (HL) ; AND (IX + d) ; AND (IY + d)
+ * 
+ * A logical AND operation is performed between the byte located at (XX + d) memory address and the
+ * byte contained in the Accumulator; the result is stored in the Accumulator.
+ * XX can be HL, IX or IY.
  */
-function and_ptrXXplusd(xxIndex, d) {
-    CPU.tCycles += 19;
+function and_ptrXXplusd(xxIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
     const xx = r16.get(xxIndex);
     const n = mem[xx + d];
     const a = r8.get(i8.A);
     let f = CPU.tables.andFlagsTable[(a << 8) | n];
     r8.set(i8.F, f);
     r8.set(i8.A, a & n);
-}
-
-/**
-* AND (HL)
-* 
-* A logical AND operation is performed between the byte located at HL memory address and the
-* byte contained in the Accumulator; the result is stored in the Accumulator.
-*/
-function and_ptrHL() {
-    CPU.tCycles -= 12;
-    and_ptrXXplusd(i16.HL, 0);
-}
-
-/**
-* AND (IX + d)
-* 
-* A logical AND operation is performed between the byte located at (IX + d) memory address and the
-* byte contained in the Accumulator; the result is stored in the Accumulator.
-*/
-function and_ptrIXplusd(d) {
-    and_ptrXXplusd(i16.IX, d);
-}
-
-/**
-* AND (IY + d)
-* 
-* A logical AND operation is performed between the byte located at (IY + d) memory address and the
-* byte contained in the Accumulator; the result is stored in the Accumulator.
-*/
-function and_ptrIYplusd(d) {
-    and_ptrXXplusd(i16.IY, d);
 }
 
 /**
@@ -421,47 +282,20 @@ function or_n(n) {
 }
 
 /**
- * Helper function for OR (XX)
+ * OR (XX) ---> OR (HL) ; OR (IX + d) ; OR (IY + d)
+ * 
+ * A logical OR operation is performed between the byte located at (XX + d) memory address and the
+ * byte contained in the Accumulator; the result is stored in the Accumulator.
+ * XX can be HL, IX or IY.
  */
-function or_ptrXXplusd(xxIndex, d) {
-    CPU.tCycles += 19;
+function or_ptrXXplusd(xxIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
     const xx = r16.get(xxIndex);
     const n = mem[xx + d];
     const a = r8.get(i8.A);
     let f = CPU.tables.orFlagsTable[(a << 8) | n];
     r8.set(i8.F, f);
     r8.set(i8.A, a | n);
-}
-
-/**
-* OR (HL)
-* 
-* A logical OR operation is performed between the byte located at HL memory address and the
-* byte contained in the Accumulator; the result is stored in the Accumulator.
-*/
-function or_ptrHL() {
-    CPU.tCycles -= 12;
-    or_ptrXXplusd(i16.HL, 0);
-}
-
-/**
-* OR (IX + d)
-* 
-* A logical OR operation is performed between the byte located at (IX + d) memory address and the
-* byte contained in the Accumulator; the result is stored in the Accumulator.
-*/
-function or_ptrIXplusd(d) {
-    or_ptrXXplusd(i16.IX, d);
-}
-
-/**
-* OR (IY + d)
-* 
-* A logical OR operation is performed between the byte located at (IY + d) memory address and the
-* byte contained in the Accumulator; the result is stored in the Accumulator.
-*/
-function or_ptrIYplusd(d) {
-    or_ptrXXplusd(i16.IY, d);
 }
 
 /**
@@ -495,47 +329,20 @@ function xor_n(n) {
 }
 
 /**
- * Helper function for XOR (XX)
+ * XOR (XX) ---> XOR (HL) ; XOR (IX + d) ; XOR (IY + d)
+ * 
+ * A logical XOR operation is performed between the byte located at (XX + d) memory address and the
+ * byte contained in the Accumulator; the result is stored in the Accumulator.
+ * XX can be HL, IX or IY.
  */
-function xor_ptrXXplusd(xxIndex, d) {
-    CPU.tCycles += 19;
+function xor_ptrXXplusd(xxIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
     const xx = r16.get(xxIndex);
     const n = mem[xx + d];
     const a = r8.get(i8.A);
     let f = CPU.tables.xorFlagsTable[(a << 8) | n];
     r8.set(i8.F, f);
     r8.set(i8.A, a ^ n);
-}
-
-/**
-* XOR (HL)
-* 
-* A logical XOR operation is performed between the byte located at HL memory address and the
-* byte contained in the Accumulator; the result is stored in the Accumulator.
-*/
-function xor_ptrHL() {
-    CPU.tCycles -= 12;
-    xor_ptrXXplusd(i16.HL, 0);
-}
-
-/**
-* XOR (IX + d)
-* 
-* A logical XOR operation is performed between the byte located at (IX + d) memory address and the
-* byte contained in the Accumulator; the result is stored in the Accumulator.
-*/
-function xor_ptrIXplusd(d) {
-    xor_ptrXXplusd(i16.IX, d);
-}
-
-/**
-* XOR (IY + d)
-* 
-* A logical XOR operation is performed between the byte located at (IY + d) memory address and the
-* byte contained in the Accumulator; the result is stored in the Accumulator.
-*/
-function xor_ptrIYplusd(d) {
-    xor_ptrXXplusd(i16.IY, d);
 }
 
 /**
@@ -570,49 +377,21 @@ function cp_n(n) {
 }
 
 /**
- * Helper function for CP (XX)
+ * CP (XX) ---> CP (HL) ; CP (IX + d) ; CP (IY + d)
+ * 
+ * The content of (XX + d) memory address is compared with the contents of the Accumulator. If there
+ * is a true compare, the Z flag is set. The execution of this instruction does not affect the
+ * contents of the Accumulator.
+ * XX can be HL, IX or IY.
  */
-function cp_ptrXXplusd(xxIndex, d) {
-    CPU.tCycles += 19;
+function cp_ptrXXplusd(xxIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
     const a = r8.get(i8.A);
     const xx = r16.get(xxIndex);
     const n = mem[xx + d];
     let f = CPU.tables.subFlagsTable[(a << 8) | n];
     f = (f & 0b11010111) | (n & 0b00101000); // Overwrites flags F3 and F5 from operand n
     r8.set(i8.F, f);
-}
-/**
-* CP (HL)
-* 
-* The content of HL memory address is compared with the contents of the Accumulator. If there
-* is a true compare, the Z flag is set. The execution of this instruction does not affect the
-* contents of the Accumulator.
-*/
-function cp_ptrHL() {
-    CPU.tCycles -= 12;
-    cp_ptrXXplusd(i16.HL, 0);
-}
-
-/**
-* CP (IX + d)
-* 
-* The content of (IX + d) memory address is compared with the contents of the Accumulator. If there
-* is a true compare, the Z flag is set. The execution of this instruction does not affect the
-* contents of the Accumulator.
-*/
-function cp_ptrIXplusd(d) {
-    cp_ptrXXplusd(i16.IX, d);
-}
-
-/**
-* CP (IY + d)
-* 
-* The content of (IY + d) memory address is compared with the contents of the Accumulator. If there
-* is a true compare, the Z flag is set. The execution of this instruction does not affect the
-* contents of the Accumulator.
-*/
-function cp_ptrIYplusd(d) {
-    cp_ptrXXplusd(i16.IY, d);
 }
 
 function setFlagsIncDec(n, VLimit) {
@@ -639,46 +418,17 @@ function inc_r(rIndex) {
 }
 
 /**
-* INC (HL)
+* INC (XX) ---> INC (HL) ; INC (IX + d) ; INC (IY + d)
 * 
-* The byte contained in the address specified by the contents of the HL register pair is incremented.
+* The byte contained in the address specified by the contents of (XX + d) is incremented.
+* XX can be HL, IX or IY.
 */
-function inc_ptrHL() {
-    CPU.tCycles += 11;
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
+function inc_ptrXXplusd(xyIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
+    const xx = r16.get(xyIndex);
+    const n = mem[xx + d];
     setFlagsIncDec(n, 0x7f);
-    mem[hl] = n + 1;
-}
-
-/**
-* Helper for inc_ptrIXplusd and inc_ptrIYplusd
-*/
-function inc_ptrXYplusd(xyIndex, d) {
-    CPU.tCycles += 23;
-    const ix = r16.get(xyIndex);
-    const n = mem[ix + d];
-    setFlagsIncDec(n, 0x7f);
-    mem[ix + d] = n + 1;
-}
-
-
-/**
-* INC (IX + d)
-* 
-* The byte contained in the address specified by the contents of (IX + d) is incremented.
-*/
-function inc_ptrIXplusd(d) {
-    inc_ptrXYplusd(i16.IX, d);
-}
-
-/**
-* INC (IY + d)
-* 
-* The byte contained in the address specified by the contents of (IY + d) is incremented.
-*/
-function inc_ptrIYplusd(d) {
-    inc_ptrXYplusd(i16.IY, d);
+    mem[xx + d] = n + 1;
 }
 
 /**
@@ -694,105 +444,47 @@ function dec_r(rIndex) {
 }
 
 /**
-* DEC (HL)
-* 
-* The byte contained in the address specified by the contents of the HL register pair is decremented.
+* DEC (XX) ---> DEC (HL) ; DEC (IX + d) ; DEC (IY + d)
+*
+* The byte contained in the address specified by the contents of (XX + d) is decremented.
+* XX can be HL, IX or IY.
 */
-function dec_ptrHL() {
-    CPU.tCycles += 11;
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
-    setFlagsIncDec(n, 0x80);
-    mem[hl] = n - 1;
-}
-
-/**
-* Helper for dec_ptrIXplusd and dec_ptrIYplusd
-*/
-function dec_ptrXYplusd(xyIndex, d) {
-    CPU.tCycles += 23;
+function dec_ptrXXplusd(xyIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
     const ix = r16.get(xyIndex);
     const n = mem[ix + d];
     setFlagsIncDec(n, 0x80);
     mem[ix + d] = n - 1;
 }
 
-/**
-* DEC (IX + d)
-* 
-* The byte contained in the address specified by the contents of (IX + d) is decremented.
-*/
-function dec_ptrIXplusd(d) {
-    dec_ptrXYplusd(i16.IX, d);
-}
-
-/**
-* DEC (IY + d)
-* 
-* The byte contained in the address specified by the contents of (IY + d) is incremented.
-*/
-function dec_ptrIYplusd(d) {
-    dec_ptrXYplusd(i16.IY, d);
-}
-
 module.exports = {
     add_A_r,
     add_A_n,
     add_A_ptrXXplusd,
-    add_A_ptrHL,
-    add_A_ptrIXplusd,
-    add_A_ptrIYplusd,
     adc_A_r,
     adc_A_n,
     adc_A_ptrXXplusd,
-    adc_A_ptrHL,
-    adc_A_ptrIXplusd,
-    adc_A_ptrIYplusd,
     sub_A_r,
     sub_A_n,
     sub_A_ptrXXplusd,
-    sub_A_ptrHL,
-    sub_A_ptrIXplusd,
-    sub_A_ptrIYplusd,
     sbc_A_r,
     sbc_A_n,
     sbc_A_ptrXXplusd,
-    sbc_A_ptrHL,
-    sbc_A_ptrIXplusd,
-    sbc_A_ptrIYplusd,
     and_r,
     and_n,
     and_ptrXXplusd,
-    and_ptrHL,
-    and_ptrIXplusd,
-    and_ptrIYplusd,
     or_r,
     or_n,
     or_ptrXXplusd,
-    or_ptrHL,
-    or_ptrIXplusd,
-    or_ptrIYplusd,
     xor_r,
     xor_n,
     xor_ptrXXplusd,
-    xor_ptrHL,
-    xor_ptrIXplusd,
-    xor_ptrIYplusd,
     cp_r,
     cp_n,
     cp_ptrXXplusd,
-    cp_ptrHL,
-    cp_ptrIXplusd,
-    cp_ptrIYplusd,
     inc_r,
-    inc_ptrHL,
-    inc_ptrXYplusd,
-    inc_ptrIXplusd,
-    inc_ptrIYplusd,
+    inc_ptrXXplusd,
     dec_r,
-    dec_ptrHL,
-    dec_ptrXYplusd,
-    dec_ptrIXplusd,
-    dec_ptrIYplusd,
+    dec_ptrXXplusd,
     setCPU
 }
