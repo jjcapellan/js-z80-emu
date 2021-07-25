@@ -63,11 +63,14 @@ function exx() {
 }
 
 /**
- * Helper function for ex (SP), HL/IX/IY ...
- * @param {number} xxIndex 16bit index (Ex: regs16.idx.AF, regs16.idx.IY, ...)
+ * EX (SP), XX ---> EX (SP), HL ; EX (SP), IX ; EX (SP), IY
+ * 
+ * The low-order byte in register XX is exchanged with the contents of the memory
+ * address specified by the contents of register pair SP (Stack Pointer), and the high-order
+ * byte of XX is exchanged with the next highest memory address (SP+1).
  */
-function ex_ptrSP_XX(xxIndex) {
-    CPU.tCycles += 23;
+function ex_ptrSP_XX(xxIndex, tCycles) {
+    CPU.tCycles += tCycles;
     const sp = r16.get(i16.SP);
     const xx = r16.get(xxIndex);
     const xxH = xx >> 8;
@@ -75,43 +78,6 @@ function ex_ptrSP_XX(xxIndex) {
     r16.set(xxIndex, (mem[sp + 1] << 8) | mem[sp]);
     mem[sp] = xxL;
     mem[sp + 1] = xxH;
-}
-
-/**
- * ex (SP), HL
- * 
- * The low-order byte contained in register pair HL is exchanged with the contents of the
- * memory address specified by the contents of register pair SP (Stack Pointer), and the 
- * highorder byte of HL is exchanged with the next highest memory address (SP+1)
- * Clock: 19T
- */
-function ex_ptrSP_HL() {
-    CPU.tCycles -= 4;
-    ex_ptrSP_XX(i16.HL);
-}
-
-/**
- * ex (SP), IX
- * 
- * The low-order byte in Index Register IX is exchanged with the contents of the memory
- * address specified by the contents of register pair SP (Stack Pointer), and the high-order
- * byte of IX is exchanged with the next highest memory address (SP+1).
- * Clock: 23T
- */
-function ex_ptrSP_IX() {
-    ex_ptrSP_XX(i16.IX);
-}
-
-/**
- * ex (SP), IY
- * 
- * The low-order byte in Index Register IY is exchanged with the contents of the memory
- * address specified by the contents of register pair SP (Stack Pointer), and the high-order
- * byte of IY is exchanged with the next highest memory address (SP+1).
- * Clock: 23T
- */
-function ex_ptrSP_IY() {
-    ex_ptrSP_XX(i16.IY);
 }
 
 /**
@@ -343,9 +309,6 @@ module.exports = {
     ex_AF_AF2,
     exx,
     ex_ptrSP_XX,
-    ex_ptrSP_HL,
-    ex_ptrSP_IX,
-    ex_ptrSP_IY,
     ldi,
     ldir,
     ldd,
