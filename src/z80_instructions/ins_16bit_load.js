@@ -157,14 +157,23 @@ function ld_ptrnn_IY(ptrnn) {
     ld_ptrnn_XY(ptrnn, i16.IY);
 }
 
+
+/**
+ * Helper function for: LD SP, HL ;  LD SP, IX ;  LD SP, IY
+ */
+function ld_SP_XX(xxIndex) {
+    CPU.tCycles += 10;
+    r16.set(i16.SP, r16.get(xxIndex));
+}
+
 /**
  * LD SP, HL
  * 
  * The contents of the register pair HL are loaded to the Stack Pointer (SP).
   */
 function ld_SP_HL() {
-    CPU.tCycles += 6;
-    r16.set(i16.SP, r16.get(i16.HL));
+    CPU.tCycles -= 4;
+    ld_SP_XX(i16.HL);
 }
 
 /**
@@ -173,8 +182,7 @@ function ld_SP_HL() {
  * The 2-byte contents of Index Register IX are loaded to the Stack Pointer (SP)
   */
 function ld_SP_IX() {
-    CPU.tCycles += 10;
-    r16.set(i16.SP, r16.get(i16.IX));
+    ld_SP_XX(i16.IX);
 }
 
 /**
@@ -183,8 +191,7 @@ function ld_SP_IX() {
  * The 2-byte contents of Index Register IY are loaded to the Stack Pointer (SP)
   */
 function ld_SP_IY() {
-    CPU.tCycles += 10;
-    r16.set(i16.SP, r16.get(i16.IY));
+    ld_SP_XX(i16.IY);
 }
 
 /**
@@ -303,6 +310,7 @@ module.exports = {
     ld_ptrnn_XY,
     ld_ptrnn_IX,
     ld_ptrnn_IY,
+    ld_SP_XX,
     ld_SP_HL,
     ld_SP_IX,
     ld_SP_IY,
