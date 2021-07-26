@@ -73,53 +73,18 @@ function rlc_r(rIndex) {
 }
 
 /**
-* RLC (HL)
-* 
-* The contents of the memory address specified by the contents of register pair HL are
-* rotated left 1 bit position. The contents of bit 7 are copied to the Carry flag and also to bit 0.
-* Bit 0 is the least-significant bit.
-* Clock: 15T
-*/
-function rlc_ptrHL() {
-    CPU.tCycles += 15;
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
+ * RLC (XX) ---> RLC (HL) ; RLC (IX + d) ; RLC (IY + d)
+ * 
+ * The contents of the memory address specified by the contents of (XX) are
+ * rotated left 1 bit position. The contents of bit 7 are copied to the Carry flag and also to bit 0.
+ * Bit 0 is the least-significant bit.
+ */
+function rlc_ptrXXplusd(xxIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
+    const xx = r16.get(xxIndex);
+    const n = mem[xx + d];
     const nRotated = get_rotated_rlc(n);
-    mem[hl] = nRotated;
-}
-
-/**
-* RLC (IX + d)
-* 
-* The contents of the memory address specified by the sum of the contents of Index Register
-* IX and the two’s-complement displacement integer, d, are rotated left 1 bit position. The
-* contents of bit 7 are copied to the Carry flag and also to bit 0. Bit 0 is the least-significant
-* bit.
-* Clock: 23T
-*/
-function rlc_ptrIXd(d) {
-    CPU.tCycles += 23;
-    const ix = r16.get(i16.IX);
-    const n = mem[ix + d];
-    const nRotated = get_rotated_rlc(n);
-    mem[ix + d] = nRotated;
-}
-
-/**
-* RLC (IY + d)
-* 
-* The contents of the memory address specified by the sum of the contents of Index Register
-* IY and the two’s-complement displacement integer, d, are rotated left 1 bit position. The
-* contents of bit 7 are copied to the Carry flag and also to bit 0. Bit 0 is the least-significant
-* bit.
-* Clock: 23T
-*/
-function rlc_ptrIYd(d) {
-    CPU.tCycles += 23;
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    const nRotated = get_rotated_rlc(n);
-    mem[iy + d] = nRotated;
+    mem[xx + d] = nRotated;
 }
 
 /**
@@ -161,55 +126,18 @@ function rl_r(rIndex) {
 }
 
 /**
-* RL (HL)
+* RL (XX) ---> RL (HL) ; RL (IX + d) ; RL (IY + d)
 * 
-* The contents of the memory address specified by the contents of register pair HL are
-* rotated left 1 bit position. The contents of bit 7 are copied to the Carry flag,
+* The contents of the memory address specified by (XX) are rotated left 
+* 1 bit position. The contents of bit 7 are copied to the Carry flag,
 * and previus Carry flag to bit 0. Bit 0 is the least-significant bit.
-* Clock: 4T
 */
-function rl_ptrHL() {
-    CPU.tCycles += 4;
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
+function rl_ptrXXplusd(xxIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
+    const xx = r16.get(xxIndex);
+    const n = mem[xx + d];
     const nRotated = get_rotated_rl(n);
-    mem[hl] = nRotated;
-}
-
-/**
-* RL (IX + d)
-* 
-* The contents of the memory address specified by the sum of the contents of Index Register
-* IX and the two’s-complement displacement integer, d, are rotated left 1 bit position. The
-* contents of bit 7 are copied to the Carry flag, and previus Carry flag to bit 0.
-* Bit 0 is the least-significant
-* bit.
-* Clock: 6T
-*/
-function rl_ptrIXd(d) {
-    CPU.tCycles += 6;
-    const ix = r16.get(i16.IX);
-    const n = mem[ix + d];
-    const nRotated = get_rotated_rl(n);
-    mem[ix + d] = nRotated;
-}
-
-/**
-* RL (IY + d)
-* 
-* The contents of the memory address specified by the sum of the contents of Index Register
-* IY and the two’s-complement displacement integer, d, are rotated left 1 bit position. The
-* contents of bit 7 are copied to the Carry flag, and previus Carry flag to bit 0.
-* Bit 0 is the least-significant
-* bit.
-* Clock: 6T
-*/
-function rl_ptrIYd(d) {
-    CPU.tCycles += 6;
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    const nRotated = get_rotated_rl(n);
-    mem[iy + d] = nRotated;
+    mem[xx + d] = nRotated;
 }
 
 /**
@@ -290,53 +218,18 @@ function rrc_r(rIndex) {
 }
 
 /**
-* RRC (HL)
+* RRC (XX) ---> RRC (HL) ; RRC (IX + d) ; RRC (IY + d)
 * 
-* The contents of the memory address specified by the contents of register pair HL are
-* rotated right 1 bit position. The contents of bit 0 are copied to the Carry flag and
+* The contents of the memory address specified by (XX) are rotated right 
+* 1 bit position. The contents of bit 0 are copied to the Carry flag and
 * also to bit 7. Bit 0 is the least-significant bit.
-* Clock: 4T
 */
-function rrc_ptrHL() {
-    CPU.tCycles += 4;
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
+function rrc_ptrXXplusd(xxIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
+    const xx = r16.get(xxIndex);
+    const n = mem[xx + d];
     const nRotated = get_rotated_rrc(n);
-    mem[hl] = nRotated;
-}
-
-/**
-* RRC (IX + d)
-* 
-* The contents of the memory address specified by the sum of the contents of Index Register
-* IX and the two’s-complement displacement integer, d, are rotated right 1 bit position. 
-* The contents of bit 0 are copied to the Carry flag and also to bit 7. 
-* Bit 0 is the least-significant bit.
-* Clock: 6T
-*/
-function rrc_ptrIXd(d) {
-    CPU.tCycles += 6;
-    const ix = r16.get(i16.IX);
-    const n = mem[ix + d];
-    const nRotated = get_rotated_rrc(n);
-    mem[ix + d] = nRotated;
-}
-
-/**
-* RRC (IY + d)
-* 
-* The contents of the memory address specified by the sum of the contents of Index Register
-* IY and the two’s-complement displacement integer, d, are rotated right 1 bit position.
-* The contents of bit 0 are copied to the Carry flag and also to bit 7.
-* Bit 0 is the least-significant bit.
-* Clock: 6T
-*/
-function rrc_ptrIYd(d) {
-    CPU.tCycles += 6;
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    const nRotated = get_rotated_rrc(n);
-    mem[iy + d] = nRotated;
+    mem[xx + d] = nRotated;
 }
 
 /**
@@ -400,54 +293,19 @@ function rr_r(rIndex) {
 }
 
 /**
-* RR (HL)
+* RR (XX) ---> RR (HL) ; RR (IX + d) ; RR (IY + d)
 * 
-* The contents of the memory address specified by the contents of register pair HL are
-* rotated right 1 bit position through the Carry flag. The contents of bit 0 are copied
+* The contents of the memory address specified by (XX) are rotated right 
+* 1 bit position through the Carry flag. The contents of bit 0 are copied
 * to the Carry flag and the previous contents of the Carry flag are
 * copied to bit 7. Bit 0 is the least-significant bit.
-* Clock: 4T
 */
-function rr_ptrHL() {
-    CPU.tCycles += 4;
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
+function rr_ptrXXplusd(xxIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
+    const xx = r16.get(xxIndex);
+    const n = mem[xx + d];
     const nRotated = get_rotated_rr(n);
-    mem[hl] = nRotated;
-}
-
-/**
-* RR (IX + d)
-* 
-* The contents of the memory address specified by the sum of the contents of Index Register
-* IX and the two’s-complement displacement integer, d, are rotated right 1 bit position through
-* the Carry flag.The contents of bit 0 are copied to the Carry flag and the previous contents
-* of the Carry flag are copied to bit 7. Bit 0 is the least-significant bit.
-* Clock: 6T
-*/
-function rr_ptrIXd(d) {
-    CPU.tCycles += 6;
-    const ix = r16.get(i16.IX);
-    const n = mem[ix + d];
-    const nRotated = get_rotated_rr(n);
-    mem[ix + d] = nRotated;
-}
-
-/**
-* RR (IY + d)
-* 
-* The contents of the memory address specified by the sum of the contents of Index Register
-* IY and the two’s-complement displacement integer, d, are rotated right 1 bit position through
-* the Carry flag.The contents of bit 0 are copied to the Carry flag and the previous contents
-* of the Carry flag are copied to bit 7. Bit 0 is the least-significant bit.
-* Clock: 6T
-*/
-function rr_ptrIYd(d) {
-    CPU.tCycles += 6;
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    const nRotated = get_rotated_rr(n);
-    mem[iy + d] = nRotated;
+    mem[xx + d] = nRotated;
 }
 
 /**
@@ -488,54 +346,19 @@ function sla_r(rIndex) {
 }
 
 /**
-* SLA (HL)
+* SLA (XX) ---> SLA (HL) ; SLA (IX + d) ; SLA (IY + d)
 * 
-* An arithmetic shift left 1 bit position is performed on the the contents of the memory address
-* specified by the contents of register pair HL. 
+* An arithmetic shift left 1 bit position is performed on the the contents
+* of the memory address specified by the contents of (XX). 
 * The contents of bit 7 are copied to the Carry flag.
 * Bit 0 is the least-significant bit.
-* Clock: 4T
 */
-function sla_ptrHL() {
-    CPU.tCycles += 4;
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
+function sla_ptrXXplusd(xxIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
+    const xx = r16.get(xxIndex);
+    const n = mem[xx + d];
     const nShifted = get_shifted_sla(n);
-    mem[hl] = nShifted;
-}
-
-/**
-* SLA (IX + d)
-* 
-* An arithmetic shift left 1 bit position is performed on the the contents of the memory address
-* specified by the contents of index register IX. 
-* The contents of bit 7 are copied to the Carry flag.
-* Bit 0 is the least-significant bit.
-* Clock: 6T
-*/
-function sla_ptrIXd(d) {
-    CPU.tCycles += 6;
-    const ix = r16.get(i16.IX);
-    const n = mem[ix + d];
-    const nShifted = get_shifted_sla(n);
-    mem[ix + d] = nShifted;
-}
-
-/**
-* SLA (IY + d)
-* 
-* An arithmetic shift left 1 bit position is performed on the the contents of the memory address
-* specified by the contents of index register IY. 
-* The contents of bit 7 are copied to the Carry flag.
-* Bit 0 is the least-significant bit.
-* Clock: 6T
-*/
-function sla_ptrIYd(d) {
-    CPU.tCycles += 6;
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    const nShifted = get_shifted_sla(n);
-    mem[iy + d] = nShifted;
+    mem[xx + d] = nShifted;
 }
 
 /**
@@ -577,54 +400,19 @@ function sra_r(rIndex) {
 }
 
 /**
-* SRA (HL)
+* SRA (XX) ---> SRA (HL) ; SRA (IX + d) ; SRA (IY + d)
 * 
 * An arithmetic shift right 1 bit position is performed on the the contents of the memory address
-* specified by the contents of register pair HL. 
+* specified by (XX). 
 * The contents of bit 0 are copied to the Carry flag. Bit 7 remains unchanged.
 * Bit 0 is the least-significant bit.
-* Clock: 4T
 */
-function sra_ptrHL() {
-    CPU.tCycles += 4;
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
+function sra_ptrXXplusd(xxIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
+    const xx = r16.get(xxIndex);
+    const n = mem[xx + d];
     const nShifted = get_shifted_sra(n);
-    mem[hl] = nShifted;
-}
-
-/**
-* SRA (IX + d)
-* 
-* An arithmetic shift right 1 bit position is performed on the the contents of the memory address
-* specified by the contents of index register IX. 
-* The contents of bit 0 are copied to the Carry flag. Bit 7 remains unchanged.
-* Bit 0 is the least-significant bit.
-* Clock: 6T
-*/
-function sra_ptrIXd(d) {
-    CPU.tCycles += 6;
-    const ix = r16.get(i16.IX);
-    const n = mem[ix + d];
-    const nShifted = get_shifted_sra(n);
-    mem[ix + d] = nShifted;
-}
-
-/**
-* SRA (IY + d)
-* 
-* An arithmetic shift right 1 bit position is performed on the the contents of the memory address
-* specified by the contents of index register IY. 
-* The contents of bit 0 are copied to the Carry flag. Bit 7 remains unchanged.
-* Bit 0 is the least-significant bit.
-* Clock: 6T
-*/
-function sra_ptrIYd(d) {
-    CPU.tCycles += 6;
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    const nShifted = get_shifted_sra(n);
-    mem[iy + d] = nShifted;
+    mem[xx + d] = nShifted;
 }
 
 /**
@@ -665,54 +453,19 @@ function srl_r(rIndex) {
 }
 
 /**
-* SRL (HL)
+* SRL (XX) ---> SRL (HL) ; SRL (IX + d) ; SRL (IY + d)
 * 
 * An arithmetic shift right 1 bit position is performed on the the contents of the memory address
-* specified by the contents of register pair HL. 
+* specified by (XX).
 * The contents of bit 0 are copied to the Carry flag.
 * Bit 0 is the least-significant bit.
-* Clock: 4T
 */
-function srl_ptrHL() {
-    CPU.tCycles += 4;
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
+function srl_ptrXXplusd(xxIndex, d, tCycles) {
+    CPU.tCycles += tCycles;
+    const xx = r16.get(xxIndex);
+    const n = mem[xx + d];
     const nShifted = get_shifted_srl(n);
-    mem[hl] = nShifted;
-}
-
-/**
-* SRL (IX + d)
-* 
-* An arithmetic shift right 1 bit position is performed on the the contents of the memory address
-* specified by the contents of index register IX. 
-* The contents of bit 0 are copied to the Carry flag.
-* Bit 0 is the least-significant bit.
-* Clock: 6T
-*/
-function srl_ptrIXd(d) {
-    CPU.tCycles += 6;
-    const ix = r16.get(i16.IX);
-    const n = mem[ix + d];
-    const nShifted = get_shifted_srl(n);
-    mem[ix + d] = nShifted;
-}
-
-/**
-* SRL (IY + d)
-* 
-* An arithmetic shift right 1 bit position is performed on the the contents of the memory address
-* specified by the contents of index register IY. 
-* The contents of bit 0 are copied to the Carry flag.
-* Bit 0 is the least-significant bit.
-* Clock: 6T
-*/
-function srl_ptrIYd(d) {
-    CPU.tCycles += 6;
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    const nShifted = get_shifted_srl(n);
-    mem[iy + d] = nShifted;
+    mem[xx + d] = nShifted;
 }
 
 /**
@@ -809,38 +562,24 @@ const helpers = {
 module.exports = {
     rlca,
     rlc_r,
-    rlc_ptrHL,
-    rlc_ptrIXd,
-    rlc_ptrIYd,
+    rlc_ptrXXplusd,
     rl_r,
-    rl_ptrHL,
-    rl_ptrIXd,
-    rl_ptrIYd,
+    rl_ptrXXplusd,
     rla,
     rld,
     rrca,
     rrc_r,
-    rrc_ptrHL,
-    rrc_ptrIXd,
-    rrc_ptrIYd,
+    rrc_ptrXXplusd,
     rra,
     rrd,
     rr_r,
-    rr_ptrHL,
-    rr_ptrIXd,
-    rr_ptrIYd,
+    rr_ptrXXplusd,
     sla_r,
-    sla_ptrHL,
-    sla_ptrIXd,
-    sla_ptrIYd,
+    sla_ptrXXplusd,
     sra_r,
-    sra_ptrHL,
-    sra_ptrIXd,
-    sra_ptrIYd,
+    sra_ptrXXplusd,
     srl_r,
-    srl_ptrHL,
-    srl_ptrIXd,
-    srl_ptrIYd,
+    srl_ptrXXplusd,
     helpers,
     setCPU
 }
