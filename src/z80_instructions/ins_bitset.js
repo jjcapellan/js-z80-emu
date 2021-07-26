@@ -40,15 +40,14 @@ function bit_b_r(b, rIndex) {
 }
 
 /**
-* BIT b, (HL)
+* BIT b, (XX) ---> BIT b, (HL) ; BIT b, (IX + d) ; BIT b, (IY + d)
 * 
-* This instruction tests bit b in the memory location specified by the contents
-* of the HL register pair and sets the Z flag accordingly.
+* This instruction tests bit b in the memory location specified by (XX) and sets the Z flag accordingly.
 */
-function bit_b_ptrHL(b) {
-    CPU.tCycles += 12;
-    const hl = r16.get(i16.HL);
-    const n = mem[hl];
+function bit_b_ptrXXplusd(xxIndex, b, d, tCycles) {
+    CPU.tCycles += tCycles;
+    const xx = r16.get(xxIndex);
+    const n = mem[xx + d];
     const z = ((n & (1 << b)) == 0) ? true : false;
     let f = createFlags(
         flags.get(fi.C),
@@ -57,56 +56,6 @@ function bit_b_ptrHL(b) {
         ((n & (1 << fi.F3)) != 0) && (b == 3),
         true,
         ((n & (1 << fi.F5)) != 0) && (b == 5),
-        z,
-        (b == 7) && (z == 0)
-    );
-    r8.set(i8.F, f);
-}
-
-/**
-* BIT b, (IX + d)
-* 
-* This instruction tests bit b in the memory location specified by the contents of register pair
-* IX combined with the two’s complement displacement d and sets the Z flag accordingly.
-*/
-function bit_b_ptrIXplusd(b, d) {
-    CPU.tCycles += 20;
-    const ix = r16.get(i16.IX);
-    const n = mem[ix + d];
-    const z = ((n & (1 << b)) == 0) ? true : false;
-    const ixdHigh = (ix + d) >> 8;
-    let f = createFlags(
-        flags.get(fi.C),
-        false,
-        z,
-        ((ixdHigh & (1 << fi.F3)) != 0),
-        true,
-        ((ixdHigh & (1 << fi.F5)) != 0),
-        z,
-        (b == 7) && (z == 0)
-    );
-    r8.set(i8.F, f);
-}
-
-/**
-* BIT b, (IY + d)
-* 
-* This instruction tests bit b in the memory location specified by the contents of register pair
-* IY combined with the two’s complement displacement d and sets the Z flag accordingly.
-*/
-function bit_b_ptrIYplusd(b, d) {
-    CPU.tCycles += 20;
-    const iy = r16.get(i16.IY);
-    const n = mem[iy + d];
-    const z = ((n & (1 << b)) == 0) ? true : false;
-    const iydHigh = (iy + d) >> 8;
-    let f = createFlags(
-        flags.get(fi.C),
-        false,
-        z,
-        ((iydHigh & (1 << fi.F3)) != 0),
-        true,
-        ((iydHigh & (1 << fi.F5)) != 0),
         z,
         (b == 7) && (z == 0)
     );
@@ -133,49 +82,20 @@ function set_b_r(b, rIndex) {
     r8.set(rIndex, set_bit(b, r8.get(rIndex)));
 }
 
-function set_bit_mem(b, rrIndex, d) {
-    const rr = r16.get(rrIndex);
-    let n = mem[rr + d];
-    mem[rr + d] = set_bit(b, n);
-}
-
 /**
-* SET b, (HL)
+* SET b, (XX) ---> SET b, (HL) ; SET b, (IX + d) ; SET b, (IY + d)
 * 
-* Bit b in the memory location addressed by the contents of register pair HL is set.
+* Bit b in the memory location addressed by (XX) is set.
 */
-function set_b_ptrHL(b) {
-    CPU.tCycles += 15;
-    set_bit_mem(b, i16.HL, 0);
-}
-
-/**
-* SET b, (IX + d)
-* 
-* Bit b in the memory location addressed by the sum of the contents of the IX register pair
-* and the two’s complement integer d is set.
-*/
-function set_b_ptrIXplusd(b, d) {
-    CPU.tCycles += 23;
-    set_bit_mem(b, i16.IX, d);
-}
-
-/**
-* SET b, (IY + d)
-* 
-* Bit b in the memory location addressed by the sum of the contents of the IY register pair
-* and the two’s complement integer d is set.
-*/
-function set_b_ptrIYplusd(b, d) {
-    CPU.tCycles += 23;
-    set_bit_mem(b, i16.IY, d);
+function set_b_ptrXXplusd(xxIndex, b, d, tCycles) {
+    CPU.tCycles += tCycles;
+    const xx = r16.get(xxIndex);
+    let n = mem[xx + d];
+    mem[xx + d] = set_bit(b, n);
 }
 
 /**
  * Helper function for RES instructions
- * @param {number} b 
- * @param {number} n 
- * @returns 
  */
 function reset_bit(b, n) {
     return n & (0xff ^ (1 << b));
@@ -191,56 +111,24 @@ function res_b_r(b, rIndex) {
     r8.set(rIndex, reset_bit(b, r8.get(rIndex)));
 }
 
-function reset_bit_mem(b, rrIndex, d) {
-    const rr = r16.get(rrIndex);
-    let n = mem[rr + d];
-    mem[rr + d] = reset_bit(b, n);
-}
-
 /**
-* RES b, (HL)
+* RES b, (XX) ---> RES b, (HL) ; RES b, (IX + d) ; RES b, (IY + d)
 * 
-* Bit b in the memory location addressed by the contents of register pair HL is reset.
+* Bit b in the memory location addressed by (XX) is reset.
 */
-function res_b_ptrHL(b) {
-    CPU.tCycles += 15;
-    reset_bit_mem(b, i16.HL, 0);
-}
-
-/**
-* RES b, (IX + d)
-* 
-* Bit b in the memory location addressed by the sum of the contents of the IX register pair
-* and the two’s complement integer d is reset.
-*/
-function res_b_ptrIXplusd(b, d) {
-    CPU.tCycles += 23;
-    reset_bit_mem(b, i16.IX, d);
-}
-
-/**
-* RES b, (IY + d)
-* 
-* Bit b in the memory location addressed by the sum of the contents of the IY register pair
-* and the two’s complement integer d is reset.
-*/
-function res_b_ptrIYplusd(b, d) {
-    CPU.tCycles += 23;
-    reset_bit_mem(b, i16.IY, d);
+function res_b_ptrXXplusd(xxIndex, b, d, tCycles) {
+    CPU.tCycles += tCycles;
+    const xx = r16.get(xxIndex);
+    let n = mem[xx + d];
+    mem[xx + d] = reset_bit(b, n);
 }
 
 module.exports = {
     bit_b_r,
-    bit_b_ptrHL,
-    bit_b_ptrIXplusd,
-    bit_b_ptrIYplusd,
+    bit_b_ptrXXplusd,
     set_b_r,
-    set_b_ptrHL,
-    set_b_ptrIXplusd,
-    set_b_ptrIYplusd,
+    set_b_ptrXXplusd,
     res_b_r,
-    res_b_ptrHL,
-    res_b_ptrIXplusd,
-    res_b_ptrIYplusd,
+    res_b_ptrXXplusd,
     setCPU
 }
