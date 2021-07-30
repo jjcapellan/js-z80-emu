@@ -144,6 +144,12 @@ function rl_ptrXXplusd(xxIndex, d, tCycles) {
     const n = mem[xx + d];
     const nRotated = get_rotated_rl(n);
     mem[xx + d] = nRotated;
+    return nRotated;
+}
+
+function rl_ptrXXplusd_r(xxIndex, d, rIndex, tCycles){
+    const nRotated = rl_ptrXXplusd(xxIndex, d, tCycles);
+    r8.set(rIndex, nRotated);
 }
 
 /**
@@ -578,6 +584,7 @@ module.exports = {
     rlc_ptrXXplusd_r,
     rl_r,
     rl_ptrXXplusd,
+    rl_ptrXXplusd_r,
     rla,
     rld,
     rrca,
