@@ -385,6 +385,12 @@ function sla_ptrXXplusd(xxIndex, d, tCycles) {
     mem[xx + d] = nShifted;
 }
 
+function sla_ptrXXplusd_r(xxIndex, d, rIndex, tCycles) {
+    const nRotated = sla_ptrXXplusd(xxIndex, d, tCycles);
+    r8.set(rIndex, nRotated);
+}
+
+
 /**
  * Helper function for SRA X
  * @param {number} n Byte
@@ -604,6 +610,7 @@ module.exports = {
     rr_ptrXXplusd_r,
     sla_r,
     sla_ptrXXplusd,
+    sla_ptrXXplusd_r,
     sra_r,
     sra_ptrXXplusd,
     srl_r,
