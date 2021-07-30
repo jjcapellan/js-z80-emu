@@ -443,7 +443,14 @@ function sra_ptrXXplusd(xxIndex, d, tCycles) {
     const n = mem[xx + d];
     const nShifted = get_shifted_sra(n);
     mem[xx + d] = nShifted;
+    return nShifted;
 }
+
+function sra_ptrXXplusd_r(xxIndex, d, rIndex, tCycles) {
+    const nShifted = sra_ptrXXplusd(xxIndex, d, tCycles);
+    r8.set(rIndex, nShifted);
+}
+
 
 /**
  * Helper function for SRL X
@@ -613,6 +620,7 @@ module.exports = {
     sla_ptrXXplusd_r,
     sra_r,
     sra_ptrXXplusd,
+    sra_ptrXXplusd_r,
     srl_r,
     srl_ptrXXplusd,
     helpers,
