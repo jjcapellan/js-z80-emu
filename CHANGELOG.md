@@ -1,3 +1,13 @@
+## v2.2.0-Alpha
+* Added: **Z80.clockSpeed**. Clock speed in Mhz (default = 3.5). This value is passed to the Z80 constructor.
+* Added: **Z80.cycleMicroseconds**. Duration in microseconds of 1 cycle. Is calculated using clockSpeed.
+* Added: **Z80.tCycles** Remaining T cycles for to use by current instruction.
+* Added: Timing implementation in processor loop.
+* Added: **Z80.exit()**
+* Added: Implementation of almost all undocumented instructions.
+* Change: New decoder structure.
+* Change: Major refactoring of instruction functions. New param tCycles. 
+
 ## v2.1.0-Alpha
 * Added: Implementation of jump instructions.
 * Added: Implementation of call, return instructions
