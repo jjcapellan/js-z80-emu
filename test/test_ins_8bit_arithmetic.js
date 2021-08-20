@@ -3,364 +3,318 @@ const z80 = require('../src/z80_cpu');
 const instr = require('../src/z80_instructions/ins_8bit_arithmetic');
 
 const cpu = new z80();
-const regs8 = cpu.registers.regs8;
-const regs16 = cpu.registers.regs16;
+const r8 = cpu.registers.regs8;
+const r16 = cpu.registers.regs16;
+const i8 = r8.idx;
+const i16 = r16.idx;
 const flags = cpu.registers.flags;
 const mem = cpu.memory;
 
 test('add_A_r(rIndex)', t => {
-    regs8.set(regs8.idx.D, 0x1c);
-    regs8.set(regs8.idx.A, 0x1);
-    const rIndex = regs8.idx.D;
+    r8.set(i8.D, 0x1c);
+    r8.set(i8.A, 0x1);
+    const rIndex = i8.D;
     instr.add_A_r(rIndex); // ADD A, D
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(a, 0x1d);
     t.is(f, 0x8);
 });
 
 test('add_A_n(n)', t => {
-    regs8.set(regs8.idx.A, 0x1);
+    r8.set(i8.A, 0x1);
     const n = 0x1c;
     instr.add_A_n(n); // ADD A, n
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(a, 0x1d);
     t.is(f, 0x8);
 });
 
-test('add_A_ptrHL()', t => {
-    regs8.set(regs8.idx.A, 0x1);
-    regs16.set(regs16.idx.HL, 0x1212);
+test('add_A_ptrXXplusd()', t => {
+    r8.set(i8.A, 0x1);
+    r16.set(i16.HL, 0x1212);
     mem[0x1212] = 0x11;
-    instr.add_A_ptrHL(); // ADD A, (HL)
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    instr.add_A_ptrXXplusd(i16.HL, 0, 7); // ADD A, (HL)
+    const a = r8.get(i8.A);instr.add_A_ptrXXplusd
+    const f = r8.get(i8.F);
     t.is(f, 0, `Expected: 0, Flags: ${f.toString(2)}`);
     t.is(a, 0x12);    
 });
 
-test('add_A_ptrIXplusd(d)', t => {
-    regs8.set(regs8.idx.A, 0x1);
-    regs16.set(regs16.idx.IX, 0x4);
+test('ADD A, (IX + d)', t => {
+    r8.set(i8.A, 0x1);
+    r16.set(i16.IX, 0x4);
     const d = 0x1;
     mem[0x5] = 0x25;
-    instr.add_A_ptrIXplusd(d); // ADD A, (IX + d)
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
-    t.is(f, 0x20);
-    t.is(a, 0x26);
-});
-
-test('add_A_ptrIYplusd(d)', t => {
-    regs8.set(regs8.idx.A, 0x1);
-    regs16.set(regs16.idx.IY,0x4);
-    const d = 0x1;
-    mem[0x5] = 0x25;
-    instr.add_A_ptrIYplusd(d); // ADD A, (IY + d)
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    instr.add_A_ptrXXplusd(i16.IX, d, 19);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x20);
     t.is(a, 0x26);
 });
 
 test('adc_A_r(rIndex)', t => {
-    regs8.set(regs8.idx.A, 0x1);
-    regs8.set(regs8.idx.B, 0x4);
-    const rIndex = regs8.idx.B;
+    r8.set(i8.A, 0x1);
+    r8.set(i8.B, 0x4);
+    const rIndex = i8.B;
     flags.set(flags.idx.C, true);
     instr.adc_A_r(rIndex); // ADC A, B
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0);
     t.is(a, 0x6);
 });
 
 test('adc_A_n(n)', t => {
-    regs8.set(regs8.idx.A, 0x1);
+    r8.set(i8.A, 0x1);
     const n = 0x1c;
     flags.set(flags.idx.C, true);
     instr.adc_A_n(n); // ADC A, n
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x8);
     t.is(a, 0x1e);
 });
 
-test('adc_A_ptrHL()', t => {
-    regs8.set(regs8.idx.A, 0x1);
-    regs16.set(regs16.idx.HL, 0x1212);
+test('ADC A, (HL)', t => {
+    r8.set(i8.A, 0x1);
+    r16.set(i16.HL, 0x1212);
     mem[0x1212] = 0x11;
     flags.set(flags.idx.C, true);
-    instr.adc_A_ptrHL(); // ADC A, (HL)
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    instr.adc_A_ptrXXplusd(i16.HL, 0, 7);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x0);
     t.is(a, 0x13);
 });
 
-test('adc_A_ptrIXplusd(d)', t => {
-    regs8.set(regs8.idx.A, 0x1);
-    regs16.set(regs16.idx.IX,0x4);
+test('ADC A, (IX + d)', t => {
+    r8.set(i8.A, 0x1);
+    r16.set(i16.IX,0x4);
     const d = 0x1;
     mem[0x5] = 0x25;
     flags.set(flags.idx.C, true);
-    instr.adc_A_ptrIXplusd(d); // ADC A, (IX + d)
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
-    t.is(f, 0x20);
-    t.is(a, 0x27);
-});
-
-test('adc_A_ptrIYplusd(d)', t => {
-    regs8.set(regs8.idx.A, 0x1);
-    regs16.set(regs16.idx.IY,0x4);
-    const d = 0x1;
-    mem[0x5] = 0x25;
-    flags.set(flags.idx.C, true);
-    instr.adc_A_ptrIYplusd(d); // ADC A, (IY + d)
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    instr.adc_A_ptrXXplusd(i16.IX, d, 19);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x20);
     t.is(a, 0x27);
 });
 
 test('sub_A_r(rIndex)', t => {
-    regs8.set(regs8.idx.D, 0x1);
-    regs8.set(regs8.idx.A, 0x1c);
-    const rIndex = regs8.idx.D;
+    r8.set(i8.D, 0x1);
+    r8.set(i8.A, 0x1c);
+    const rIndex = i8.D;
     instr.sub_A_r(rIndex); // SUB A, D
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x0a);
     t.is(a, 0x1b);
 });
 
 test('sub_A_n(n)', t => {
-    regs8.set(regs8.idx.A, 0x1c);
+    r8.set(i8.A, 0x1c);
     const n = 0x1;
     instr.sub_A_n(n); // SUB A, n
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x0a);
     t.is(a, 0x1b);
 });
 
-test('sub_A_ptrHL()', t => {
-    regs8.set(regs8.idx.A, 0x12);
-    regs16.set(regs16.idx.HL, 0x1212);
+test('SUB A, (HL)', t => {
+    r8.set(i8.A, 0x12);
+    r16.set(i16.HL, 0x1212);
     mem[0x1212] = 0x1;
-    instr.sub_A_ptrHL(); // SUB A, (HL)
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    instr.sub_A_ptrXXplusd(i16.HL, 0);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x02);
     t.is(a, 0x11);
 });
 
-test('sub_A_ptrIXplusd(d)', t => {
-    regs8.set(regs8.idx.A, 0x12);
-    regs16.set(regs16.idx.IX,0x4);
+test('SUB A, (IX + d)', t => {
+    r8.set(i8.A, 0x12);
+    r16.set(i16.IX,0x4);
     const d = 0x1;
     mem[0x5] = 0x1;
-    instr.sub_A_ptrIXplusd(d); // SUB A, (IX + d)
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
-    t.is(f, 0x02);
-    t.is(a, 0x11);
-});
-
-test('sub_A_ptrIYplusd(d)', t => {
-    regs8.set(regs8.idx.A, 0x12);
-    regs16.set(regs16.idx.IY,0x4);
-    const d = 0x1;
-    mem[0x5] = 0x1;
-    instr.sub_A_ptrIYplusd(d); // SUB A, (IY + d)
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    instr.sub_A_ptrXXplusd(i16.IX, d);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x02);
     t.is(a, 0x11);
 });
 
 test('sbc_A_r(rIndex)', t => {
-    regs8.set(regs8.idx.A, 0x1);
-    regs8.set(regs8.idx.B, 0x4);
-    const rIndex = regs8.idx.B;
+    r8.set(i8.A, 0x1);
+    r8.set(i8.B, 0x4);
+    const rIndex = i8.B;
     flags.set(flags.idx.C, true);
     instr.sbc_A_r(rIndex); // SUBC A, B
-    const a = regs8.get(regs8.idx.A);
+    const a = r8.get(i8.A);
     t.is(a, 256 + (0x1 - (0x4 + 0x1))); // +256 convert negative signed int to unsigned
 });
 
 test('sbc_A_n(n)', t => {
-    regs8.set(regs8.idx.A, 0x1);
+    r8.set(i8.A, 0x1);
     const n = 0x1c;
     flags.set(flags.idx.C, true);
     instr.sbc_A_n(n); // SUBC A, n
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(a, 256 + (0x1 - (0x1c + 0x1)));
 });
 
-test('sbc_A_ptrHL()', t => {
-    regs8.set(regs8.idx.A, 0x1);
-    regs16.set(regs16.idx.HL, 0x1212);
+test('SUBC A, (HL)', t => {
+    r8.set(i8.A, 0x1);
+    r16.set(i16.HL, 0x1212);
     mem[0x1212] = 0x11;
     flags.set(flags.idx.C, true);
-    instr.sbc_A_ptrHL(); // SUBC A, (HL)
-    const a = regs8.get(regs8.idx.A);
+    instr.sbc_A_ptrXXplusd(i16.HL, 0, 7);
+    const a = r8.get(i8.A);
     t.is(a, 256 + (0x1 - (0x11 + 0x1)));
 });
 
-test('sbc_A_ptrIXplusd(d)', t => {
-    regs8.set(regs8.idx.A, 0x1);
-    regs16.set(regs16.idx.IX,0x4);
+test('SUBC A, (IX + d)', t => {
+    r8.set(i8.A, 0x1);
+    r16.set(i16.IX,0x4);
     const d = 0x1;
     mem[0x5] = 0x25;
     flags.set(flags.idx.C, true);
-    instr.sbc_A_ptrIXplusd(d); // SUBC A, (IX + d)
-    const a = regs8.get(regs8.idx.A);
-    t.is(a, 256 + (0x1 - (0x25 + 0x1)));
-});
-
-test('sbc_A_ptrIYplusd(d)', t => {
-    regs8.set(regs8.idx.A, 0x1);
-    regs16.set(regs16.idx.IY,0x4);
-    const d = 0x1;
-    mem[0x5] = 0x25;
-    flags.set(flags.idx.C, true);
-    instr.sbc_A_ptrIYplusd(d); // SUB A, (IY + d)
-    const a = regs8.get(regs8.idx.A);
+    instr.sbc_A_ptrXXplusd(i16.IX, d, 19);
+    const a = r8.get(i8.A);
     t.is(a, 256 + (0x1 - (0x25 + 0x1)));
 });
 
 test('and_r(rIndex)', t => {
-    const rIndex = regs8.idx.D;
-    regs8.set(regs8.idx.A, 0x36);    
-    regs8.set(rIndex, 0x25);    
+    const rIndex = i8.D;
+    r8.set(i8.A, 0x36);    
+    r8.set(rIndex, 0x25);    
     instr.and_r(rIndex); // AND D
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x34, `Flags: ${f}, Expected: 0x34`);
     t.is(a, 0x36 & 0x25);
 });
 
 test('and_n(n)', t => {
     const n = 0x1c;
-    regs8.set(regs8.idx.A, 0x36);    
+    r8.set(i8.A, 0x36);    
     instr.and_n(n); // AND n
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x14, `Flags: ${f.toString(16)}, Expected: 0x14`);
     t.is(a, 0x36 & 0x1c);
 });
 
-test('and_ptrHL()', t => {
-    regs16.set(regs16.idx.HL, 0x1212);
-    const hl = regs16.get(regs16.idx.HL);
+test('AND (HL)', t => {
+    r16.set(i16.HL, 0x1212);
+    const hl = r16.get(i16.HL);
     cpu.memory[hl] = 0x2c;
-    regs8.set(regs8.idx.A, 0x36);    
-    instr.and_ptrHL(); // AND (HL)
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    r8.set(i8.A, 0x36);    
+    instr.and_ptrXXplusd(i16.HL, 0, 7);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x34, `Flags: ${f.toString(16)}, Expected: 0x34`);
     t.is(a, 0x36 & 0x2c, `Result: ${a}, Expected: ${0x36 & 0x2c}`);
 });
 
-test('and_ptrIXplusd(d)', t => {
+test('AND (IX + d)(d)', t => {
     const d = 0x42;
-    regs16.set(regs16.idx.IX,0x06);
-    const ix = regs16.get(regs16.idx.IX);
+    r16.set(i16.IX,0x06);
+    const ix = r16.get(i16.IX);
     cpu.memory[ix + d] = 0x6a;
-    regs8.set(regs8.idx.A, 0x36);    
-    instr.and_ptrIXplusd(d); // AND (IX + d)
-    const a = regs8.get(regs8.idx.A);
+    r8.set(i8.A, 0x36);    
+    instr.and_ptrXXplusd(i16.IX, d, 19);
+    const a = r8.get(i8.A);
     t.is(a, 0x36 & 0x6a);
 });
 
 test('or_r(rIndex)', t => {
-    const rIndex = regs8.idx.D;
-    regs8.set(regs8.idx.A, 0x36);    
-    regs8.set(rIndex, 0x25);    
+    const rIndex = i8.D;
+    r8.set(i8.A, 0x36);    
+    r8.set(rIndex, 0x25);    
     instr.or_r(rIndex); // OR D
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x20);
     t.is(a, 0x36 | 0x25);
 });
 
 test('or_n(n)', t => {
     const n = 0x1c;
-    regs8.set(regs8.idx.A, 0x36);    
+    r8.set(i8.A, 0x36);    
     instr.or_n(n); // OR n
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x28);
     t.is(a, 0x36 | 0x1c);
 });
 
-test('or_ptrHL()', t => {
-    regs16.set(regs16.idx.HL, 0x1212);
-    const hl = regs16.get(regs16.idx.HL);
+test('OR (HL)', t => {
+    r16.set(i16.HL, 0x1212);
+    const hl = r16.get(i16.HL);
     cpu.memory[hl] = 0x2c;
-    regs8.set(regs8.idx.A, 0x36);    
-    instr.or_ptrHL(); // OR (HL)
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    r8.set(i8.A, 0x36);    
+    instr.or_ptrXXplusd(i16.HL, 0, 7);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x28);
     t.is(a, 0x36 | 0x2c);
 });
 
-test('or_ptrIXplusd(d)', t => {
+test('OR (IX + d)', t => {
     const d = 0x42;
-    regs16.set(regs16.idx.IX, 0x06);
-    const ix = regs16.get(regs16.idx.IX);
+    r16.set(i16.IX, 0x06);
+    const ix = r16.get(i16.IX);
     cpu.memory[ix + d] = 0x6a;
-    regs8.set(regs8.idx.A, 0x36);    
-    instr.or_ptrIXplusd(d); // OR (IX + d)
-    const a = regs8.get(regs8.idx.A);
+    r8.set(i8.A, 0x36);    
+    instr.or_ptrXXplusd(i16.IX, d, 19);
+    const a = r8.get(i8.A);
     t.is(a, 0x36 | 0x6a);
 });
 
 test('xor_r(rIndex)', t => {
-    const rIndex = regs8.idx.D;
-    regs8.set(regs8.idx.A, 0x36);    
-    regs8.set(rIndex, 0x25);    
+    const rIndex = i8.D;
+    r8.set(i8.A, 0x36);    
+    r8.set(rIndex, 0x25);    
     instr.xor_r(rIndex); // XOR D
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0);
     t.is(a, 0x36 ^ 0x25);
 });
 
 test('xor_n(n)', t => {
     const n = 0x1c;
-    regs8.set(regs8.idx.A, 0x36);    
+    r8.set(i8.A, 0x36);    
     instr.xor_n(n); // XOR n
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x28);
     t.is(a, 0x36 ^ 0x1c);
 });
 
-test('xor_ptrHL()', t => {
-    regs16.set(regs16.idx.HL, 0x1212);
-    const hl = regs16.get(regs16.idx.HL);
+test('XOR (HL)', t => {
+    r16.set(i16.HL, 0x1212);
+    const hl = r16.get(i16.HL);
     cpu.memory[hl] = 0x2c;
-    regs8.set(regs8.idx.A, 0x36);    
-    instr.xor_ptrHL(); // XOR (HL)
-    const a = regs8.get(regs8.idx.A);
-    const f = regs8.get(regs8.idx.F);
+    r8.set(i8.A, 0x36);    
+    instr.xor_ptrXXplusd(i16.HL, 0, 7);
+    const a = r8.get(i8.A);
+    const f = r8.get(i8.F);
     t.is(f, 0x08);
     t.is(a, 0x36 ^ 0x2c);
 });
 
-test('xor_ptrIXplusd(d)', t => {
+test('XOR (IX + d)', t => {
     const d = 0x42;
-    regs16.set(regs16.idx.IX, 0x06);
-    const ix = regs16.get(regs16.idx.IX);
+    r16.set(i16.IX, 0x06);
+    const ix = r16.get(i16.IX);
     cpu.memory[ix + d] = 0x6a;
-    regs8.set(regs8.idx.A, 0x36);    
-    instr.xor_ptrIXplusd(d); // XOR (IX + d)
-    const a = regs8.get(regs8.idx.A);
+    r8.set(i8.A, 0x36);    
+    instr.xor_ptrXXplusd(i16.IX, d, 19);
+    const a = r8.get(i8.A);
     t.is(a, 0x36 ^ 0x6a);
 });

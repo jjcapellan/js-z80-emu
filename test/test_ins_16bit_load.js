@@ -3,139 +3,141 @@ const z80 = require('../src/z80_cpu');
 const instr = require('../src/z80_instructions/ins_16bit_load');
 
 const cpu = new z80();
-const regs8 = cpu.registers.regs8;
-const regs16 = cpu.registers.regs16;
+const r8 = cpu.registers.regs8;
+const r16 = cpu.registers.regs16;
+const i8 = r8.idx;
+const i16 = r16.idx;
 const flags = cpu.registers.flags;
 const mem = cpu.memory;
 
-test('ld_dd_nn(ddIndex, nn)', t => {
+test('LD AF, nn', t => {
     const nn = 0x1216;
-    const ddIndex = regs16.idx.AF;    
-    instr.ld_dd_nn(ddIndex, nn); // LD AF, nn
-    const af = regs16.get(regs16.idx.AF);
+    const ddIndex = i16.AF;    
+    instr.ld_XX_nn(ddIndex, nn, 10); 
+    const af = r16.get(i16.AF);
     t.is(af, nn);
 });
 
-test('ld_IX_nn(nn)', t => {
+test('LD IX, nn', t => {
     const nn = 0x0612;    
-    instr.ld_IX_nn(nn); // LD IX, nn
-    const ix = regs16.get(regs16.idx.IX);
+    instr.ld_XX_nn(i16.IX, nn, 14); // 
+    const ix = r16.get(i16.IX);
     t.is(ix, nn);
 });
 
-test('ld_HL_ptrnn(ptrnn)', t => {
+test('LD HL, (nn)', t => {
     const ptrnn = 0x1212;
     mem[0x1212] = 0x16;
     mem[0x1212 + 1] = 0x1e;    
-    instr.ld_HL_ptrnn(ptrnn); // LD HL, (nn)
-    const hl = regs16.get(regs16.idx.HL);
-    const h = regs8.get(regs8.idx.H);
-    const l = regs8.get(regs8.idx.L);
+    instr.ld_XX_ptrnn(i16.HL, ptrnn, 16);
+    const hl = r16.get(i16.HL);
+    const h = r8.get(i8.H);
+    const l = r8.get(i8.L);
     t.is(h, 0x1e);
     t.is(l, 0x16);
     t.is(hl, 0x1e16);
 });
 
-test('ld_dd_ptrnn(ddIndex, ptrnn)', t => {
+test('LD DE, (nn)', t => {
     const ptrnn = 0x2526;
     mem[ptrnn] = 0x19;
     mem[ptrnn + 1] = 0x1c;    
-    instr.ld_dd_ptrnn(regs16.idx.DE, ptrnn); // LD DE, (nn)
-    const de = regs16.get(regs16.idx.DE);
-    const d = regs8.get(regs8.idx.D);
-    const e = regs8.get(regs8.idx.E);
+    instr.ld_XX_ptrnn(i16.DE, ptrnn, 20);
+    const de = r16.get(i16.DE);
+    const d = r8.get(i8.D);
+    const e = r8.get(i8.E);
     t.is(d, 0x1c, `Result: ${d.toString(16)} Expected: 0x1c `);
     t.is(e, 0x19);
     t.is(de, 0x1c19);
 });
 
-test('ld_IX_ptrnn(ptrnn)', t => {
+test('LD IX, (nn)', t => {
     const ptrnn = 0x3232;
     mem[ptrnn] = 0x11;
     mem[ptrnn + 1] = 0x1d;    
-    instr.ld_IX_ptrnn(ptrnn); // LD IX, (nn)
-    const ix = regs16.get(regs16.idx.IX);
+    instr.ld_XX_ptrnn(i16.IX,ptrnn, 20);
+    const ix = r16.get(i16.IX);
     t.is(ix, 0x1d11, `Result: ${ix.toString(16)}`);
 });
 
-test('ld_ptrnn_HL(ptrnn)', t => {
+test('LD (nn), HL', t => {
     const ptrnn = 0x5656;
-    regs16.set(regs16.idx.HL, 0x2125);    
-    instr.ld_ptrnn_HL(ptrnn); // LD (nn), HL
-    const h = regs8.get(regs8.idx.H);
-    const l = regs8.get(regs8.idx.L);
+    r16.set(i16.HL, 0x2125);    
+    instr.ld_ptrnn_XX(i16.HL, ptrnn, 16);
+    const h = r8.get(i8.H);
+    const l = r8.get(i8.L);
     t.is(h, mem[ptrnn + 1]);
     t.is(l, mem[ptrnn]);
 });
 
-test('ld_ptrnn_dd(ddIndex, ptrnn)', t => {
+test('LD (nn), DE', t => {
     const ptrnn = 0x3232;
-    const ddIndex = regs16.idx.DE;
+    const ddIndex = i16.DE;
     const d = 0x1d;
     const e = 0x19;
-    regs8.set(regs8.idx.D, d);    
-    regs8.set(regs8.idx.E, e);
-    instr.ld_ptrnn_dd(ddIndex, ptrnn); // LD (nn), DE
+    r8.set(i8.D, d);    
+    r8.set(i8.E, e);
+    instr.ld_ptrnn_XX(ddIndex, ptrnn, 20);
     t.is(d, mem[ptrnn + 1]);
     t.is(e, mem[ptrnn]);
 });
 
-test('ld_ptrnn_IX(ptrnn)', t => {
+test('LD (nn), IX', t => {
     const ptrnn = 0x4243;
-    regs16.set(regs16.idx.IX, 0x1c16);
-    instr.ld_ptrnn_IX(ptrnn); // LD (nn), IX
+    r16.set(i16.IX, 0x1c16);
+    instr.ld_ptrnn_XX(i16.IX, ptrnn, 20);
     t.is(mem[ptrnn + 1], 0x1c, `Result: ${mem[ptrnn].toString(16)}`);
     t.is(mem[ptrnn], 0x16);
 });
 
-test('ld_SP_HL()', t => {
-    regs16.set(regs16.idx.HL, 0x2526);
-    instr.ld_SP_HL(); // LD SP, HL
-    const sp = regs16.get(regs16.idx.SP);
-    const hl = regs16.get(regs16.idx.HL);
-    t.is(sp, hl, `Result: ${sp.toString(16)}`);
+test('LD SP, HL', t => {
+    r16.set(i16.HL, 0x2526);
+    instr.ld_SP_XX(i16.HL, 6);
+    const sp = r16.get(i16.SP);
+    const hl = r16.get(i16.HL);
+    t.is(sp, hl, `Result: ${sp.toString(16)}`);instr.ld_SP_XX
 });
 
-test('push_qq(qqIndex)', t => {
-    regs16.set(regs16.idx.SP, 0x1007);
-    const qqIndex = regs16.idx.AF;
-    regs16.set(qqIndex, 0x2233);
-    instr.push_qq(qqIndex); // push AF
-    const sp = regs16.get(regs16.idx.SP);
+test('PUSH AF', t => {
+    r16.set(i16.SP, 0x1007);
+    const qqIndex = i16.AF;
+    r16.set(qqIndex, 0x2233);
+    instr.push_XX(qqIndex, 11);
+    const sp = r16.get(i16.SP);
     t.is(mem[0x1006], 0x22, `Result: ${mem[0x1007].toString(16)}`);
     t.is(mem[0x1005], 0x33);
     t.is(sp, 0x1005);
 });
 
-test('push_IX()', t => {
-    regs16.set(regs16.idx.SP, 0x1007);
-    regs16.set(regs16.idx.IX, 0x1214);
-    instr.push_IX(); // push IX
-    const sp = regs16.get(regs16.idx.SP);
+test('PUSH IX', t => {
+    r16.set(i16.SP, 0x1007);
+    r16.set(i16.IX, 0x1214);
+    instr.push_XX(i16.IX, 15);
+    const sp = r16.get(i16.SP);
     t.is(mem[0x1006], 0x12);
     t.is(mem[0x1005], 0x14);
     t.is(sp, 0x1005);
 });
 
-test('pop_qq(qqIndex)', t => {
-    regs16.set(regs16.idx.SP, 0x1000);
+test('POP HL', t => {
+    r16.set(i16.SP, 0x1000);
     mem[0x1000] = 0x55;
     mem[0x1001] = 0x33;
-    const qqIndex = regs16.idx.HL;
-    instr.pop_qq(qqIndex); // pop HL    
-    const hl = regs16.get(qqIndex);
-    let s = regs16.get(regs16.idx.SP);
+    const qqIndex = i16.HL;
+    instr.pop_XX(qqIndex, 10);    
+    const hl = r16.get(qqIndex);
+    let s = r16.get(i16.SP);
     t.is(hl, 0x3355);
     t.is(s, 0x1002);
 });
 
-test('pop_IX()', t => {
-    regs16.set(regs16.idx.SP, 0x1000);
+test('POP IX', t => {
+    r16.set(i16.SP, 0x1000);
     mem[0x1000] = 0x55;
     mem[0x1001] = 0x33;
-    instr.pop_IX(); // pop IX
-    const sp = regs16.get(regs16.idx.SP);
-    const ix = regs16.get(regs16.idx.IX);
+    instr.pop_XX(i16.IX, 14);
+    const sp = r16.get(i16.SP);
+    const ix = r16.get(i16.IX);
     t.is(ix, 0x3355);
     t.is(sp, 0x1002);
 });

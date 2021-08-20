@@ -28,13 +28,13 @@ test('bit_b_r(b, rIndex)', t => {
     doTest(4, 0x41, 0x41, 0x01, 0x55); 
 });
 
-test('bit_b_ptrHL(b)', t => {
+test('BIT b, (HL)', t => {
     function doTest(b, n0, n1, f0, f1) {
         r16.set(i16.HL, 0x5c9d);
         const hl = r16.get(i16.HL);
         mem[hl] = n0;
         r8.set(i8.F, f0);
-        instr.bit_b_ptrHL(b); // BIT b, (hl)
+        instr.bit_b_ptrXXplusd(i16.HL, b, 0, 12);
         let n = mem[hl];
         let f = r8.get(i8.F);
         t.is(n, n1);
@@ -45,13 +45,13 @@ test('bit_b_ptrHL(b)', t => {
     doTest(4, 0x41, 0x41, 0x01, 0x55);
 });
 
-test('bit_b_ptrIXplusd(b, d)', t => {
+test('BIT b, (IX + d)', t => {
     function doTest(b, d, n0, n1, f0, f1) {
         r16.set(i16.IX, 0x5c9c);
         const ix = r16.get(i16.IX);
         mem[ix+d] = n0;
         r8.set(i8.F, f0);
-        instr.bit_b_ptrIXplusd(b, d); // BIT b, (IX + d)
+        instr.bit_b_ptrXXplusd(i16.IX, b, d, 20);
         let n = mem[ix + d];
         let f = r8.get(i8.F);
         t.is(n, n1);
