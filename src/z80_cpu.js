@@ -132,7 +132,7 @@ class Z80 {
         waitTime = ((this.tCycles * this.cycleMicroseconds) - delta) / 1000; // (ms)
         waitTime = (waitTime < 0) ? 0 : waitTime;
 
-        this.instructionTimer = setTimeout(step, waitTime);
+        this.instructionTimer = setTimeout(this.step.bind(this), waitTime);
     }
 }
 
